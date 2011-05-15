@@ -8,20 +8,10 @@
 <link rel="shortcut icon" href='/template/water/goldenorb-favicon.png' />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png"/>
 
-<%= stylesheet_link_tag("reset", "addons/colorbox", "addons/event_calendar", "phusion",
-                        "contents", "template"
-                        #"/#{subdomain}/stylesheets/contents",
-                        #"/#{subdomain}/stylesheets/new-template",
-                         #:cache => "#{SITE_NAME[subdomain]}-css"
-                         ) %>
 
-<%= javascript_include_tag "addons/modernizr-1.6.min.js" %>
-<%= javascript_include_tag 'jquery.min', 'rails', 'jquery-ui.min', 'application'  %>
-<%= javascript_include_tag 'addons/jquery.bgiframe.min', 'addons/jquery.colorbox-min', 'addons/event_calendar', 'addons/jquery.json-2.2.min' %>
-<%= javascript_include_tag :ckeditor %>
-<%#  'addons/jquery.jstree', 'addons/jquery.cookie',  'addons/jquery.hotkeys', %>
-
-<%= csrf_meta_tag %>
+<%= stylesheet_link_tag    "application" %>
+<%= javascript_include_tag "application" %>
+<%= csrf_meta_tags %>
 
 
 <meta name="google-site-verification" content="z_51Ce5rd5V_iSdfxPEIgMllAQUvu3AwKy3a3eZvq0U" />
@@ -29,7 +19,7 @@
 
 
 <!--[if lt IE 7 ]>
-  <script src="javascripts/addons/dd_belatedpng.js"></script>
+  <%# script src="javascripts/addons/dd_belatedpng.js"></script %>
   <script> DD_belatedPNG.fix('img, .png_bg'); //fix any <img> or .png_bg background-images </script>
 <![endif]-->
 
