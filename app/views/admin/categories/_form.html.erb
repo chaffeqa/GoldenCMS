@@ -1,0 +1,46 @@
+<%= form_for([:admin,@category], :html => { :multipart => true }) do |f| %>
+  <% if @category.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@category.errors.count, "error") %> prohibited this category from being saved:</h2>
+
+      <ul>
+        <% @category.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <fieldset>
+    <%= f.fields_for :node do |node_f| %>
+      <%= node_f.hidden_field :displayed, :value => true %>
+    <% end %>
+
+    <div class="field"><span class="hint">Select where you want this category to sit in the Inventory heirarchy.</span>
+      <%= f.label :parent_category_id, raw('') %>
+      <%= f.select :parent_category_id, options_for_select( [['Inventory','']] + ( Category.order(:title).collect {|category| [category.title, category.id]} ), @category.parent_category_id || '' ) %>
+    </div>
+
+    <div class="field">
+      <%= f.label :title, "Category Name", :class => "req" %>
+      <%= f.text_field :title %>
+    </div>
+
+    <div class="field"><span class="hint">Describe the items in this category. The description is often prominently displayed on the listing page for the category).</span>
+      <%= f.label :description %>
+      <%= f.text_area :description %>
+    </div>
+    <hr />
+    <div class="field"><span class="hint">Upload an image to represent the category.</span>
+      <%= f.label :image, 'Category Image' %>
+      <% unless f.object.new_record? %>
+        <%= image_tag (f.object.thumbnail_image) %><br />
+        <%= f.label :image, raw('&nbsp;') %>
+      <% end %>
+      <%= f.file_field :image %>
+    </div>
+
+    <%= render :partial => 'admin/submit', :locals => {:f => f, :type => 'Category'} %>
+  </fieldset>
+<% end %>
+

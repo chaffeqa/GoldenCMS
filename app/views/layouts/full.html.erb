@@ -1,0 +1,37 @@
+<!-- All dynamic_pages with the template_type = 'Inside' -->
+<!DOCTYPE html>
+<!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="no-js ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
+  <head>
+    <%= render 'partials/head' %>
+    <%= yield(:head) %>
+  </head>
+
+  <body id="<%= content_for?(:body_id) ? yield(:body_id) : 'secPage' %>"
+	class="<%= content_for?(:body_class) ? yield(:body_class) : 'oneColumn' %>">
+    <% if admin? %><%= render 'partials/page_admin' %><% end %>
+    <div id="body">
+      <div id="bodyFade">
+        <div id="pageContainer">
+          <%= render 'partials/header' %>
+          <div id="content" class="clearfix">
+            <article id="mainColumn" class="clearfix contents">
+              <div id="top"></div>
+              <div id="inner">
+                <%= content_for?(:breadcrumb) ? yield(:breadcrumb) : (render :partial => 'partials/breadcrumb') %>
+                <%= content_for?(:mainColumn) ? yield(:mainColumn) : yield %>
+              </div>
+            </article>
+          </div>
+          <%= render 'partials/footer' %>
+          <%= yield(:footer) %>
+          <%= render 'partials/foot' %>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+

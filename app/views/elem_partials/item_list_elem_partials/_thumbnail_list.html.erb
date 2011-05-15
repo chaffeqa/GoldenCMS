@@ -1,0 +1,20 @@
+<% unless items.empty? %>
+  <% item_list = items.collect {|i| i if i.class == 'Item' }.compact; item_cat_list = items.collect {|i| i if i.class == 'ItemCategory' }.compact %>
+  <ul class="itemList">
+    <% item_cat_list.each do |item_cat|%>
+      <%= content_tag_for :li, item_cat.item do %>
+        <div class="thumbnail"> <%= link_to image_tag(item_cat.item.thumbnail_image ? item_cat.item.thumbnail_image : "no_image_thumb.gif"), shortcut_path(item_cat.node.shortcut) %> </div>
+        <p class="title"><%= link_to item_cat.item.name, shortcut_path(item_cat.node.shortcut) %></p>
+        <p class="cost"><%= number_to_currency(item_cat.item.cost) %></p>
+      <% end %>
+    <% end %>
+    <% item_list.each do |item|%>
+      <%= content_tag_for :li, item do %>
+        <div class="thumbnail"> <%= link_to image_tag(item.thumbnail_image ? item.thumbnail_image : "no_image_thumb.gif"), shortcut_path(item.better_url) %> </div>
+        <p class="title"><%= link_to item.name, shortcut_path(item.better_url) %></p>
+        <p class="cost"><%= number_to_currency(item.cost) %></p>
+      <% end %>
+    <% end %>
+  </ul>
+<% end %>
+

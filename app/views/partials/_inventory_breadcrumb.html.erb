@@ -1,0 +1,7 @@
+<div class="breadcrumb">
+  <%= link_to @current_site.node.title, @current_site.node.url %> &gt; 
+  <%= link_to 'Inventory', inventory_path() %>  &gt; 
+  <%= link_to 'Browse', shortcut_path(@node.shortcut) %> 
+  <%=raw( inventory_search_breadcrumbs) %>
+</div>
+

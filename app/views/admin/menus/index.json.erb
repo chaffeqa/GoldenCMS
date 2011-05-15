@@ -1,0 +1,15 @@
+<% unless @errors.blank? %>
+  <% @errors.each do |node| %>
+    <% if node.errors.any? %>
+      <div id="error_explanation">
+        <h3><%= pluralize(node.errors.count, 'Error') + " for menu: #{node.menu_name}" %></h3>
+        <ul>
+          <% node.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>
+

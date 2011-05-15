@@ -1,0 +1,8 @@
+<li title="<%= category.description || 'No Description' %>">
+  <%= link_to category.title, category.node.url %> &nbsp;
+
+  <span class="right">
+  <%= link_to 'Edit', edit_admin_category_path(category), :class => "btn small" %>
+  <%= link_to 'Delete', admin_category_path(category), :confirm => 'Are you sure you want to delete this page?', :method => :delete, :class => "btn small" %>
+  </span>
+</li>

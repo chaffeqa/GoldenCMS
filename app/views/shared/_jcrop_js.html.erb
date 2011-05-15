@@ -1,0 +1,81 @@
+<!-- Crop JS -->
+<script type="text/javascript" charset="utf-8">// On Load...
+  $(function() {
+
+    // Submits the new image
+	  $("#image-input").live('change', function(){
+	    if (!$(this).attr('clicked')){
+	      $(this).attr('clicked','true')
+        $("#new_image").val(true);
+        $(".file_upload").children("#text").html("Please Wait...");
+	      stripTitles();
+		    reset_crop();
+        $('form').submit();
+	    return true;
+      } else { return false; }
+      return true
+	  });
+
+    // Submits the cropped avatar
+    $("#image-crop").live('click', function(){
+      if (!$(this).attr('clicked')){
+        $(this).attr('clicked','true')
+        $("#new_image").val(true);
+        $(this).text("Please Wait...");
+        stripTitles();
+        $('form').submit();
+      return true;
+      } else { return false; }
+      return true
+    });
+
+
+    $("#start-crop").live('click', function() {
+      $('#cropbox').Jcrop({
+        onChange: update_crop,
+        onSelect: update_crop,
+        setSelect: [0, 0, 500, 500],
+        aspectRatio: 1
+      });
+	    $('.cropping-inactive').hide();
+      $('.cropping-active').show();
+	    return reset_crop();
+    });
+
+
+    $("#stop-crop").live('click', function() {
+	    $('.cropping-inactive').show();
+      $('.cropping-active').hide();
+	    return reset_crop();
+    });
+
+
+  });
+
+
+  // Resets the DOM
+	function reset_crop() {
+	  $("#crop_x").val('0');
+	  $("#crop_y").val('0');
+	  $("#crop_w").val('0');
+	  $("#crop_h").val('0');
+		return false;
+	};
+
+  // Handles the callback for the Jcrop box activity
+  function update_crop(coords) {
+    var rx = 100/coords.w;
+    var ry = 100/coords.h;
+    $('#preview').css({
+      width: Math.round(rx * <%= resource.image_geometry(:original).width %>) + 'px',
+      height: Math.round(ry * <%= resource.image_geometry(:original).height %>) + 'px',
+      marginLeft: '-' + Math.round(rx * coords.x) + 'px',
+      marginTop: '-' + Math.round(ry * coords.y) + 'px'
+    });
+    $("#crop_x").val(Math.round(coords.x));
+    $("#crop_y").val(Math.round(coords.y));
+    $("#crop_w").val(Math.round(coords.w));
+    $("#crop_h").val(Math.round(coords.h));
+  }
+</script>
+

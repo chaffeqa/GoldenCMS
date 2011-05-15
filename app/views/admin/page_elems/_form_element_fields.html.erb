@@ -1,0 +1,12 @@
+<%= hidden_field_tag :shortcut, @node.shortcut %>
+
+<%= f.fields_for :element do |element_f| %>
+  <div class="field">
+    <%= element_f.label :title, :class => 'req' %>
+    <%= element_f.text_field :title %>
+    <%= element_f.check_box :display_title %>&nbsp;
+    <%= element_f.label :display_title, "Display Title?" %>
+  </div>
+  <%= element_f.hidden_field :page_area %>
+<% end %>
+

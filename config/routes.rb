@@ -1,58 +1,76 @@
 GoldenCMS::Application.routes.draw do
-  # The priority is based upon order of creation:
-  # first created -> highest priority.
 
-  # Sample of regular route:
-  #   match 'products/:id' => 'catalog#view'
-  # Keep in mind you can assign values other than :controller and :action
+  devise_for :admins
 
-  # Sample of named route:
-  #   match 'products/:id/purchase' => 'catalog#purchase', :as => :purchase
-  # This route can be invoked with purchase_url(:id => product.id)
+  resources :elements, :only => [:destroy] do
+    post :move_up, :on => :member
+    post :move_down, :on => :member
+  end
 
-  # Sample resource route (maps HTTP verbs to controller actions automatically):
-  #   resources :products
+  # Questions for 'Contact Us'
+  resources :questions, :only => [:new, :create]
 
-  # Sample resource route with options:
-  #   resources :products do
-  #     member do
-  #       get 'short'
-  #       post 'toggle'
-  #     end
-  #
-  #     collection do
-  #       get 'sold'
-  #     end
-  #   end
 
-  # Sample resource route with sub-resources:
-  #   resources :products do
-  #     resources :comments, :sales
-  #     resource :seller
-  #   end
+  # Admin Namespace
+  namespace "admin" do
+    resource :sites
+    resources :dynamic_pages, :except => [:show]
+    resources :menus, :only => [:index] do
+      post :sort, :on => :collection
+    end
+    resources :items do
+      # Managing Regulations
+      get :manage_regulations, :on => :collection
+      post :manage_regulations, :on => :collection
+      delete :manage_regulations, :on => :collection
+      # Managing Capabilities
+      get :manage_capabilities, :on => :collection
+      post :manage_capabilities, :on => :collection
+      delete :manage_capabilities, :on => :collection
+    end
+    resources :blogs, :except => [:show] do
+      resources :posts, :except => [:index]
+    end
+    resources :categories, :except => [:show] do
+      post :move_up, :on => :member
+      post :move_down, :on => :member
+    end
+    resources :questions, :only => [:index, :show, :destroy]
+    resources :calendars, :except => [:show] do
+      resources :events, :except => [:index]
+    end
+    scope :module => 'page_elems' do
+      resources :login_elems, :only => [:new]
+      resources :item_elems, :except => [:index, :show]
+      resources :item_list_elems, :except => [:index, :show]
+      resources :blog_elems, :except => [:index, :show]
+      resources :calendar_elems, :except => [:index, :show]
+      resources :text_elems, :except => [:index, :show]
+      resources :link_elems, :except => [:index] do
+        post :file, :on => :member
+      end
+      resources :image_elems, :except => [:index, :show]
+      resource :item_search_elems, :only => [:new]
+      resource :side_nav_elems, :only => [:new, :destroy]
+    end
+  end
 
-  # Sample resource route with more complex sub-resources
-  #   resources :products do
-  #     resources :comments
-  #     resources :sales do
-  #       get 'recent', :on => :collection
-  #     end
-  #   end
 
-  # Sample resource route within a namespace:
-  #   namespace :admin do
-  #     # Directs /admin/products/* to Admin::ProductsController
-  #     # (app/controllers/admin/products_controller.rb)
-  #     resources :products
-  #   end
 
-  # You can have the root of your site routed with "root"
-  # just remember to delete public/index.html.
-  # root :to => 'welcome#index'
+  match 'inventory' => 'inventory#inventory', :as => :inventory
+  get 'inventory/search', :as => :inventory_search
+  match 'items' => 'inventory#search' # Since we don't want to allow /items to call item#show
+  match "error" => 'shortcut#error', :as => :error
+  match ':shortcut(/:year(/:month))' => 'shortcut#route', :as => :calendar, :constraints => {:year => /\d{4}/, :month => /\d{1,2}/}
+  match ':shortcut/:page_area/new_element' => 'dynamic_pages#new_element', :as => :new_element
+  match ':shortcut(.:format)' => 'shortcut#route', :as => :shortcut, :constraints => { :shortcut => /[a-zA-Z0-9\-_]+/}, :formats => [:html, :js]
 
-  # See how all your routes lay out with "rake routes"
+  #constraints(Subdomain) do
+  #  match '/' => 'shortcut#home' # TODO change back to sites#show
+  #end
 
-  # This is a legacy wild controller route that's not recommended for RESTful applications.
-  # Note: This route will make all actions in every controller accessible via GET requests.
-  # match ':controller(/:action(/:id(.:format)))'
+  #  match '/admin/:controller/:action(/:id)'
+  #  match '/:controller/:action(/:id)'
+
+  root :to => 'shortcut#home'
 end

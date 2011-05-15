@@ -1,0 +1,15 @@
+<!-- All dynamic_pages with the template_type = 'InsideNoSideNav' -->
+
+<%= content_for :body_id do %>secPage<% end %>
+<%= content_for :body_class do %>twoColumn<% end %>
+
+<section id="content" class="clearfix">
+  <section id="mainColumn" class="clearfix contents">
+    <div id="top"></div>
+    <div id="inner">
+      <%= render :partial => 'partials/breadcrumb' %>
+      <%= render :partial => 'elements/page_area_elements', :locals => {:page_area => 1} %>
+    </div>
+  </section>
+</section>
+

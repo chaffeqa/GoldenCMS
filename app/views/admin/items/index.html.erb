@@ -1,0 +1,47 @@
+<h1 class="title">Items</h1>
+
+<p>[Instructions here...]</p>
+
+<p>
+  <%= link_to 'New Item', new_admin_item_path, :class => "btn large blue" %> <br/>
+</p>
+
+<table id="itemAdminTable">
+  <tr>
+    <!--th></th-->
+    <th>Item Name</th>
+    <th>Part #</th>
+    <th>In Category</th>
+    <th>Price Range</th>
+    <th>Displayed</th>
+    <th colspan="2"></th>
+  </tr>
+
+  <%= render :partial => 'query_form' %>
+
+  <tr class="sorters">
+    <!--td></td-->
+    <td><%= sortable "name", "Item Name", parsed_params %></td>
+    <td><%= sortable "part_number", 'Part #', parsed_params %></td>
+    <td><span>Categories</span></td>
+    <td><%= sortable "cost", "Price", parsed_params %></td>
+    <td><%= sortable "display", "Displayed", parsed_params %></td>
+    <td colspan="2"><span>Options</span></td>
+  </tr>
+  <% even = true
+  @items.each do |item|
+    even = !even %>
+    <%= content_tag_for :tr, item, :class => (even ? "even" : "odd") do %>
+                  <!--td class="itemThumb"> <%#= image_tag(item.thumbnail_image)  %> </td-->
+      <%= sortable_td('name') do %><%= item.node ? link_to(item.name, shortcut_path(item.node.shortcut)) : item.name %><% end %>
+      <%= sortable_td('part_number') do %><%= item.part_number %><% end %>
+      <td><%=raw item.categories.collect {|cat| (link_to(cat.title, shortcut_path(cat.node.shortcut)) + (cat == item.categories.last ? raw('<br />') : raw(',<br />'))) } %></td>
+      <%= sortable_td('cost') do %><%= number_to_currency(item.cost) %><% end %>
+      <%= sortable_td('display') do %><%= item.display ? "Yes" : "No" %><% end %>
+      <td><%= link_to 'Edit', edit_admin_item_path(item), :class => "btn small" %></td>
+      <td><%= link_to 'Delete', admin_item_path(item, full_params.to_hash), :confirm => 'Are you sure you want to delete this item?', :method => :delete, :class => "btn small" %></td>
+    <% end %>
+  <% end %>
+</table>
+<%= render :partial => 'shared/pagination', :locals => {:resource => @items} %>
+

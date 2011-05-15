@@ -1,0 +1,75 @@
+
+
+<%= form_for([:admin, @image_elem], :html => { :multipart => true }) do |f| %>
+
+  <% if @image_elem.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@image_elem.errors.count, "error") %> prohibited this image from being saved:</h2>
+
+      <ul>
+        <% @image_elem.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+<fieldset class="tab">
+  <legend>Image Details</legend>
+
+  <%= render :partial => 'admin/page_elems/form_element_fields', :locals => {:f => f} %>
+
+  <div class="field">
+    <%= f.label :image_style, 'Style applied to img tag:' %>
+    <%= f.text_field :image_style %>
+  </div>
+</fieldset>
+
+<fieldset>
+  <% if @image_elem.image and !@image_elem.image.url.blank? and !@image_elem.image.url.include?('missing.png') %>
+    <div class="field" id="image_elems-image">
+      <span class="hint nb cropping-active" style="display:none;">
+        <div id="image-preview">
+          <h4>Preview</h4>
+          <div style="width: 100px; height: 100px; overflow: hidden;"> <%= image_tag( @image_elem.image.url, :id => 'preview') %> </div>
+        </div>
+      </span>
+      <div class="cropping-active" style="display:none;" >
+        <label></label><%= image_tag( @image_elem.image.url, :id => "cropbox") %>
+
+        <% for attribute in [:crop_x, :crop_y, :crop_w, :crop_h] %>
+          <%= f.hidden_field attribute, :id => attribute %>
+        <% end %>
+        <div class='controls' style="padding-top:7px;">
+          <%= link_to 'Cancel', 'javascript:void(0)', :id => 'stop-crop', :class => 'btn medium' %> &nbsp;
+          <%= link_to 'Update Image', 'javascript:void(0)', :id => 'image-crop', :class => "btn medium" %>
+        </div>
+      </div>
+
+      <span class="hint nb cropping-inactive">Resize the Image</span>
+      <div class="cropping-inactive">
+      <label></label><%= image_tag( @image_elem.image.url) %>
+        <div class='controls'>
+          <%= link_to 'Crop Image', 'javascript:void(0)', :id => 'start-crop', :class => 'btn medium' %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <hr class="cropping-inactive" />
+  <div class="field cropping-inactive"><span class="hint nb">Upload an new Image</span>
+  <a class="file_upload btn">
+    <%= f.file_field :image, :id => 'image-input' %>
+    <%= hidden_field_tag :new_image %>
+    <span id="text">Upload New Image</span>
+  </a>
+  </div>
+</fieldset>
+
+
+<%= render :partial => 'admin/submit', :locals => {:f => f, :type => 'element'} %>
+<% end %>
+
+
+<% content_for(:head) do %> <%= javascript_include_tag 'addons/jquery.Jcrop.min' %> <% end %>
+<% content_for(:javascript) do %> <%= render :partial => 'shared/jcrop_js', :locals => {:resource => @image_elem} %> <% end %>
+

@@ -1,0 +1,17 @@
+<% if admin? %>
+  <span class="controls">
+    <%= link_to image_tag("delete.png", :alt => 'X'), element_path(element), :confirm => "Are you sure you wish to delete this element?", :method => :delete, :class => 'control' %>
+    <%= render :partial => 'elements/element_controls', :locals => {:element => element} %>
+  </span>
+<% end %>
+
+<% if element.display_title %><h1 class="title  <%= element.html_id %> "><%= element.title %></h1><% end %>
+
+<%= form_tag(inventory_search_path, :method => 'get', :class => 'search') do %>
+  <label id="searchLabel">Create custom searches for your Inventory</label>
+  <%= text_field_tag :search_text %>
+  <%= select_tag :category_id, options_for_select( (( Category.order(:title).collect {|category| [category.title, category.id] } ) << ['Category','']),'') %>
+  <%= select_tag :cost_range, options_for_select([['$0 - $100','0-100'], ['$100 - $2000','100-2000'], ['$2000 - $5000','2000-5000'], ['$5000 - $20000','5000-20000'], ['$20000 > ','20000-1000000000'], ['Cost', ''] ], '') %>
+  <%= submit_tag('Search', :disables_with => 'Searching...', :id => 'searchButton', :class => 'btn medium finish') %>
+<% end %>
+

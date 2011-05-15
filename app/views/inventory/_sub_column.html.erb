@@ -1,0 +1,7 @@
+<h3>Your Search Parameters:</h3>
+<ul>
+  <% unless params[:searchText].blank? %> <li><strong>Search Text:</strong><br/> "<%= params[:searchText] %>"</li> <% end %>
+  <% unless params[:category].blank? %> <li><strong>Under Category:</strong><br/> <%= params[:category] %></li> <% end %>
+  <% unless params[:cost_range].blank? %> <li><strong>Price Range:</strong><br/> $<%= params[:cost_range] %></li> <% end %>
+</ul>
+

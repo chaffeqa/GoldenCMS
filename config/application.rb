@@ -14,6 +14,7 @@ module GoldenCMS
 
     # Custom directories with classes and modules you want to be autoloadable.
     # config.autoload_paths += %W(#{config.root}/extras)
+    config.autoload_paths << config.root.join('lib')
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
@@ -45,7 +46,7 @@ module GoldenCMS
     config.filter_parameters += [:password]
 
     # Enable IdentityMap for Active Record, to disable set to false or remove the line below.
-    config.active_record.identity_map = true
+    config.active_record.identity_map = false # NOTE until fixed
 
     # Enable the asset pipeline
     config.assets.enabled = true

@@ -1,0 +1,29 @@
+<% unless items.empty? %>
+  <table class="item-list-table">
+    <tr>
+      <th></th>
+      <th><%= sortable "name", "Item Name" %></th>
+      <th><%= sortable "part_number", 'Part #' %></th>
+      <th><%= sortable "cost", "Price" %></th>
+    </tr>
+  <% even = true
+  items.each do |item|
+    even = !even %>
+      <% if item.node %>
+        <%= content_tag_for :tr, item, :class => (even ? "even" : "odd") do %>
+          <td class="itemThumb"> <%= link_to(image_tag(item.thumbnail_image), shortcut_path(item.node.shortcut))  %> </td>
+          <td><%= item.name %></td>
+          <%#= sortable_td('name') do %><%#= link_to(item.name, shortcut_path(item.better_url)) %><%# end %>
+          <td><%= link_to item.part_number, shortcut_path(item.node.shortcut) %></td>
+          <td><%= number_to_currency(item.cost) %></td>
+        <% end %>
+      <% end %>
+    <% end %>
+  </table>
+  <hr/>
+  <%#= render :partial => 'shared/pagination', :locals => {:resource => items} %>
+
+<% else %>
+  <p>No items matched your search.</p>
+<% end %>
+

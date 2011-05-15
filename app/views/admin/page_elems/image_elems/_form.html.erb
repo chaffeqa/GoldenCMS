@@ -1,0 +1,29 @@
+<%= form_for([:admin, @image_elem], :html => { :multipart => true }) do |f| %>
+<%= render :partial => 'shared/form_errors', :locals => {:resource => @image_elem} %>
+  <fieldset>
+  <% unless @image_elem.image.url.blank? or @image_elem.image.url.include?('missing.png') %>
+    <div class="field">
+      <h2>Current Image</h2>
+      <label></label><%= image_tag( @image_elem.image.url) %>
+    </div>
+  <% end %>
+    <div class="field">
+      <%= f.label :image, 'Image to upload:' %>
+      <%= f.file_field :image %>
+    </div>
+  </fieldset>
+  <fieldset class="tab">
+    <legend>Image Options</legend>
+    <%= render :partial => 'admin/page_elems/form_element_fields', :locals => {:f => f} %>
+    <div class="field">
+      <%= f.label :image_style, 'HTML Style applied to image tag:' %>
+      <%= f.text_field :image_style %>
+    </div>
+  </fieldset>
+  <div class="field">
+    <%= f.label :submit, raw("&nbsp;") %>
+    <%= f.submit 'Submit', :disable_with => "Please Wait...", :class => "btn medium" %>
+    <%= link_to 'Cancel', shortcut_path(@shortcut) %>
+  </div>
+<% end %>
+

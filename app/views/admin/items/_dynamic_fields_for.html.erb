@@ -1,0 +1,54 @@
+<fieldset class="tab">
+    <legend>Specific Item Attributes.</legend>
+    <div class="field">
+      <label>Dimension Type</label>
+      <%= f.select :dimension_type, options_for_select(Item.dimension_types, f.object.new_record? ? 'N/A' : f.object.dimension_type), {}, :class => 'DynamicFieldsSelector' %>
+    </div>
+
+    <div class="AdjustableFields DynamicFields">
+      <%= f.fields_for :adjustable_dimension, f.object.adjustable_dimension || f.object.build_adjustable_dimension do |dimension_f| %>
+        <%= render :partial => 'adjustable_dimension', :locals => { :f => dimension_f } %>
+      <% end %>
+    </div>
+    <div class="CircularFields DynamicFields">
+      <%= f.fields_for :circular_dimension, f.object.circular_dimension || f.object.build_circular_dimension do |dimension_f| %>
+        <%= render :partial => 'circular_dimension', :locals => { :f => dimension_f } %>
+      <% end %>
+    </div>
+    <div class="CubeFields DynamicFields">
+      <%= f.fields_for :cube_dimension, f.object.cube_dimension || f.object.build_cube_dimension do |dimension_f| %>
+        <%= render :partial => 'cube_dimension', :locals => { :f => dimension_f } %>
+      <% end %>
+    </div>
+    <div class="DrumFields DynamicFields">
+      <%= f.fields_for :drum_dimension, f.object.drum_dimension || f.object.build_drum_dimension do |dimension_f| %>
+        <%= render :partial => 'drum_dimension', :locals => { :f => dimension_f } %>
+      <% end %>
+    </div>
+    <div class="FlexibleFields DynamicFields">
+      <%= f.fields_for :flexible_dimension, f.object.flexible_dimension || f.object.build_flexible_dimension do |dimension_f| %>
+        <%= render :partial => 'flexible_dimension', :locals => { :f => dimension_f } %>
+      <% end %>
+    </div>
+    <div class="FunnelFields DynamicFields">
+      <%= f.fields_for :funnel_dimension, f.object.funnel_dimension || f.object.build_funnel_dimension do |dimension_f| %>
+        <%= render :partial => 'funnel_dimension', :locals => { :f => dimension_f } %>
+      <% end %>
+    </div>
+    <div class="PoolFields DynamicFields">
+      <%= f.fields_for :pool_dimension, f.object.pool_dimension || f.object.build_pool_dimension do |dimension_f| %>
+        <%= render :partial => 'pool_dimension', :locals => { :f => dimension_f } %>
+      <% end %>
+    </div>
+    <div class="StandardFields DynamicFields">
+      <%= f.fields_for :standard_dimension, f.object.standard_dimension || f.object.build_standard_dimension do |dimension_f| %>
+        <%= render :partial => 'standard_dimension', :locals => { :f => dimension_f } %>
+      <% end %>
+    </div>
+    <div class="SorbentFields DynamicFields">
+      <%= f.fields_for :sorbent_dimension, f.object.sorbent_dimension || f.object.build_sorbent_dimension do |dimension_f| %>
+        <%= render :partial => 'sorbent_dimension', :locals => { :f => dimension_f } %>
+      <% end %>
+    </div>
+  </fieldset>
+

@@ -1,0 +1,10 @@
+<ul class="categoryList">
+  <% categories.each do |category|%>
+  <% if category.node %>
+    <%= content_tag_for :li, category.node do %>
+      <p class="title"><%= link_to category.title, shortcut_path(category.node.shortcut) %></p>
+    <% end %>
+  <% end %>
+  <% end %>
+</ul>
+

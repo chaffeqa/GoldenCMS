@@ -1,0 +1,26 @@
+<fieldset class="tab">
+    <legend>Basic Item Attributes</legend>
+    <div class="field">
+      <%= f.label :weight %>
+      <%= f.text_field :weight, :title => "Weight" %>
+    </div>
+    <div class="field">
+      <%= f.label :handling_capacity %>
+      <%= f.text_field :handling_capacity, :title => "Handling Capacity" %>
+    </div>
+    <div class="field">
+      <%= f.label :sump_capacity %>
+      <%= f.text_field :sump_capacity, :title => "Sump Capacity" %>
+    </div>
+    <div class="field">
+      <%= f.label :p_length, 'Dimensions' %>
+      <%= f.text_field :p_length, :title => "Length", :class => "third" %>
+      x <%= f.text_field :p_width, :title => "Width", :class => "third" %>
+      x <%= f.text_field :p_height, :title => "Height", :class => "third" %>
+    </div>
+    <div class="field">
+      <%= f.label :regulations %>
+      <%= f.text_area :regulations, :title => "Regulations" %>
+    </div>
+  </fieldset>
+

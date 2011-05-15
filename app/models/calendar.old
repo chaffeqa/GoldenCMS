@@ -1,0 +1,23 @@
+class Calendar < ActiveRecord::Base
+  has_many :events
+  has_many :calendar_elems
+
+  # Associated Node attributes
+  has_one :node, :as => :page, :dependent => :destroy
+  accepts_nested_attributes_for :node
+
+#  validates_associated :node
+  before_validation :update_node
+
+  # updates the attributes for each node for this item
+  def update_node
+    node = self.node ? self.node : self.build_node
+    node.title =  self.name
+    node.menu_name =  self.name
+    node.shortcut = self.name
+    node.set_safe_shortcut
+    node.displayed = self.display
+    Node.calendar_node.children << self.node
+  end
+end
+

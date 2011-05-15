@@ -1,0 +1,79 @@
+<%= form_for([:admin, @item], :html => { :multipart => true }) do |f| %>
+  <% if @item.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@item.errors.count, "error") %> prohibited this item from being saved:</h2>
+
+      <ul>
+        <% @item.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+  <%= f.fields_for :node do |node_f| %>
+    <%= node_f.hidden_field :displayed, :value => true %>
+  <% end %>
+
+  <fieldset class="tab">
+    <legend>Categorize</legend>
+    <p>Optionally add this product to multiple categories.</p>
+    <% f.fields_for :item_categories do |ic_form| %>
+      <%= render :partial => 'item_category', :locals => { :f => ic_form } %>
+    <% end %>
+    <%= new_child_fields_template(f, :item_categories)%>
+    <div class="field"><label></label><%= add_child_link "Add Category", :item_categories %></div>
+  </fieldset>
+
+  <fieldset class="tab">
+    <legend>Item Images</legend>
+    <p>Manage images for this product.</p>
+    <div class="field">
+      <label></label>
+      <% f.fields_for :product_images do |img_form| %>
+        <%= render :partial => 'product_image', :locals => { :f => img_form } %>
+      <% end %>
+      <%= new_child_fields_template(f, :product_images)%>
+    </div>
+    <div class="field">
+      <label></label>
+      <%= add_child_link "Add Product Image", :product_images %>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <div class="field"><span class="hint">Be sure to enter a unique Item Name.</span>
+      <%= f.label :name, "Item Name", :class => "req" %>
+      <%= f.text_field :name, :title => "Item Name", :class => "twothirds" %>
+      <%= f.text_field :part_number, :title => 'Part #', :class => "third" %>
+    </div>
+    <div class="field">
+      <%= f.label :short_description %>
+      <%= f.text_field :short_description, :title => "Short Description" %>
+    </div>
+    <div class="field">
+      <%= f.label :long_description %>
+      <%= f.cktext_area :long_description, :title => "Long Description" %>
+    </div>
+    <div class="field">
+      <%= f.label :cost, "Price" %>
+      <% val = (@item.cost > 0) ? @item.cost : "0.00"  %>
+      $ <%= f.text_field :cost, :class => "third", :title => val, :value => val %>
+    </div>
+    <div class="field">
+      <%= f.label :for_sale, "Item Options" %>
+      <%= f.check_box :for_sale %> List item for sale?
+    </div>
+    <div class="field">
+      <%= f.label :display, raw('&nbsp') %>
+      <%= f.check_box :display %> Display publicly?
+    </div>
+  </fieldset>
+
+
+ <fieldset>
+    <%= render :partial => 'admin/submit', :locals => {:f => f, :type => 'Item'} %>
+  </fieldset>
+<% end %>
+

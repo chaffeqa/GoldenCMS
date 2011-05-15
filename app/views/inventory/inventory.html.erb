@@ -1,0 +1,19 @@
+<h1 class="title"><%= @node.title %></h1>
+<!-- Element -->
+<section  class="element CategoryListElem Inventory">
+  <p class="category-desc">Select a category to see further information and sub-categories within that region...</p>
+  <%= render :partial => 'elem_partials/category_list_elem_partials/title_list', :locals => {:categories => @current_site.get_node_by_shortcut(@current_site.inventory_shortcut).children.categories.collect {|node| node.category}} %>
+</section>
+<!-- END -->
+
+
+<!-- Content_for components to insert into static_page -->
+<%= content_for :subColumn do %>
+  <%= render :partial => 'partials/inventory_side_nav' %>
+<% end %>
+
+<%= content_for :breadcrumb do %>
+  <%= render 'partials/breadcrumb' %>
+<% end %>
+<!-- End -->
+

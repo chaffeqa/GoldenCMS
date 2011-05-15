@@ -1,0 +1,28 @@
+<% remote = local_assigns[:remote] || false %>
+<%# Optional locals assignment of :element_id which will be appended to the pagination parameters %>
+<% pagination_prefix = (local_assigns[:element_id] || "") %>
+<div class="paginate-container cf">
+   <div class="pagination"><%= paginate resource, :param_name => (pagination_prefix+"page").to_sym, :remote => remote %></div>
+
+  <%= form_tag(request.url, :method => :get, :class => 'per-page-form', :remote => remote) do %>
+    <div class="field">
+      Display how many items per page? &nbsp;
+      <%= select_tag(
+        (pagination_prefix+"per_page").to_sym, 
+        options_for_select([['3','3'],['5','5'],['10','10'],['30','30'],['All','10000000']], 
+        get_per_page(pagination_prefix))
+      ) %>
+
+      <%# Persist the current search/filter parameters in this form %>
+      <% if @search_params %>
+        <% for param in @search_params %>
+          <% unless ["#{pagination_prefix}page","#{pagination_prefix}per_page"].include?(param[0].to_s) or param[0].class != String %>
+            <%= hidden_field_tag(param[0].to_sym, param[1])  %>
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <%= submit_tag('Refine Results', :disable_with => 'Please Wait...') %>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,17 @@
+<h1>List of Categories</h1>
+
+<p><%= link_to 'New Category', new_admin_category_path, :class => "btn large" %></p>
+
+
+<% if @categories.empty? %>
+  <p>No Current Inventory Categories</p>
+<% else %>
+  <ul class="categoryList">
+    <% @categories.each do |category| %>
+      <%= render :partial => 'category', :locals => {:category => category} %>
+    <% end %>
+  </ul>
+<% end %>
+<br />
+<%= render :partial => 'shared/pagination', :locals => {:resource => @categories} %>
+

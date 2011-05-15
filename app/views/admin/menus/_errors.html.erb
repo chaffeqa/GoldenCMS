@@ -1,0 +1,6 @@
+<% unless @errors.blank? %>
+  <% @errors.each do |node| %>
+    <%= render :partial => 'shared/form_errors', :locals => {:resource => node} %>
+  <% end %>
+<% end %>
+
