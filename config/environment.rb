@@ -17,6 +17,8 @@ RESERVED_SHORTCUTS = {
   :items => "items"
 }
 
+LOG_CATEGORY = ['CODE','CACHE','DB','FILTER','PARAMS']
+
 ELEM_TYPES = [
   ["Text"             ,   "text_elems"            ],
   ["Link"             ,   "link_elems"            ],

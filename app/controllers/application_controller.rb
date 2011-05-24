@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  include UrlHelper, SearchHelper, ApplicationHelper
+  include SearchHelper, ApplicationHelper, LoggingHelper
   
   protect_from_forgery
   rescue_from ActiveRecord::RecordNotFound, :with => :error_rescue
@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
 
   # Find or instantiate the current site
   def get_site
-    logger.debug "FILTER **************** Called get_site Before_Filter ****************"
+    logger.debug log_format("FILTER", "Called get_site Before_Filter")
     @current_site ||= Site.get_subdomain(subdomain)
     return instantiate_site unless @current_site and @current_site.node
     # Set Site Name
@@ -33,7 +33,7 @@ class ApplicationController < ActionController::Base
 
   # Find or Instantiates the current @node
   def get_node
-    logger.debug "FILTER **************** Called get_node Before_Filter FILTER ****************"
+    logger.debug log_format("FILTER", "Called get_node Before_Filter")
     @node ||= @current_site.get_node_by_shortcut(params[:shortcut])
     #Check Node Validity
     return false unless check_node_validity
@@ -55,10 +55,12 @@ class ApplicationController < ActionController::Base
   
   # Renders our error pages, with passed in status and log message.  Returns false
   def render_error_status(status=500, log_msg = "")
-    logger.error "REQUEST **************** Rendering #{status}: #{log_msg}. Request URI: #{request.url} ****************"
+    logger.error log_format("REQUEST","Rendering #{status}: #{log_msg}. Request URI: #{request.url}")
     render :file => "#{Rails.root}/public/#{status}.html", :status => status, :layout => false
     return false
   end
+  
+  
 
   private
   

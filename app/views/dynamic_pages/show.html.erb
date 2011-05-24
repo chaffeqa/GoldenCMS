@@ -7,6 +7,7 @@
 
 <% content_for :page_admin_bar do %>
   <%= link_to('Preview Page', 'javascript:void(0)', :class => 'btn yellow large', :id => 'preview') %>
+  <%= link_to('Fresh Page', shortcut_path(@node.shortcut, :fresh => true), :class => 'btn large') %>
   <%= link_to('Page Settings',  edit_admin_dynamic_page_path(@dynamic_page), :class => 'btn large') %>
 <% end %>
 

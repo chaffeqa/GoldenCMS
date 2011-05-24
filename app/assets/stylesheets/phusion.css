@@ -6,7 +6,7 @@ li.not-displayed {display: none !important;}
 #adminBar {
     height: 30px;
     padding: 8px 0;
-    background: url(../images/adminBar-bg.png) repeat-x;
+    background: url(adminBar-bg.png) repeat-x;
     -moz-box-shadow: 0 1px 3px #999; -webkit-box-shadow: 0 1px 3px #999;
     border-bottom: 1px solid #777;
     font-family: Helvetica, arial, sans-serif;
@@ -19,7 +19,7 @@ li.not-displayed {display: none !important;}
 
 #admin-menu:hover { padding-bottom: 60px; margin-bottom: -60px;}
 #admin-menu a { display: block; padding: 4px 10px; color: #aaa; }
-#admin-menu li li a { border-right: none padding: 4px 8px; }
+#admin-menu li li a { border-right: none; padding: 4px 8px; }
 
 /* all list items */
 /* width needed or else Opera goes nuts */
@@ -63,7 +63,7 @@ li.not-displayed {display: none !important;}
 }
 
 /* second-and-more-level hovering */
-#admin-menu li li.expandable { background: url(../images/expandable-arrow.png) no-repeat 145px 7px; }
+#admin-menu li li.expandable { background: url(expandable-arrow.png) no-repeat 145px 7px; }
 #admin-menu li li:hover,
 #admin-menu li li.iehover {
   background-color: #111;
@@ -118,7 +118,7 @@ div.admin section:hover {margin: -37px -6px 29px; padding: 5px 5px 0; border: 1p
 div.admin section:hover span.controls {display: block;}
 div.admin:hover section,
 div.admin:hover span.controls {z-index: 999;}
-div.admin a.adminEdit {display: inline-block; text-indent: -9999px; width: 16px; height: 16px; background: url(../images/edit.png) no-repeat;}
+div.admin a.adminEdit {display: inline-block; text-indent: -9999px; width: 16px; height: 16px; background: url(edit.png) no-repeat;}
 
 
 section.admin {display: none;}
@@ -134,7 +134,7 @@ div.admin section.admin:hover {margin: -6px -6px -1px;}
 
 /*********** Button **********/
 .btn {
-    background: #222 url(../images/gradient.png) repeat-x;
+    background: #222 url(gradient.png) repeat-x;
     display: inline-block !important;
     position: relative;
     padding: 5px 10px 6px;

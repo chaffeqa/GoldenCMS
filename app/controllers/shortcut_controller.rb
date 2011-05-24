@@ -7,13 +7,21 @@ class ShortcutController < ApplicationController
   # Routing method for all shortcut_path routes, looks for a Node for the current
   # request and renders or redirects appropriatly
   def route
-    render_with_cache('node-page::'+request.fullpath+'::'+@node.cache_key) { render("#{@node.template_path}", :layout => @node.layout) }
+    if params[:fresh].present? or admin?
+      render("#{@node.template_path}", :layout => @node.layout)
+    else
+      render_with_cache('node-page::'+request.fullpath+'::'+@node.cache_key) { render("#{@node.template_path}", :layout => @node.layout) }
+    end
   end
 
   # Action for the root_path route.  Sets the current node (@node) = @home_node so
   # the current sites home page is displayed
-  def home
-    render_with_cache('node-page::'+request.fullpath+'::'+@node.cache_key) { render("#{@node.template_path}", :layout => @node.layout) }
+  def home    
+    if params[:fresh].present? or admin?
+      render("#{@node.template_path}", :layout => @node.layout)
+    else
+      render_with_cache('node-page::'+request.fullpath+'::'+@node.cache_key) { render("#{@node.template_path}", :layout => @node.layout) }
+    end
   end
 
   # Action for displaying an error.  Accepts both a :shortcut and :message param
@@ -22,11 +30,11 @@ class ShortcutController < ApplicationController
     @message = params[:message] || ''
     @shortcut = params[:shortcut] || ''
     unless @shortcut.blank? and @message.blank?
-      logger.error "REQUEST **************** Error Action Called - Status: #{status}, Shortcut: #{@shortcut}, Message: #{@message} **************** "
+      logger.error log_format("REQUEST","Error Action Called - Status: #{status}, Shortcut: #{@shortcut}, Message: #{@message}")
       @similar_nodes = Node.displayed.similar_shortcuts(@shortcut)
       render('error_page/error', :status => status)
     else
-      logger.error "REQUEST **************** Error Action Called - Status: #{status}, No Shortcut, no Message **************** "
+      logger.error log_format("REQUEST","Error Action Called - Status: #{status}, No Shortcut, no Message")
       render_error_status(status)
     end
   end

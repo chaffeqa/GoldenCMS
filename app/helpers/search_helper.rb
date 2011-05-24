@@ -29,7 +29,7 @@ module SearchHelper
   def pagination
     @per_page ||= (@search_params.select {|k,v| k =~ /^per_page/}.flatten.last || 10).to_i
     @page ||= (@search_params.select {|k,v| k =~ /^page/}.flatten.last || 1).to_i
-    logger.debug "CODE **************** @page: #{@page.inspect}, @per_page: #{@per_page.inspect}"
+    logger.debug log_format("CODE","page: #{@page.inspect}, @per_page: #{@per_page.inspect}")
   end
   
   # Retrieves the pagination "page" attribute for a given element (passed in as a prefix uniq identifyer)

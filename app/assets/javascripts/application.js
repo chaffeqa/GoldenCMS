@@ -3,6 +3,9 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require "ckeditor"
+//= provide "template"
+//= provide "addons/themes"
 //= require_tree .
 
 

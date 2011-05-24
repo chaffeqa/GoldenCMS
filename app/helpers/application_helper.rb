@@ -39,13 +39,13 @@ module ApplicationHelper
   def render_with_cache(key = request.fullpath, options = nil)
     body = Rails.cache.read(key)
     if body
-      logger.debug "CACHE **************** Read Cache key: #{key.to_s} ****************"
+      logger.debug log_format("CACHE","Read Cache key: #{key.to_s}")
       render :text => body
     else
       yield if block_given?
       render unless performed?
       Rails.cache.write(key, response.body, options)
-      logger.debug "CACHE **************** Write Cache key: #{key.to_s} ****************"
+      logger.debug log_format("CACHE","Write Cache key: #{key.to_s}")
     end
   end
    

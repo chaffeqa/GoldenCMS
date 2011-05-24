@@ -7,12 +7,12 @@
 
 /* this is for sites that have a designed background to keep it from pushing up under the adminbar */
 #body {
-        background: #e6e6e6 url(../template/water/page-bg.gif) top center repeat-y;
+        background: #e6e6e6 url(page-bg.gif) top center repeat-y;
         border-top: 50px solid #e6e6e6;
 }
         #bodyFade {
             padding-bottom: 51px;
-            background: url(../template/water/footer-fade-bottem.gif) bottom center no-repeat;
+            background: url(footer-fade-bottem.gif) bottom center no-repeat;
         }
                 /* PAGE CONTAINER */
                 #pageContainer {
@@ -65,7 +65,7 @@ header {
 
 /* NAVIGATION */
 nav#mainNav {
-    background: #2A2A2A url(../template/water/nav-bg.gif) 0 0 repeat-x;
+    background: #2A2A2A url(nav-bg.gif) 0 0 repeat-x;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     margin-bottom: 26px;
@@ -124,7 +124,7 @@ nav#mainNav {
 }
 
 #featuredArea {
-    background: #F3F3F3 url(../template/water/featured-area-bg.gif) 0 0 repeat-x;
+    background: #F3F3F3 url(featured-area-bg.gif) 0 0 repeat-x;
     border: 1px solid #cdcdcd;
     min-height: 70px;
     height: auto !important;
@@ -139,7 +139,7 @@ nav#mainNav {
         border-bottom: none;
         line-height: 1.7em;
     }
-	#featuredArea h1.browse-inventory { padding-left: 50px; background: url(../template/water/magnifying-glass.png) no-repeat;}
+	#featuredArea h1.browse-inventory { padding-left: 50px; background: url(magnifying-glass.png) no-repeat;}
     #featuredArea #featuredLeft {
         float: left;
         width: 375px;
@@ -186,7 +186,7 @@ nav#mainNav {
         min-height: 350px;
         height: auto !important;
         height: 350px;
-        background: url(../template/water/main-content-home-bg.gif) 0 0 no-repeat;
+        background: url(main-content-home-bg.gif) 0 0 no-repeat;
         padding: 10px 0 0 35px;
     }
     #homePage #mainColumn a {
@@ -211,7 +211,7 @@ nav#mainNav {
         min-height: 650px;
         height: auto !important;
         height: 650px;
-        background: url(../template/water/main-content-sec-bg.gif) 0 0 no-repeat;
+        background: url(main-content-sec-bg.gif) 0 0 no-repeat;
         padding: 10px 0 0 35px;
     }
         #secPage .oneColumn #mainColumn {
@@ -249,7 +249,7 @@ nav#mainNav {
         min-height: 650px;
         height: auto !important;
         height: 650px;
-        background: url(../template/water/main-content-sec-bg.gif) 0 0 no-repeat;
+        background: url(main-content-sec-bg.gif) 0 0 no-repeat;
     }
 
     /******** Side Navigation ********/
@@ -260,7 +260,7 @@ nav#mainNav {
     nav.side-nav-elem ul li a:before {content: "- ";}
     nav.side-nav-elem ul li a.selected { font-weight: bold;  color: #000; }
     nav.side-nav-elem ul ul li {}
-    nav.side-nav-elem ul ul li a {padding-left: .7em; background: url(../template/li-bullet-black.png) .2em .6em no-repeat;  font-size: .8em;}
+    nav.side-nav-elem ul ul li a {padding-left: .7em; background: url(li-bullet-black.png) .2em .6em no-repeat;  font-size: .8em;}
     nav.side-nav-elem ul ul li a:before {content: "";}
     nav.side-nav-elem ul ul ul li a {font-size: .8em; color: #827D3B; background: none;}
     nav.side-nav-elem ul ul ul li a:before {content: "- ";}
@@ -272,7 +272,7 @@ nav#mainNav {
 
 /* SITE FOOTER/NAVIGATION */
 footer {
-    background: url(../template/water/footer-bg.gif) top center no-repeat;
+    background: url(footer-bg.gif) top center no-repeat;
     clear: both;
 }
 

@@ -7,7 +7,7 @@ class DynamicPagesController < ApplicationController
 
   
   def new_element
-    if request.post?
+    if request.post? and params[:elem_controller].present?
       respond_to do |format|
         format.html { redirect_to(:controller => "admin/page_elems/#{params[:elem_controller]}", :action => 'new', :shortcut => params[:shortcut], :page_area => params[:page_area]) }
         format.js { redirect_to(:controller => "admin/page_elems/#{params[:elem_controller]}", :action => 'new', :shortcut => params[:shortcut], :page_area => params[:page_area], :format => :js) }

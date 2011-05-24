@@ -33,9 +33,8 @@ module SiteSpecificHelper
     end
     # Log any errors, and then add them to the passed in site
     unless errors.empty?
-      logger.error "DB **************** Build_Basic_Menu_Tree Errors: **************** "
-      errors.each {|err| site.errors.add(:base, err); logger.error "#{err}" }
-      logger.error "DB **************** END Build_Basic_Menu_Tree Errors **************** "
+      logger.error log_format("DB","Build_Basic_Menu_Tree Errors: " + 
+        errors.each {|err| site.errors.add(:base, err); logger.error "#{err}" })
     end
     # Return true if there were no errors
     return errors.empty?

@@ -4,7 +4,7 @@ gem 'rails',     :git => 'git://github.com/rails/rails.git'
 gem 'jquery-rails'
 # For Heroku...
 gem 'therubyracer-heroku', '0.8.1.pre3'
-gem 'ckeditor', '3.4.3.pre'
+gem 'ckeditor', '3.5.3'
 gem 'paperclip'
 gem 'simple-navigation'#, :git => 'git://github.com/andi/simple-navigation.git'
 gem 'devise'

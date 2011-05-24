@@ -8,10 +8,10 @@ module NavigationHelper
       key = flat ? "flat-tree::#{@current_site.cache_key}" : "tree::#{@current_site.cache_key}"
       cached = Rails.cache.read(key)
       if cached
-        logger.debug "CACHE **************** Read Cache key: #{key.to_s} ****************"
+        logger.debug log_format("CACHE","Read Cache key: #{key.to_s}")
         items = cached
       else
-        logger.debug "CACHE **************** Write Cache key: #{key.to_s} ****************"
+        logger.debug log_format("CACHE","Write Cache key: #{key.to_s}")
         items = (flat ? @current_site.flat_node_tree : @current_site.node_tree)
         Rails.cache.write(key, items) if cached.nil?
       end
