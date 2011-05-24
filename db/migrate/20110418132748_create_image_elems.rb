@@ -1,5 +1,5 @@
 class CreateImageElems < ActiveRecord::Migration
-  def self.up
+  def change
     create_table :image_elems do |t|
       t.string :image_file_name
       t.string :image_content_type
@@ -13,12 +13,6 @@ class CreateImageElems < ActiveRecord::Migration
     
     add_index :image_elems, :link_elem_id
     add_index :image_elems, :photo_gallery_elem_id
-  end
-
-  def self.down
-    remove_index :image_elems, :link_elems
-    remove_index :image_elems, :photo_gallery_elems
-    drop_table :image_elems
   end
 end
 

@@ -1,12 +1,11 @@
 class CreateDynamicPages < ActiveRecord::Migration
-  def self.up
+  def change
     create_table :dynamic_pages do |t|
-      t.string :template_name
+      t.belongs_to :node
+      t.integer :positions
       t.timestamps
     end
-  end
-
-  def self.down
-    drop_table :dynamic_pages
+    
+    add_index :dynamic_pages, :node_id
   end
 end

@@ -1,5 +1,5 @@
 class CreateItemListElems < ActiveRecord::Migration
-  def self.up
+  def change
     create_table :item_list_elems do |t|
       t.references :category
       t.integer :limit
@@ -10,10 +10,5 @@ class CreateItemListElems < ActiveRecord::Migration
     end
 
     add_index :item_list_elems, :category_id
-  end
-
-  def self.down
-    remove_index :item_list_elems, :category_id
-    drop_table :item_list_elems
   end
 end

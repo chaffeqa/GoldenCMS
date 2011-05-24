@@ -1,5 +1,5 @@
 class CreatePhotoGalleryElems < ActiveRecord::Migration
-  def self.up
+  def change
     create_table :photo_gallery_elems do |t|
       t.string :display_type
       t.integer :max_width
@@ -11,9 +11,5 @@ class CreatePhotoGalleryElems < ActiveRecord::Migration
 
       t.timestamps
     end
-  end
-
-  def self.down
-    drop_table :photo_gallery_elems
   end
 end

@@ -1,5 +1,5 @@
 class CreateCalendarElems < ActiveRecord::Migration
-  def self.up
+  def change
     create_table :calendar_elems do |t|
       t.string :display_style
       t.integer :max_events_shown
@@ -10,10 +10,5 @@ class CreateCalendarElems < ActiveRecord::Migration
     end
 
     add_index :calendar_elems, :calendar_id
-  end
-
-  def self.down
-    remove_index :calendar_elems, :calendar_id
-    drop_table :calendar_elems
   end
 end

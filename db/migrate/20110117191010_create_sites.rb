@@ -1,21 +1,16 @@
 class CreateSites < ActiveRecord::Migration
-  def self.up
+  def change
     create_table :sites do |t|
       t.string :subdomain
-      t.boolean :has_inventory, :default => false
-      t.belongs_to :node
       t.string :site_name
+      t.boolean :has_inventory, :default => false
+      t.text :config_params
+      t.text :header
+      t.text :footer
       t.timestamps
     end
 
     add_index :sites, :subdomain
-    add_index :sites, :node_id
-  end
-
-  def self.down
-    remove_index :sites, :subdomain
-    remove_index :sites, :node_id
-    drop_table :sites
   end
 end
 

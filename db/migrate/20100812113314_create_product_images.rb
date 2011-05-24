@@ -1,5 +1,5 @@
 class CreateProductImages < ActiveRecord::Migration
-  def self.up
+  def change
     create_table :product_images do |t|
       t.string :image_file_name
       t.string :image_content_type
@@ -11,10 +11,5 @@ class CreateProductImages < ActiveRecord::Migration
     end
 
     add_index :product_images, :item_id
-  end
-
-  def self.down
-    remove_index :product_images, :item_id
-    drop_table :product_images
   end
 end
