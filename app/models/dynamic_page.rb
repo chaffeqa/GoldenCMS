@@ -6,7 +6,7 @@ class DynamicPage < ActiveRecord::Base
   ###########
 
   # Associated Node attributes
-  belongs_to :node
+  belongs_to :node, :inverse_of => :dynamic_page
   has_many :elements
   
   
@@ -18,10 +18,11 @@ class DynamicPage < ActiveRecord::Base
   ###########
 
   #Validations
-  validates :template_name, :inclusion => { :in => TEMPLATES.values }
+  validates :template_name, :inclusion => { :in => TEMPLATES.values.collect {|hash| hash["template_name"] } }
+  validates :positions, :presence => true, :numericality => true
 
   #Callbacks
-  #before_save :update_node
+  before_validation :fill_attributes
   #after_save :update_cache_chain
   #before_destroy :update_cache_chain
   
@@ -41,8 +42,12 @@ class DynamicPage < ActiveRecord::Base
   end
 
   # updates the attributes for each node for this item
-  def update_node
-    node.layout = self.template_name
+  def fill_attributes
+    puts "called"
+    if self.node.present?
+      self.template_name = TEMPLATES[node.layout_name]["template_name"]
+      self.positions = TEMPLATES[node.layout_name]["positions"]
+    end
   end
   
   
@@ -52,13 +57,6 @@ class DynamicPage < ActiveRecord::Base
   # Helpers
   ###########
 
-  def self.template_name_select
-    [['<Default>',DEFAULT_TEMPLATE]] + TEMPLATES.keys.collect {|key| [key, TEMPLATES[key]] }
-  end
-
-  def underscore_template_name
-    template_name.gsub(/ /, '_').underscore
-  end  
 
 
 end

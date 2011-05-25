@@ -112,8 +112,9 @@ ActiveRecord::Schema.define(:version => 20110513151815) do
   add_index "ckeditor_assets", ["user_id"], :name => "fk_user"
 
   create_table "dynamic_pages", :force => true do |t|
-    t.integer  "node_id"
+    t.string   "template_name"
     t.integer  "positions"
+    t.integer  "node_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -241,7 +242,7 @@ ActiveRecord::Schema.define(:version => 20110513151815) do
     t.string   "menu_name"
     t.string   "shortcut"
     t.string   "displayed"
-    t.string   "layout"
+    t.string   "layout_name"
     t.string   "ancestry"
     t.integer  "ancestry_depth",    :default => 0
     t.string   "names_depth_cache"

@@ -6,17 +6,16 @@ class Node < ActiveRecord::Base
   ###########
   belongs_to :site
   belongs_to :site_scope, :class_name => 'Site'
+  has_ancestry :cache_depth => true, :orphan_strategy => :rootify  
+  has_many   :link_elems, :dependent => :destroy
   
   # Creates associations for each accepted node page type
-  NODE_PAGE_TYPES.each do |page_type|
+  NODE_PAGE_TYPES.keys.each do |page_type|
     has_one page_type.to_sym
     accepts_nested_attributes_for page_type.to_sym
     has_many page_type.pluralize.to_sym, :through => :children, :source => page_type.to_sym
   end
 
-  has_ancestry :cache_depth => true, :orphan_strategy => :rootify
-  
-  has_many   :link_elems, :dependent => :destroy
 
 
   ####################################################################
@@ -24,12 +23,12 @@ class Node < ActiveRecord::Base
   ###########
 
   #Validations
-  validates :shortcut, :presence => true
+  validates :shortcut, :presence => {:allow_blank => true}, :uniqueness => {:scope => :site_scope_id, :allow_blank => true}
   validates :title, :presence => true
   validates :menu_name, :presence => true
-  validates :layout, :inclusion => { :in => TEMPLATES.values }
+  validates :layout_name, :inclusion => { :in => TEMPLATES.keys }
   validate :shortcut_html_safe?
-  validate :check_unique_shortcut?
+  #validate :check_unique_shortcut?
   validate :reserved_node_violation?
 
   #Callbacks
@@ -63,7 +62,7 @@ class Node < ActiveRecord::Base
   # Sets this node's site_id to it's site's id
   def set_ancestry_path_and_site_scope
     self.names_depth_cache = path.map(&:menu_name).join('/')
-    self.site_scope_id = (root ? root.site.id : nil) 
+    self.site_scope_id = (root ? root.site.try(:id) : nil) 
   end
 
   # Ensures the fields for this node are all filled, and if not, attempts to fill them
@@ -71,7 +70,7 @@ class Node < ActiveRecord::Base
     self.title = menu_name || shortcut.try(:humanize) if title.blank?
     self.menu_name = title || shortcut.try(:humanize) if menu_name.blank?
     self.shortcut = parameterize(menu_name) || parameterize(title) if shortcut.blank?
-    self.layout = DEFAULT_TEMPLATE if self.layout.blank?
+    self.layout_name ||= set_layout_name
   end
 
   # Tests to see if the node changes violate the basic structural rules
@@ -82,13 +81,13 @@ class Node < ActiveRecord::Base
 
   # Tests to see if the node changes violate the reserved node rules
   def reserved_node_violation?
-    this_nodes_site = self.root ? self.root.site : nil
+    this_nodes_site = self.root.try(:site)
     # Validation if this is a reserved node being updated...
     if !self.new_record? and this_nodes_site.reserved_nodes.collect {|n| n.id}.include?(self.id) and !this_nodes_site.nil?
       errors.add(:base, "You cannot adjust reserved menu page shortcuts.  Reserved menu items include: #{this_nodes_site.reserved_shortcuts.join(', ')}") unless this_nodes_site.reserved_shortcuts.include?(self.shortcut)
     end
     # Validation if this Home node
-    errors.add(:parent_id, "This page must be the root of the menu hierarchy") if self.site and !parent_id.blank?
+    #errors.add(:parent_id, "This page must be the root of the menu hierarchy") if self.site and !parent_id.blank?
   end
 
   # Checks the database to ensure the Shortcut is not already taken
@@ -125,6 +124,13 @@ class Node < ActiveRecord::Base
   # Site specific methods
   ###########
 
+
+
+
+  ####################################################################
+  # Helpers
+  ###########
+
   # Returns the URL of this node.
   def url(params={})
     url_params = params == {} ? '' : "?"+params.collect {|key,val| "#{key.to_s}=#{val.to_s}"}.join('&')
@@ -139,18 +145,17 @@ class Node < ActiveRecord::Base
     str = page_type
     return ("page_templates/"+str.pluralize)
   end
-
-
-
-
-  ####################################################################
-  # Helpers
-  ###########
   
+  # Sets this node's layout to the default layout for this node's page_type.  
+  # If no page_type, uses the 'application' default layout
+  def set_layout_name
+    self.layout_name = page_type.nil? ? 'application' : NODE_PAGE_TYPES[page_type]["default_layout"]
+  end
   
+  # Return this node's page_type.  Returns nil if there is no assigned page_type
   def page_type
     association = nil
-    NODE_PAGE_TYPES.each {|assoc| association = assoc unless self.send(assoc).nil?}
+    NODE_PAGE_TYPES.keys.each {|assoc| association = assoc unless self.send(assoc).nil?}
     association
   end
 
@@ -200,15 +205,6 @@ class Node < ActiveRecord::Base
 
 
   private
-
-  # Finds or Creates a node with the given shortcut, adds it to the home_node
-  def self.find_or_create(shortcut='', display=true)
-    unless shortcut.nil?
-      return where(:shortcut => shortcut).first unless where(:shortcut => shortcut).empty?
-      return self.home.children.create(:menu_name => shortcut.gsub('_',' ').capitalize, :title => shortcut.gsub('_',' ').capitalize, :shortcut => shortcut, :displayed => display)
-    end
-    nil
-  end
 
   # Actual behind the scenes ordering of the Node tree
   def self.order_helper( json, parent_id = nil)

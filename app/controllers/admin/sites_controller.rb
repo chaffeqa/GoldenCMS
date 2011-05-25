@@ -10,19 +10,22 @@ class Admin::SitesController < ApplicationController
 
   def new
     @site = Site.new
+    @site.init_default_attributes
   end
 
   def create
     @site = Site.new(params[:site])
+    @site.build_home_page
+    @site.build_basic_menu_tree
     # Instantiate the site, root node, root page, and all base nodes for the site
-    if build_home_page(@site).save and @site.save and build_basic_menu_tree(@site) and @site.node.save # Hotfix to make the root node capture the site_id
+    if @site.save
       redirect_to root_url, :notice => 'Site successfully created!'
     else
       if @site.new_record?
         logger.warn "Error in site instantiation: @site = #{@site.inspect}"
         render :new
       else 
-        logger.warn "Error in site heirarchy creation: @site = #{@site.inspect}, @home_page = #{@home_page.inspect}"
+        logger.warn "Error in site heirarchy creation: @site = #{@site.inspect}, @home_page = #{@site.node.inspect}"
         render :edit
       end
     end

@@ -1,23 +1,32 @@
 # Load the rails application
 require File.expand_path('../application', __FILE__)
 
-SITE_NAME = {"" => "GoldenCMS"}
-SITE = "GoldenCMS"
-
-TEMPLATES = {"Home" => "home", "Inside" => "inside", "Full" => "full"}
-DEFAULT_TEMPLATE = 'inside'
-CALENDAR_TEMPLATE = 'full'
-
-RESERVED_SHORTCUTS = { 
-  :home => "home", 
-  :inventory => "inventory", 
-  :categories => "inventory", 
-  :blogs => "blogs", 
-  :calendars => "calendars", 
-  :items => "items"
+DEFAULT_CONFIG_PARAMS = { 
+  "home_shortcut" => "home", 
+  "inventory_shortcut" => "inventory", 
+  "categories_shortcut" => "inventory", 
+  "blogs_shortcut" => "blogs", 
+  "calendars_shortcut" => "calendars", 
+  "items_shortcut" => "items"
 }
 
-NODE_PAGE_TYPES = [ 'blog','calendar','category','dynamic_page','event','item_page','post' ]
+TEMPLATES = {
+  "home" => {"template_name" => "Home", "positions" => 5}, 
+  "inside" => {"template_name" => "Inside", "positions" => 2}, 
+  "full" => {"template_name" => "Inside (No Nav)", "positions" => 1},
+  "application" => {"template_name" => "Static"} # Static layout
+}
+HOME_PAGE_TEMPLATE = "home"
+
+NODE_PAGE_TYPES = { 
+  'dynamic_page' => {"default_layout" => "inside"},
+  'blog' => {"default_layout" => "inside"},
+  'calendar' => {"default_layout" => "full"},
+  'category' => {"default_layout" => "inside"},
+  'event' => {"default_layout" => "inside"},
+  'item_page' => {"default_layout" => "inside"},
+  'post' => {"default_layout" => "inside"}
+}
 
 LOG_CATEGORY = ['CODE','CACHE','DB','FILTER','PARAMS']
 

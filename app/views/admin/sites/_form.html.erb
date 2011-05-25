@@ -10,26 +10,47 @@
     </div>
   <% end %>
 
-<fieldset>
+  <% field_set_tag 'Site Configuration Params' do %>
+      <div class="field"><span class="hint"><a class="expander">Explain this</a></span>
+        <%= f.label :site_name, "Site Name", :class => "req" %>
+        <%= f.text_field :site_name, :class => 'halfw' %>
+        <span class="expanded-hint">TODO.</span>
+      </div>
+      
+      <div class="field"><span class="hint"><a class="expander">Explain this</a></span>
+        <%= f.label :subdomain, "Subdomain", :class => "req" %>
+        http://<%= f.text_field :subdomain, :class => 'thirdw' %>.<%= raw(request.domain) %>
+        <span class="expanded-hint">TODO.</span>
+      </div>
+      
+      <div class="field">
+        <%= f.label :has_inventory, raw("&nbsp;") %>
+        <%= f.check_box :has_inventory %> Has an Inventory?
+      </div>
+  <% end %>
+
+  <% field_set_tag 'Site Configuration Params' do %>
     <div class="field"><span class="hint"><a class="expander">Explain this</a></span>
-      <%= f.label :site_name, "Site Name", :class => "req" %>
-      <%= f.text_field :site_name, :class => 'halfw' %>
+      <%= f.label :config_params, "Configuration Params" %>
+      <%= f.text_area :config_params  %>
+      <span class="expanded-hint">TODO.</span>
+    </div>  
+  <% end %>
+
+  <% field_set_tag 'Site Header and Footer' do %>
+    <div class="field"><span class="hint"><a class="expander">Explain this</a></span>
+      <%= f.label :header, "Header" %>
+      <%= f.text_area :header  %>
       <span class="expanded-hint">TODO.</span>
     </div>
     
     <div class="field"><span class="hint"><a class="expander">Explain this</a></span>
-      <%= f.label :subdomain, "Subdomain", :class => "req" %>
-      http://<%= f.text_field :subdomain, :class => 'thirdw' %>.<%= raw(request.domain) %>
+      <%= f.label :footer, "Header" %>
+      <%= f.text_area :footer  %>
       <span class="expanded-hint">TODO.</span>
-    </div>
-    
-    <div class="field">
-      <%= f.label :has_inventory, raw("&nbsp;") %>
-      <%= f.check_box :has_inventory %> Has an Inventory?
-    </div>
+    </div>  
 
-  <%= render :partial => 'admin/submit', :locals => {:f => f, :type => 'Site'} %>
-</fieldset>
-
+    <%= render :partial => 'admin/submit', :locals => {:f => f, :type => 'Site'} %>
+  <% end %>
 <% end %>
 
