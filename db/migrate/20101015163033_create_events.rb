@@ -7,12 +7,11 @@ class CreateEvents < ActiveRecord::Migration
       t.datetime :end_at
       t.boolean :all_day, :default => false
       t.string :color
-      t.belongs_to :calendar      
+      t.belongs_to :node    
       t.timestamps
     end
 
-    add_index :events, :calendar_id
+    add_index :events, :node_id
     add_index :events, [:start_at, :end_at]
-    add_index :events, [:calendar_id, :start_at, :end_at]
   end
 end

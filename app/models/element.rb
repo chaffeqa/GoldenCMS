@@ -5,8 +5,11 @@ class Element < ActiveRecord::Base
   # Associations
   ###########
   belongs_to :dynamic_page
-  belongs_to :elem, :polymorphic => true
   acts_as_list :scope => 'dynamic_page_id = #{dynamic_page_id} AND page_area = #{page_area}'
+  
+  ELEM_TYPES.each do |human_name, elem_table|
+    has_one elem_table.signularize.to_sym
+  end
 
 
 
@@ -18,11 +21,11 @@ class Element < ActiveRecord::Base
   #Validations
   validates :title, :presence => true
   validates :page_area, :numericality => true
-  before_save :create_html_id
   
   #Callbacks
-  after_save :update_cache_chain
-  before_destroy :update_cache_chain
+  before_save :create_html_id
+  #after_save :update_cache_chain
+ # before_destroy :update_cache_chain
   
   # Global method to trigger caching updates for all objects that rely on this object's information
   # This will be called in one of two cases:

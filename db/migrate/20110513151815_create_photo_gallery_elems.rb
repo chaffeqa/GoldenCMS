@@ -8,8 +8,10 @@ class CreatePhotoGalleryElems < ActiveRecord::Migration
       t.string :effect_speed
       t.integer :interval_seconds
       t.boolean :resize
-
+      t.belongs_to :element
       t.timestamps
     end
+
+    add_index :photo_gallery_elems, :element_id
   end
 end

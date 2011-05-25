@@ -4,8 +4,7 @@ class ImageElem < ActiveRecord::Base
   ### ASSOCIATIONS
   ###############################
 
-  has_one :element, :as => :elem, :dependent => :destroy, :validate => true, :autosave => true
-  accepts_nested_attributes_for :element
+  belongs_to :element
 
   has_attached_file :image,
     :storage => :s3,

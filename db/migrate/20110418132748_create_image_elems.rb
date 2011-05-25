@@ -8,9 +8,11 @@ class CreateImageElems < ActiveRecord::Migration
       t.string :image_style
       t.belongs_to :link_elem
       t.belongs_to :photo_gallery_elem
+      t.belongs_to :element
       t.timestamps
     end
-    
+
+    add_index :image_elems, :element_id
     add_index :image_elems, :link_elem_id
     add_index :image_elems, :photo_gallery_elem_id
   end

@@ -4,12 +4,11 @@ class Calendar < ActiveRecord::Base
   ####################################################################
   # Associations
   ###########
-  has_many :events
   has_many :calendar_elems
 
   # Associated Node attributes
-  has_one :node, :as => :page, :dependent => :destroy
-  accepts_nested_attributes_for :node
+  belongs_to :node
+  has_many :events, :through => :node
 
 
   ####################################################################
@@ -17,9 +16,9 @@ class Calendar < ActiveRecord::Base
   ###########
 
   validates :title, :presence => true, :uniqueness => true
-  before_validation :update_node  
-  after_save :update_cache_chain
-  before_destroy :update_cache_chain
+  #before_validation :update_node  
+  #after_save :update_cache_chain
+  #before_destroy :update_cache_chain
   
   # Global method to trigger caching updates for all objects that rely on this object's information
   # This will be called in one of two cases:

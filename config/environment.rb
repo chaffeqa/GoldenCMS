@@ -17,6 +17,8 @@ RESERVED_SHORTCUTS = {
   :items => "items"
 }
 
+NODE_PAGE_TYPES = [ 'blog','calendar','category','dynamic_page','event','item_page','post' ]
+
 LOG_CATEGORY = ['CODE','CACHE','DB','FILTER','PARAMS']
 
 ELEM_TYPES = [

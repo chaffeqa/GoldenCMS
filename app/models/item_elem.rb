@@ -5,8 +5,7 @@ class ItemElem < ActiveRecord::Base
   # Associations
   ###########
   belongs_to :item
-  has_one :element, :as => :elem, :dependent => :destroy, :validate => true, :autosave => true
-  accepts_nested_attributes_for :element
+  belongs_to :element
 
   DISPLAY_TYPE = [
     "Thumbnail",
@@ -21,8 +20,7 @@ class ItemElem < ActiveRecord::Base
   ###########
 
   #Validations
-  validates_presence_of :item_id
-  validates_associated :item
+  validates :item_id, :presence => true
   validates :display_type, :inclusion => { :in => DISPLAY_TYPE }
   
   # Global method to trigger caching updates for all objects that rely on this object's information

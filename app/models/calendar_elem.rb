@@ -10,8 +10,7 @@ class CalendarElem < ActiveRecord::Base
   # Associations
   ###########
   belongs_to :calendar
-  has_one :element, :as => :elem, :dependent => :destroy, :validate => true, :autosave => true
-  accepts_nested_attributes_for :element
+  belongs_to :element
 
 
 

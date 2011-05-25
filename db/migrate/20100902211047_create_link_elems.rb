@@ -14,6 +14,7 @@ class CreateLinkElems < ActiveRecord::Migration
       t.datetime :link_file_updated_at
       t.belongs_to :node
       t.belongs_to :image
+      t.belongs_to :element
       t.timestamps
     end
 

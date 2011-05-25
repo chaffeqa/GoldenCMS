@@ -7,8 +7,9 @@ class Post < ActiveRecord::Base
   belongs_to :blog
 
   # Associated Node attributes
-  has_one :node, :as => :page, :dependent => :destroy, :autosave => true
-  accepts_nested_attributes_for :node
+  belongs_to :node
+  has_one :parent_node, :through => :node, :source => :parent
+  has_one :blog, :through => :parent_node, :source => :blog
 
 
 

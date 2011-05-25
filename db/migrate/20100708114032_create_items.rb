@@ -7,10 +7,12 @@ class CreateItems < ActiveRecord::Migration
       t.string :part_number
       t.string :short_description
       t.text :long_description
+      t.belongs_to :node
 
       t.timestamps
     end
 
+    add_index :items, :node_id
     add_index :items, :part_number
   end
 end

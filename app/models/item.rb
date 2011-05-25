@@ -9,12 +9,10 @@ class Item < ActiveRecord::Base
 
 
   # Associated Node attributes
-  has_many :item_elems, :dependent => :destroy
-  has_many :item_categories, :dependent => :destroy, :autosave => true, :inverse_of => :item
-  has_many :categories, :through => :item_categories
-  accepts_nested_attributes_for :item_categories, :allow_destroy => true, :reject_if => proc { |attr| attr['category_id'].blank?}
-  has_one :node, :as => :page, :dependent => :destroy, :autosave => true
-  accepts_nested_attributes_for :node
+  belongs_to :node
+  has_many :item_pages, :dependent => :destroy
+  has_many :categories, :through => :item_pages
+  accepts_nested_attributes_for :item_pages, :allow_destroy => true #, :reject_if => proc { |attr| attr['category_id'].blank?}
 
 
 
@@ -28,10 +26,10 @@ class Item < ActiveRecord::Base
   validates :cost, :presence => true, :numericality => true
 
   #Callbacks
-  before_validation :update_node
-  after_save        :update_cache_chain
-  after_save        :update_item_categories
-  before_destroy    :update_cache_chain
+  #before_validation :update_node
+  #after_save        :update_cache_chain
+  #after_save        :update_item_categories
+  #before_destroy    :update_cache_chain
   
   # Global method to trigger caching updates for all objects that rely on this object's information
   # This will be called in one of two cases:

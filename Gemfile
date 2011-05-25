@@ -8,9 +8,9 @@ gem 'ckeditor', '3.5.3'
 gem 'paperclip'
 gem 'simple-navigation'#, :git => 'git://github.com/andi/simple-navigation.git'
 gem 'devise'
-gem 'acts_as_tree', :git => 'git://github.com/erdah/acts_as_tree.git'
 gem 'carmen'
 gem 'mail'#, :git => 'https://github.com/mikel/mail.git'
+gem 'ancestry'
 gem 'aws-s3'
 gem 'dalli' # For memcache
 gem 'kaminari'
@@ -45,3 +45,6 @@ end
 group :production do
   gem 'pg'
 end
+
+#Removed Gems:
+#gem 'acts_as_tree', :git => 'git://github.com/erdah/acts_as_tree.git'

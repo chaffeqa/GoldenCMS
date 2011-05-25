@@ -4,10 +4,8 @@ class Site < ActiveRecord::Base
   # Associations
   ###########
 
-  belongs_to :node
-
-
-
+  has_one :node
+  has_many :nodes, :foreign_key => 'site_scoped_id'
 
 
 

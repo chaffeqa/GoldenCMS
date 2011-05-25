@@ -4,13 +4,12 @@ class Event < ActiveRecord::Base
   ####################################################################
   # Associations
   ###########
-  belongs_to :calendar, :touch => true
   has_event_calendar
 
   # Associated Node attributes
-  has_one :node, :as => :page, :dependent => :destroy
-  accepts_nested_attributes_for :node
-
+  belongs_to :node
+  has_one :parent_node, :through => :node, :source => :parent
+  has_one :calendar, :through => :parent_node
 
 
 
@@ -20,9 +19,9 @@ class Event < ActiveRecord::Base
 
   #Validations
   validates :name, :presence => true, :uniqueness => true
-  before_validation :update_node
-  after_save :update_cache_chain
-  before_destroy :update_cache_chain
+  #before_validation :update_node
+  #after_save :update_cache_chain
+  #before_destroy :update_cache_chain
   
   # Global method to trigger caching updates for all objects that rely on this object's information
   # This will be called in one of two cases:

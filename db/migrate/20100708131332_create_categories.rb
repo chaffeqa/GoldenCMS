@@ -8,8 +8,10 @@ class CreateCategories < ActiveRecord::Migration
       t.integer :image_file_size
       t.datetime :image_updated_at
       t.integer :item_count, :default => 0
+      t.belongs_to :node
       t.timestamps
     end
+    add_index :categories, :node_id
   end
 end
 

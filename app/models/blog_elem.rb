@@ -12,10 +12,9 @@ class BlogElem < ActiveRecord::Base
   ####################################################################
   # Associations
   ###########
-  has_one :element, :as => :elem, :dependent => :destroy, :validate => true, :autosave => true
+  belongs_to :element
   has_many :blog_elem_links, :dependent => :destroy
   has_many :blogs, :through => :blog_elem_links
-  accepts_nested_attributes_for :element
 
 
 

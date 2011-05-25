@@ -6,9 +6,11 @@ class CreateCalendarElems < ActiveRecord::Migration
       t.integer :max_days_in_past
       t.integer :max_days_in_future
       t.belongs_to :calendar
+      t.belongs_to :element
       t.timestamps
     end
 
+    add_index :calendar_elems, :element_id
     add_index :calendar_elems, :calendar_id
   end
 end

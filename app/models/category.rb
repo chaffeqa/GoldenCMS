@@ -3,15 +3,13 @@ class Category < ActiveRecord::Base
   ####################################################################
   # Associations
   ###########
-  has_many :item_categories, :dependent => :destroy
-  has_many :items, :through => :item_categories, :order => 'items.name'
-  has_many :sub_categories, :class_name => 'Category', :foreign_key => 'parent_category_id', :dependent => :nullify
   has_many :item_list_elems, :dependent => :destroy
-  belongs_to :parent_category, :class_name => 'Category'
 
   # Associated Node attributes
-  has_one :node, :as => :page, :dependent => :destroy, :autosave => true
-  accepts_nested_attributes_for :node
+  belongs_to :node
+  has_one :parent_node, :through => :node, :source => :parent, :class_name => 'Node'
+  has_one :parent_category, :class_name => 'Category', :through => :parent_node, :source => :category
+  has_many :items, :through => :node, :source => :item_pages, :class_name => 'ItemPage'
 
   has_attached_file :image,
     :storage => :s3,
@@ -33,9 +31,9 @@ class Category < ActiveRecord::Base
   ###########
 
   validates :title, :presence => true, :uniqueness => true
-  before_validation :update_node
-  after_save  :update_cache_chain
-  before_destroy :update_cache_chain
+  #before_validation :update_node
+  #after_save  :update_cache_chain
+  #before_destroy :update_cache_chain
   
   # Global method to trigger caching updates for all objects that rely on this object's information
   # This will be called in one of two cases:

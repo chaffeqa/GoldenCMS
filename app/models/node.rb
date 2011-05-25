@@ -4,14 +4,19 @@ class Node < ActiveRecord::Base
   ####################################################################
   # Associations
   ###########
-  belongs_to :page, :polymorphic => true
-  belongs_to :category, :class_name => 'Category', :foreign_key => "page_id"
-  belongs_to :item, :class_name => 'Item', :foreign_key => "page_id"
-  has_one    :site, :autosave => true
-  has_many   :link_elems, :dependent => :destroy
+  belongs_to :site
+  belongs_to :site_scope, :class_name => 'Site'
+  
+  # Creates associations for each accepted node page type
+  NODE_PAGE_TYPES.each do |page_type|
+    has_one page_type.to_sym
+    accepts_nested_attributes_for page_type.to_sym
+    has_many page_type.pluralize.to_sym, :through => :children, :source => page_type.to_sym
+  end
 
-  acts_as_tree :order => 'position'
-  acts_as_list :scope => :parent_id
+  has_ancestry :cache_depth => true, :orphan_strategy => :rootify
+  
+  has_many   :link_elems, :dependent => :destroy
 
 
   ####################################################################
@@ -25,15 +30,13 @@ class Node < ActiveRecord::Base
   validates :layout, :inclusion => { :in => TEMPLATES.values }
   validate :shortcut_html_safe?
   validate :check_unique_shortcut?
-  validate :hierarchy_structure_violation?
   validate :reserved_node_violation?
 
   #Callbacks
   before_validation :fill_missing_fields
-  # Sets this node's site_id to it's site's id
-  before_save { self.site_id = (self.root ? root.site.id : nil) }
-  after_save :update_cache_chain
-  before_destroy :update_cache_chain
+  before_save :set_ancestry_path_and_site_scope
+  #after_save :update_cache_chain
+  #before_destroy :update_cache_chain
   
   # Global method to trigger caching updates for all objects that rely on this object's information
   # This will be called in one of two cases:
@@ -55,18 +58,19 @@ class Node < ActiveRecord::Base
     end
     self.link_elems.each {|elem| elem.try(:update_cache_chain) }
   end
+  
+  # Saves the path of ancestor nodes to this node
+  # Sets this node's site_id to it's site's id
+  def set_ancestry_path_and_site_scope
+    self.names_depth_cache = path.map(&:menu_name).join('/')
+    self.site_scope_id = (root ? root.site.id : nil) 
+  end
 
   # Ensures the fields for this node are all filled, and if not, attempts to fill them
   def fill_missing_fields
-    unless self.title.blank?
-      self.menu_name = self.title if self.menu_name.blank?
-      self.shortcut = parameterize(self.title) if self.shortcut.nil?
-    else
-      unless self.menu_name.blank?
-        self.title = self.menu_name if self.title.blank?
-        self.shortcut = parameterize(self.menu_name) if self.shortcut.nil?
-      end
-    end
+    self.title = menu_name || shortcut.try(:humanize) if title.blank?
+    self.menu_name = title || shortcut.try(:humanize) if menu_name.blank?
+    self.shortcut = parameterize(menu_name) || parameterize(title) if shortcut.blank?
     self.layout = DEFAULT_TEMPLATE if self.layout.blank?
   end
 
@@ -89,11 +93,11 @@ class Node < ActiveRecord::Base
 
   # Checks the database to ensure the Shortcut is not already taken
   def check_unique_shortcut?
-    if (not new_record? and Node.where('nodes.shortcut = ? AND nodes.id != ?', shortcut, id).exists?) or (new_record? and Node.exists?(:shortcut => shortcut))
+    if (not new_record? and Node.where('nodes.shortcut = ? AND nodes.id != ?', shortcut, id).exists?) or (new_record? and Node.where(:shortcut => shortcut).exists?)
       logger.warn "DB ********** Node Shortcut collision: (Title: #{title}, ID: #{id} URL: #{shortcut}), new_record: #{new_record?} ********** "
-      addition = Node.where('shortcut LIKE ?', shortcut).count
-      suggested = self.shortcut + "_" + addition.to_s
-      errors.add(:shortcut, "URL shortcut already exists in this site.  Suggested Shortcut: '#{suggested}'")
+      addition = Node.where(:shortcut => shortcut).count
+      suggested_shortcut = addition.to_s  + "-" + shortcut
+      errors.add(:shortcut, "URL shortcut already exists in this site.  We suggest you use this shorcut instead: '#{suggested_shortcut}'")
     end
   end
 
@@ -110,11 +114,6 @@ class Node < ActiveRecord::Base
   ###########
 
   scope :displayed, where(:displayed => true)
-  scope :dynamic_pages, where(:page_type => 'DynamicPage')
-  scope :categories, where(:page_type => 'Category')
-  scope :calendars, where(:page_type => 'Calendar')
-  scope :items, where("nodes.page_type = 'Item' OR nodes.page_type = 'ItemCategory' ")
-  scope :no_items, where("nodes.page_type != 'Item' OR nodes.page_type != 'ItemCategory' OR nodes.page_type IS NULL")
   scope :similar_shortcuts, lambda {|sc| where('UPPER(nodes.shortcut) LIKE UPPER(?)', "%"+sc+"%") unless sc.blank?}
   
 
@@ -129,20 +128,7 @@ class Node < ActiveRecord::Base
   # Returns the URL of this node.
   def url(params={})
     url_params = params == {} ? '' : "?"+params.collect {|key,val| "#{key.to_s}=#{val.to_s}"}.join('&')
-    if page
-      return page.send(:better_url) + url_params
-    else
-      if !controller.blank? and !action.blank?
-        if page_id.blank?
-          return "/#{self.controller}/#{self.action}" + url_params
-        else
-          return "/#{self.controller}/#{self.action}/#{self.page_id}" + url_params
-        end
-      end
-    end
-    return "/#{self.shortcut}" + url_params
-  rescue
-    return "/#{self.shortcut}" + url_params
+    return "/#{shortcut}" + url_params
   end
 
   
@@ -150,8 +136,8 @@ class Node < ActiveRecord::Base
   # Returns the correct string for the route to call 'render' on
   # Ex. node.page = 'Blog' --> node.page_template = 'blogs/show'
   def template_path
-    str = (self.page_type == 'ItemCategory' ? 'Item' : self.page_type)
-    return (str.tableize.pluralize + "/show")
+    str = page_type
+    return ("page_templates/"+str.pluralize)
   end
 
 
@@ -160,10 +146,12 @@ class Node < ActiveRecord::Base
   ####################################################################
   # Helpers
   ###########
-
-  # Returns true if this node has a valid page
-  def has_page?
-    !page_type.blank? and !page.nil?
+  
+  
+  def page_type
+    association = nil
+    NODE_PAGE_TYPES.each {|assoc| association = assoc unless self.send(assoc).nil?}
+    association
   end
 
   # Sets this node's shortcut to the desired shortcut or closest related shortcut that will be unique in the database.  If a conflict
@@ -242,6 +230,7 @@ class Node < ActiveRecord::Base
 
   # Replaces special characters in a string so that it may be used as part of a ‘pretty’ URL.
   def parameterize(parameterized_string, sep = '-')
+    return parameterized_string if parameterized_string.blank?
     # Turn unwanted chars into the separator
     parameterized_string.gsub!(/[^a-zA-Z0-9\-_]+/, sep)
     unless sep.nil? || sep.empty?
@@ -251,7 +240,7 @@ class Node < ActiveRecord::Base
       # Remove leading/trailing separator.
       parameterized_string.gsub!(/^#{re_sep}|#{re_sep}$/, '')
     end
-    parameterized_string.downcase
+    parameterized_string
   end
 
 

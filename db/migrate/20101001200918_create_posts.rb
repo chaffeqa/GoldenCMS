@@ -4,11 +4,9 @@ class CreatePosts < ActiveRecord::Migration
       t.string :title
       t.text :body
       t.datetime :post_date
-      t.belongs_to :blog
+      t.belongs_to :node
       t.timestamps
     end
-
-    add_index :posts, :blog_id
-    add_index :posts, [:blog_id, :post_date]
+    add_index :posts, :node_id
   end
 end
