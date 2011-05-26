@@ -4,8 +4,8 @@ class Element < ActiveRecord::Base
   ####################################################################
   # Associations
   ###########
-  belongs_to :dynamic_page
-  acts_as_list :scope => 'dynamic_page_id = #{dynamic_page_id} AND page_area = #{page_area}'
+  belongs_to :node
+  acts_as_list :scope => 'node_id = #{dynamic_page_id} AND page_area = #{page_area}'
   
   ELEM_TYPES.each do |human_name, elem_table|
     has_one elem_table.signularize.to_sym

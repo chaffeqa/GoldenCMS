@@ -10,6 +10,7 @@ class CreateNodes < ActiveRecord::Migration
       t.string :ancestry
       t.integer :ancestry_depth, :default => 0
       t.string :names_depth_cache # Optional for easier select box implementation
+      t.integer :positions, :default => 0
       t.belongs_to :site_scope
       t.belongs_to :site
       t.timestamps

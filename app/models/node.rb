@@ -8,6 +8,7 @@ class Node < ActiveRecord::Base
   belongs_to :site_scope, :class_name => 'Site'
   has_ancestry :cache_depth => true, :orphan_strategy => :rootify  
   has_many   :link_elems, :dependent => :destroy
+  has_many :elements
   
   # Creates associations for each accepted node page type
   NODE_PAGE_TYPES.keys.each do |page_type|
@@ -26,10 +27,11 @@ class Node < ActiveRecord::Base
   validates :shortcut, :presence => {:allow_blank => true}, :uniqueness => {:scope => :site_scope_id, :allow_blank => true}
   validates :title, :presence => true
   validates :menu_name, :presence => true
-  validates :layout_name, :inclusion => { :in => TEMPLATES.keys }
+  validates :layout_name, :inclusion => { :in => TEMPLATES.keys }  
+  validates :positions, :presence => true, :numericality => true
   validate :shortcut_html_safe?
+  validate :reserved_node_violation?, :on => :update
   #validate :check_unique_shortcut?
-  validate :reserved_node_violation?
 
   #Callbacks
   before_validation :fill_missing_fields
@@ -57,21 +59,6 @@ class Node < ActiveRecord::Base
     end
     self.link_elems.each {|elem| elem.try(:update_cache_chain) }
   end
-  
-  # Saves the path of ancestor nodes to this node
-  # Sets this node's site_id to it's site's id
-  def set_ancestry_path_and_site_scope
-    self.names_depth_cache = path.map(&:menu_name).join('/')
-    self.site_scope_id = (root ? root.site.try(:id) : nil) 
-  end
-
-  # Ensures the fields for this node are all filled, and if not, attempts to fill them
-  def fill_missing_fields
-    self.title = menu_name || shortcut.try(:humanize) if title.blank?
-    self.menu_name = title || shortcut.try(:humanize) if menu_name.blank?
-    self.shortcut = parameterize(menu_name) || parameterize(title) if shortcut.blank?
-    self.layout_name ||= set_layout_name
-  end
 
   # Tests to see if the node changes violate the basic structural rules
   def hierarchy_structure_violation?
@@ -83,7 +70,7 @@ class Node < ActiveRecord::Base
   def reserved_node_violation?
     this_nodes_site = self.root.try(:site)
     # Validation if this is a reserved node being updated...
-    if !self.new_record? and this_nodes_site.reserved_nodes.collect {|n| n.id}.include?(self.id) and !this_nodes_site.nil?
+    if this_nodes_site and this_nodes_site.reserved_nodes.collect {|n| n.id}.include?(self.id)
       errors.add(:base, "You cannot adjust reserved menu page shortcuts.  Reserved menu items include: #{this_nodes_site.reserved_shortcuts.join(', ')}") unless this_nodes_site.reserved_shortcuts.include?(self.shortcut)
     end
     # Validation if this Home node
@@ -120,11 +107,6 @@ class Node < ActiveRecord::Base
 
 
 
-  ####################################################################
-  # Site specific methods
-  ###########
-
-
 
 
   ####################################################################
@@ -144,12 +126,6 @@ class Node < ActiveRecord::Base
   def template_path
     str = page_type
     return ("page_templates/"+str.pluralize)
-  end
-  
-  # Sets this node's layout to the default layout for this node's page_type.  
-  # If no page_type, uses the 'application' default layout
-  def set_layout_name
-    self.layout_name = page_type.nil? ? 'application' : NODE_PAGE_TYPES[page_type]["default_layout"]
   end
   
   # Return this node's page_type.  Returns nil if there is no assigned page_type
@@ -204,7 +180,35 @@ class Node < ActiveRecord::Base
 
 
 
-  private
+
+  private 
+  
+  
+  # Saves the path of ancestor nodes to this node
+  # Sets this node's site_id to it's site's id
+  def set_ancestry_path_and_site_scope
+    self.class.unscoped do
+      self.names_depth_cache = path.map(&:menu_name).join('/')
+      self.site_scope_id = (root ? root.site.try(:id) : nil) 
+    end
+  end  
+
+  # Ensures the fields for this node are all filled, and if not, attempts to fill them
+  def fill_missing_fields
+    self.title = menu_name || shortcut.try(:humanize) if title.blank?
+    self.menu_name = title || shortcut.try(:humanize) if menu_name.blank?
+    self.shortcut = parameterize(menu_name) || parameterize(title) if shortcut.blank?
+    self.layout_name ||= set_layout_name
+    self.positions = TEMPLATES[layout_name]["positions"]
+  end  
+  
+  # Sets this node's layout to the default layout for this node's page_type.  
+  # If no page_type, sets it to the DEFAULT_TEMPLATE layout
+  def set_layout_name
+    self.layout_name = page_type.nil? ? DEFAULT_TEMPLATE : NODE_PAGE_TYPES[page_type]["default_layout"]
+  end
+  
+  
 
   # Actual behind the scenes ordering of the Node tree
   def self.order_helper( json, parent_id = nil)

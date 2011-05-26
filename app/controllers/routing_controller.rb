@@ -1,4 +1,4 @@
-class ShortcutController < ApplicationController
+class RoutingController < ApplicationController
   before_filter :home_page, :only => :home
   before_filter :get_node, :except => :error
   before_filter :check_route, :except => :error
@@ -6,17 +6,7 @@ class ShortcutController < ApplicationController
 
   # Routing method for all shortcut_path routes, looks for a Node for the current
   # request and renders or redirects appropriatly
-  def route
-    if params[:fresh].present? or admin?
-      render("#{@node.template_path}", :layout => @node.layout)
-    else
-      render_with_cache('node-page::'+request.fullpath+'::'+@node.cache_key) { render("#{@node.template_path}", :layout => @node.layout) }
-    end
-  end
-
-  # Action for the root_path route.  Sets the current node (@node) = @home_node so
-  # the current sites home page is displayed
-  def home    
+  def by_shortcut
     if params[:fresh].present? or admin?
       render("#{@node.template_path}", :layout => @node.layout)
     else

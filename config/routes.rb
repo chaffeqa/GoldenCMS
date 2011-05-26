@@ -56,21 +56,15 @@ GoldenCMS::Application.routes.draw do
   end
 
 
-
+  # TODO fix these routes to be made from the Node template_path
   match 'inventory' => 'inventory#inventory', :as => :inventory
   get 'inventory/search', :as => :inventory_search
   match 'items' => 'inventory#search' # Since we don't want to allow /items to call item#show
-  match "error" => 'shortcut#error', :as => :error
-  match ':shortcut(/:year(/:month))' => 'shortcut#route', :as => :calendar, :constraints => {:year => /\d{4}/, :month => /\d{1,2}/}
-  match ':shortcut/:page_area/new_element' => 'dynamic_pages#new_element', :as => :new_element
-  match ':shortcut(.:format)' => 'shortcut#route', :as => :shortcut, :constraints => { :shortcut => /[a-zA-Z0-9\-_]+/}, :formats => [:html, :js]
+  match "error" => 'routing#error', :as => :error
+  
+  match ':shortcut(/:year(/:month))' => 'routing#by_shortcut', :as => :calendar, :constraints => {:year => /\d{4}/, :month => /\d{1,2}/}
+  match ':shortcut/:page_area/new_element' => 'elements#new_element', :as => :new_element
+  match ':shortcut' => 'routing#by_shortcut', :as => :shortcut, :constraints => { :shortcut => /[a-zA-Z0-9\-_]+/}, :formats => [:html, :js]
 
-  #constraints(Subdomain) do
-  #  match '/' => 'shortcut#home' # TODO change back to sites#show
-  #end
-
-  #  match '/admin/:controller/:action(/:id)'
-  #  match '/:controller/:action(/:id)'
-
-  root :to => 'shortcut#home'
+  root :to => 'routing#by_shortcut'
 end

@@ -8,7 +8,7 @@ class Site < ActiveRecord::Base
   ###########
 
   has_one :node
-  has_many :nodes, :foreign_key => 'site_scoped_id'
+  has_many :nodes, :foreign_key => 'site_scope_id'
 
 
 
@@ -71,13 +71,22 @@ class Site < ActiveRecord::Base
   end
 
   # Returns the site
-  def self.get_subdomain(subdomain="")
+  def self.get_subdomain(subdomain)
     where(:subdomain => subdomain).try(:first)
   end
   
-  # Get this site's node by the passed in shortcut
-  def get_node_by_shortcut(shortcut="")
+  # Get this site's node by the passed in shortcut. 
+  # NOTE returns the root node if the shorcut is '' (to make site root requests work)
+  def get_node_by_shortcut(shortcut)
+    return node if shortcut == ''
     nodes.where(:shortcut => shortcut).try(:first)
+  end
+  
+  # Attempts to create the basic site tree hierarchy
+  def initialize_site_tree
+    self.errors[:base] << 'Site Tree root already initialized!' if node
+    return (create_home_node and create_basic_menu_tree) if errors.empty?
+    return false
   end
   
   
@@ -103,32 +112,32 @@ class Site < ActiveRecord::Base
   
   # Returns this site's Blog shortcut
   def blogs_shortcut
-    config_params["blogs_shortcut"]
+    (config_params||DEFAULT_CONFIG_PARAMS)["blogs_shortcut"]
   end
 
   # Returns this site's Calendar shortcut
   def calendars_shortcut
-    config_params["calendars_shortcut"]
+    (config_params||DEFAULT_CONFIG_PARAMS)["calendars_shortcut"]
   end
 
   # Returns this site's Inventory shortcut
   def inventory_shortcut
-    config_params["inventory_shortcut"]
+    (config_params||DEFAULT_CONFIG_PARAMS)["inventory_shortcut"]
   end
 
   # Returns this site's Categories shortcut
   def categories_shortcut
-    config_params["categories_shortcut"]
+    (config_params||DEFAULT_CONFIG_PARAMS)["categories_shortcut"]
   end
 
   # Returns this site's Items shortcut
   def items_shortcut
-    config_params["items_shortcut"]
+    (config_params||DEFAULT_CONFIG_PARAMS)["items_shortcut"]
   end
 
   # Returns this site's Root node shortcut
   def home_shortcut
-    config_params["home_shortcut"]
+    (config_params||DEFAULT_CONFIG_PARAMS)["home_shortcut"]
   end
   
   # True if this site should have a separate categories node
@@ -139,13 +148,7 @@ class Site < ActiveRecord::Base
   # True if this site should have a separate items node
   def create_items_node?
     items_shortcut != inventory_shortcut
-  end
-  
-  
-  ####################################################################
-  # Site Building Methods
-  ###########  
-  
+  end  
   
   # Set the config_params to the Application defaults...
   def init_default_attributes
@@ -153,43 +156,70 @@ class Site < ActiveRecord::Base
     self.has_inventory = true
   end
   
-  # Build the Home page for the passed in site
-  def build_home_page
-    home_node = self.build_node(
+  
+  
+  
+  
+  private
+  
+  ####################################################################
+  # Site Building Methods
+  ###########  
+  
+  # Build the Home node for the passed in site
+  def create_home_node
+    home_node = self.create_node(
           :title => home_shortcut.humanize, 
           :menu_name => home_shortcut.humanize,
           :shortcut => home_shortcut,
           :layout_name => HOME_PAGE_TEMPLATE,
-          :displayed => true
+          :displayed => true,
+          :positions => TEMPLATES[HOME_PAGE_TEMPLATE]["positions"]
     )
-    home_page = DynamicPage.new
-    home_page.node = home_node
-    home_page
+    self.errors[:base] << home_node.errors.full_messages  
+    # Log any errors
+    unless errors.empty?
+      logger.error "*********** site.create_home_node Errors: *************"
+      errors.full_messages.each {|err| logger.error "#{err}" }
+      logger.error "********* End site.create_home_node Errors: ***********"
+    end
+    return errors.empty?
   end
   
   # Build the basic menu tree.  Should be called after the Site and Root node are created
-  def build_basic_menu_tree
+  def create_basic_menu_tree
     # Instantiate the blogs and calendars nodes
-    self.node.children.build(:menu_name => blogs_shortcut.humanize, :title => blogs_shortcut.humanize, :shortcut => blogs_shortcut, :displayed => false)
-    self.node.children.build(:menu_name => calendars_shortcut.humanize, :title => calendars_shortcut.humanize, :shortcut => calendars_shortcut, :displayed => false)
+    self.errors[:base] << self.node.children.create(
+      :menu_name => blogs_shortcut.humanize, :title => blogs_shortcut.humanize, :shortcut => blogs_shortcut, :displayed => false
+    ).errors.full_messages
+    self.errors[:base] << self.node.children.create(
+      :menu_name => calendars_shortcut.humanize, :title => calendars_shortcut.humanize, :shortcut => calendars_shortcut, :displayed => false
+    ).errors.full_messages
     # Instantiate the inventory structure if this site has an inventory
     if has_inventory
-      inventory_node = self.node.children.build(:menu_name => inventory_shortcut.humanize, :title => inventory_shortcut.humanize, :shortcut => inventory_shortcut, :displayed => true)
-      if inventory_node.valid?
-        # Instantiate the items node if this site has an a specific node for Items
-        inventory_node.children.build(:menu_name => items_shortcut.humanize, :title => items_shortcut.humanize, :shortcut => items_shortcut, :displayed => true)
-        # Instantiate the categories node if this site has an a specific node for Categories
-        inventory_node.children.build(:menu_name => categories_shortcut.humanize, :title => categories_shortcut.humanize, :shortcut => categories_shortcut, :displayed => true)
-      end
+      self.errors[:base] << self.node.children.create(
+        :menu_name => inventory_shortcut.humanize, :title => inventory_shortcut.humanize, :shortcut => inventory_shortcut, :displayed => true
+      ).errors.full_messages
+      # Instantiate the items node if this site has an a specific node for Items
+      self.errors[:base] << self.node.children.create(
+        :menu_name => items_shortcut.humanize, :title => items_shortcut.humanize, :shortcut => items_shortcut, :displayed => false
+      ).errors.full_messages if create_items_node?
+      # Instantiate the categories node if this site has an a specific node for Categories
+      self.errors[:base] << self.node.children.create(
+        :menu_name => categories_shortcut.humanize, :title => categories_shortcut.humanize, :shortcut => categories_shortcut, :displayed => false
+      ).errors.full_messages if create_categories_node?
     end
-    # Log any errors, and then add them to the passed in site
+    # Log any errors
     unless errors.empty?
-      logger.error "Build_Basic_Menu_Tree Errors:"
+      logger.error "*********** site.create_basic_menu_tree Errors: *************"
       errors.full_messages.each {|err| logger.error "#{err}" }
+      logger.error "********* End site.create_basic_menu_tree Errors: ***********"
     end
     # Return true if there were no errors
     return errors.empty?
   end
+  
+  
   
 
 end

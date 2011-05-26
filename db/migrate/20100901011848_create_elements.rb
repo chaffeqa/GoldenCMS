@@ -6,11 +6,11 @@ class CreateElements < ActiveRecord::Migration
       t.string :title
       t.boolean :display_title, :default => true
       t.string :html_id
-      t.belongs_to :dynamic_page
+      t.belongs_to :node
       t.timestamps
     end
 
-    add_index :elements, :dynamic_page_id
-    add_index :elements, [:dynamic_page_id, :page_area, :position]
+    add_index :elements, :node_id
+    add_index :elements, [:node_id, :page_area, :position]
   end
 end

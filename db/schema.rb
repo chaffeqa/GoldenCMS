@@ -111,29 +111,19 @@ ActiveRecord::Schema.define(:version => 20110513151815) do
   add_index "ckeditor_assets", ["assetable_type", "type", "assetable_id"], :name => "idx_assetable_type"
   add_index "ckeditor_assets", ["user_id"], :name => "fk_user"
 
-  create_table "dynamic_pages", :force => true do |t|
-    t.string   "template_name"
-    t.integer  "positions"
+  create_table "elements", :force => true do |t|
+    t.integer  "position"
+    t.integer  "page_area"
+    t.string   "title"
+    t.boolean  "display_title", :default => true
+    t.string   "html_id"
     t.integer  "node_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "dynamic_pages", ["node_id"], :name => "index_dynamic_pages_on_node_id"
-
-  create_table "elements", :force => true do |t|
-    t.integer  "position"
-    t.integer  "page_area"
-    t.string   "title"
-    t.boolean  "display_title",   :default => true
-    t.string   "html_id"
-    t.integer  "dynamic_page_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "elements", ["dynamic_page_id", "page_area", "position"], :name => "index_elements_on_dynamic_page_id_and_page_area_and_position"
-  add_index "elements", ["dynamic_page_id"], :name => "index_elements_on_dynamic_page_id"
+  add_index "elements", ["node_id", "page_area", "position"], :name => "index_elements_on_node_id_and_page_area_and_position"
+  add_index "elements", ["node_id"], :name => "index_elements_on_node_id"
 
   create_table "events", :force => true do |t|
     t.string   "name"
@@ -246,6 +236,7 @@ ActiveRecord::Schema.define(:version => 20110513151815) do
     t.string   "ancestry"
     t.integer  "ancestry_depth",    :default => 0
     t.string   "names_depth_cache"
+    t.integer  "positions",         :default => 0
     t.integer  "site_scope_id"
     t.integer  "site_id"
     t.datetime "created_at"

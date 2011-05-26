@@ -26,18 +26,15 @@ class ApplicationController < ActionController::Base
     logger.debug log_format("FILTER", "Called get_site Before_Filter")
     @current_site ||= Site.get_subdomain(subdomain)
     return instantiate_site unless @current_site and @current_site.node
-    # Set Site Name
     set_site_name(@current_site.site_name)
     return true
   end
 
-  # Find or Instantiates the current @node
+  # Find or Instantiates the current @node.  Check the node for validity.
   def get_node
     logger.debug log_format("FILTER", "Called get_node Before_Filter")
     @node ||= @current_site.get_node_by_shortcut(params[:shortcut])
-    #Check Node Validity
-    return false unless check_node_validity
-    # Set Page Title
+    return false unless node_valid? and request_valid?
     set_page_title(@node.title)
     return true
   end
@@ -94,16 +91,21 @@ class ApplicationController < ActionController::Base
   ##########################
 
   # Checks the validity of the current node as well as the basic access rights
-  def check_node_validity
-    # Invalid request format TODO refactor this to allow whitelist of formats
-    return render_error_status(404, "Invalid Shortcut Request Format: '#{request.format}'") if request.format.blank?
+  def node_valid?
     # Node isn't valid
     return render_error_status(404, "No Node Found") if @node.nil?
-    @shortcut ||= @node.shortcut
     # Page not displayed and not admin
     return render_error_status(404, "Shortcut: '#{@node.shortcut}' not publicly displayed") if not @node.displayed and not admin?
     return true
   end
+  
+  # Checks the validity of the current node as well as the basic access rights
+  def request_valid?
+    # Invalid request format TODO refactor this to allow whitelist of formats
+    return render_error_status(404, "Invalid Shortcut Request Format: '#{request.format}'") if request.format.blank?
+    return true
+  end
+    
 
   # Helper for redirects if there is an error.
   def error_redirect(message="", status=500, shortcut="")

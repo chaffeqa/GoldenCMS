@@ -11,15 +11,15 @@ DEFAULT_CONFIG_PARAMS = {
 }
 
 TEMPLATES = {
-  "home" => {"template_name" => "Home", "positions" => 5}, 
-  "inside" => {"template_name" => "Inside", "positions" => 2}, 
-  "full" => {"template_name" => "Inside (No Nav)", "positions" => 1},
-  "application" => {"template_name" => "Static"} # Static layout
+  "home" => {"human_name" => "Home", "positions" => 5}, 
+  "inside" => {"human_name" => "Inside", "positions" => 2}, 
+  "full" => {"human_name" => "Inside (No Nav)", "positions" => 1},
+  "application" => {"human_name" => "Static"} # Static layout
 }
 HOME_PAGE_TEMPLATE = "home"
+DEFAULT_TEMPLATE = "inside"
 
 NODE_PAGE_TYPES = { 
-  'dynamic_page' => {"default_layout" => "inside"},
   'blog' => {"default_layout" => "inside"},
   'calendar' => {"default_layout" => "full"},
   'category' => {"default_layout" => "inside"},

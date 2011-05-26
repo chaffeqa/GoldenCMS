@@ -17,6 +17,18 @@ class ElementsController < ApplicationController
     @element = Element.find(params[:id])
     @element.move_lower
     redirect_to( shortcut_path(@node.shortcut), :notice => 'Element successfully Moved')
+  end  
+  
+  def new_element
+    if request.post? and params[:elem_controller].present?
+      respond_to do |format|
+        format.html { redirect_to(:controller => "admin/page_elems/#{params[:elem_controller]}", :action => 'new', :shortcut => params[:shortcut], :page_area => params[:page_area]) }
+        format.js { redirect_to(:controller => "admin/page_elems/#{params[:elem_controller]}", :action => 'new', :shortcut => params[:shortcut], :page_area => params[:page_area], :format => :js) }
+      end
+    else
+      flash[:alert] = "Error in building a new element."
+      redirect_to(:back)
+    end 
   end
 
 
@@ -24,7 +36,7 @@ class ElementsController < ApplicationController
   def get_node
     if params[:id]
       @current_element = Element.find(params[:id])
-      @node = @current_element.dynamic_page.node
+      @node = @current_element.node
     end
     super
   end
