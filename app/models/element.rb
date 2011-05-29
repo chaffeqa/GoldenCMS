@@ -5,7 +5,7 @@ class Element < ActiveRecord::Base
   # Associations
   ###########
   belongs_to :node
-  acts_as_list :scope => 'node_id = #{dynamic_page_id} AND page_area = #{page_area}'
+  acts_as_list :scope => proc { ["node_id = ? AND page_area = ?", node_id, page_area] }
   
   ELEM_TYPES.each do |human_name, elem_table|
     has_one elem_table.signularize.to_sym
@@ -46,11 +46,6 @@ class Element < ActiveRecord::Base
   scope :page_area_elems, lambda {|page_area| where(:page_area => page_area) }
   # Returns the ordered elements for the passed in position
   scope :elements_for_page_area, lambda {|page_area| page_area_elems(page_area).elem_order }
-  # Returns the next highest available column_order number for the passed in position
-#  def self.set_highest_column_order(position)
-#    col_order = 1 + Element.position_elems(position).maximum("column_order")
-#    col_order
-#  end
 
 
   def create_html_id

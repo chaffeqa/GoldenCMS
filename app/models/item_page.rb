@@ -6,8 +6,8 @@ class ItemPage < ActiveRecord::Base
   ###########
   belongs_to :item
   belongs_to :node
-  has_one :category_node, :through => :node, :source => :parent
-  has_one :category, :through => :category_node, :source => :category, :counter_cache => :item_count
+  has_one :parent_node, :through => :node, :source => :parent
+  has_one :category, :through => :parent_node, :source => :category, :counter_cache => :item_count
 
 
 

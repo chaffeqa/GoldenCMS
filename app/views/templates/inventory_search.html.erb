@@ -1,0 +1,21 @@
+<h1 class="title">Search Results</h1>
+
+<%= render :partial => 'elem_partials/item_list_elem_partials/table_list', :locals => {:items => @items} %>
+<%= render :partial => 'shared/pagination', :locals => {:resource => @items} %>
+
+
+<!-- Content_for components to insert into static_page -->
+<%= content_for :subColumn do %>
+  <h3>Your Search Parameters:</h3>
+    <ul>
+      <% unless params[:searchText].blank? %> <li><strong>Search Text:</strong><br/> "<%= params[:searchText] %>"</li> <% end %>
+      <% unless params[:category].blank? %> <li><strong>Under Category:</strong><br/> <%= params[:category] %></li> <% end %>
+      <% unless params[:cost_range].blank? %> <li><strong>Price Range:</strong><br/> $<%= params[:cost_range] %></li> <% end %>
+    </ul>
+<% end %>
+
+<%= content_for :breadcrumb do %>
+  <%= render 'partials/inventory_breadcrumb' %>
+<% end %>
+<!-- End -->
+

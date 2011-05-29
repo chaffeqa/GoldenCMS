@@ -1,4 +1,4 @@
-<!-- Element -->
+<!--  START Element -->
 <%= content_tag_for(:section, element, :class => element.elem_type) do %>
   <% if element.elem %>
     <%= render :partial => "elem_partials/#{(element.elem_type.tableize).singularize}", :locals => {:elem => element.elem} %>
@@ -6,5 +6,5 @@
     <%= render :partial => "elem_partials/#{(element.elem_type.tableize).singularize}", :locals => {:element => element} %>
   <% end %>
 <% end %>
-<!-- END -->
+<!-- END Element -->
 

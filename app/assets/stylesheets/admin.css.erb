@@ -1,0 +1,195 @@
+/* PHUSION CMS */
+#adminPage #mainColumn {
+    width: 95%;
+    margin: 0 auto;
+}
+
+
+/****** Form Elements ******/
+#adminPage form {
+    padding: 10px;
+}
+#adminPage form > fieldset .field {
+    clear: both;
+    margin:0 0 6px;
+}
+
+/* CKEDITOR HACKS */
+#adminPage form > fieldset > div.ckeditor {
+    max-width: 750px; 
+    min-height: 300px;
+}
+#adminPage form > fieldset > #cke_contents_text_elem_text_editor {
+    min-height: 200px;
+}
+
+
+
+
+#adminPage form > fieldset .field > .hint {
+    color:#777;
+    float:right;
+    width:200px;
+}
+#adminPage form > fieldset .field > .hint > a { cursor: pointer; }
+#adminPage form > fieldset .field > span.expanded-hint {
+    color: #777;
+    clear: both;
+    display: block;
+}
+
+#adminPage form > fieldset .field > .field_with_errors {display: inline;}
+#adminPage form > fieldset .field > .field_with_errors > select,
+#adminPage form > fieldset .field > .field_with_errors > textarea,
+#adminPage form > fieldset .field > .field_with_errors > input { 
+    border: red solid 1px !important; }
+
+#adminPage form > fieldset.tab {
+    border: 1px solid #f0f0f0;
+    margin: 0 -10px;
+    padding: 10px;
+    margin-bottom: 1em;
+}
+#adminPage form > fieldset.tab > legend {
+    background-color: #fff;
+    font-size: 1.2em;
+    padding: 3px;
+}
+#adminPage form > fieldset .field > label,
+#adminPage form > fieldset .field > .field_with_errors > label {
+    display:inline-block;
+    font-weight:bold;
+    padding:0 5px 0 0;
+}
+#adminPage form > fieldset .field > label.req:after,
+#adminPage form > fieldset .field > .field_with_errors > label.req:after {
+    color:red;
+    content:" *";
+}
+#adminPage form > fieldset .field > input[type="text"], 
+#adminPage form > fieldset .field > input[type="password"], 
+#adminPage form > fieldset .field > input[type="file"], 
+#adminPage form > fieldset .field > select,
+#adminPage form > fieldset .field > .field_with_errors > input[type="text"], 
+#adminPage form > fieldset .field > .field_with_errors > input[type="password"], 
+#adminPage form > fieldset .field > .field_with_errors > input[type="file"], 
+#adminPage form > fieldset .field > .field_with_errors > select {
+    background: #fff;
+    border: 1px solid #999;
+    color: #777;
+    font: inherit;
+    margin: 2px 1px;
+    padding: 2px;
+    width: 315px;
+}
+#adminPage form > fieldset .field > select,
+#adminPage form > fieldset .field > .field_with_errors > select {
+    width: 322px;
+}
+#adminPage form > fieldset .field > input.half {
+    width: 151px;
+}
+#adminPage form > fieldset .field > input.third {
+    width: 97px;
+}
+#adminPage form > fieldset .field > input.twothirds {
+    width: 206px;
+}
+#adminPage form > fieldset .field > input[type="file"],
+#adminPage form > fieldset .field > .field_with_errors > input[type="file"] {
+    width: auto;
+} 
+
+#adminPage form > fieldset .field > .datetime > select,
+#adminPage form > fieldset .field > .field_with_errors > .datetime > select {
+    background: #fff;
+    border: 1px solid #999;
+    color: #777;
+    font: inherit;
+    margin: 2px 1px;
+    padding: 2px;
+}
+#adminPage form > fieldset .field > input[disabled="disabled"], 
+#adminPage form > fieldset .field > select[disabled="disabled"],
+#adminPage form > fieldset .field > .field_with_errors > input[disabled="disabled"], 
+#adminPage form > fieldset .field > .field_with_errors > select[disabled="disabled"] {
+    color: #AAA;
+    background-color: #FFF;
+    border: 1px solid #CCC;
+}
+#adminPage form > fieldset .field > input[type="checkbox"],
+#adminPage form > fieldset .field > .field_with_errors > input[type="checkbox"] {
+    width:auto;
+    vertical-align: middle;
+    margin: 0 0 2px 10px;
+}
+#adminPage form > fieldset .field > textarea,
+#adminPage form > fieldset .field > .field_with_errors > textarea {
+    margin: 2px 1px;
+    border:1px solid #AAA;
+    height:60px;
+    vertical-align:top;
+    width:319px;
+}
+#adminPage form > fieldset .field > input:focus, 
+#adminPage form > fieldset .field > input.focused, 
+#adminPage form > fieldset .field > select:focus, 
+#adminPage form > fieldset .field > select.focused,
+#adminPage form > fieldset .field > .field_with_errors > input:focus, 
+#adminPage form > fieldset .field > .field_with_errors > input.focused, 
+#adminPage form > fieldset .field > .field_with_errors > select:focus, 
+#adminPage form > fieldset .field > .field_with_errors > select.focused {
+    border-color:#000000;
+    color:#333333;
+}
+/**************************/
+
+#itemAdminTable {border-bottom: 1px solid #bebfb9;}
+#itemAdminTable tr.inputRow td {padding: 0 1em 3em 0;}
+
+#itemAdminTable select,
+#itemAdminTable input[type="text"],
+#itemAdminTable input[type="range"] {
+    background: #fff;
+    border: 1px solid #999;
+    color: #000;
+    font: inherit;
+    margin: 2px 1px;
+    padding: 2px;
+    width: 100%;
+}
+
+#itemAdminTable tr.sorters td { padding: 0; }
+#itemAdminTable tr.sorters td span,
+#itemAdminTable tr.sorters td a { font-weight: bold; background: #E1E2DC; border: 1px solid #bebfb9; padding: 0.5em 0.4em; display: block; }
+#itemAdminTable tr.sorters td a.ASC { background: #bebfb9 url(<%= asset_path "arrow-asc.png" %>) 90% .6em no-repeat; }
+#itemAdminTable tr.sorters td a.DESC { background: #bebfb9 url(<%= asset_path "arrow-desc.png" %>) 90% .6em no-repeat; }
+#itemAdminTable td.sorted {
+    background: rgba(230, 230, 250, .7);
+    border-left: 1px solid #bebfb9; 
+    border-right: 1px solid #bebfb9; 
+}
+
+ table.adminTable {}
+
+	/* Thead */
+	 table.adminTable thead th { text-align: center; }
+	 table.adminTable thead td {}
+
+	/* Tbody */
+	 table.adminTable tbody td {padding: .5em .4em;}
+	 table.adminTable tbody th {}
+
+	 table.adminTable tbody .alt td {}
+	 table.adminTable tbody .alt th {}
+
+	/* Tfoot */
+	 table.adminTable tfoot th {}
+	 table.adminTable tfoot td {}
+
+#adminPage ul.categoryList { margin: 0 5em 0 0; }
+#adminPage ul.categoryList ul { margin: 0 0 0 1em; }
+#adminPage ul.categoryList li { clear: both; padding: 1px 0 1px .7em; border-top: 1px solid #f0f0f0;}
+#adminPage ul.categoryList li .right { float: right; }
+
+#adminPage td.itemThumb img { vertical-align: middle; }

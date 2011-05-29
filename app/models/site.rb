@@ -8,7 +8,7 @@ class Site < ActiveRecord::Base
   ###########
 
   has_one :node
-  has_many :nodes, :foreign_key => 'site_scope_id'
+  has_many :nodes, :foreign_key => 'root_site_id'
 
 
 

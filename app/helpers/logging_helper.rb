@@ -1,9 +1,15 @@
 module LoggingHelper 
   
-  def log_format(cat, msg="")
-    log_category = LOG_CATEGORY.include?(cat) ? cat : LOG_CATEGORY[0]
+  def log_format(msg="", error_type='CODE')
+    log_category = LOG_CATEGORY.include?(error_type) ? cat : LOG_CATEGORY[0]
     return ("**************** #{log_category} ****************\n" + 
             msg.inspect + "\n" +
             "*************** END #{log_category} *****************").to_s
   end
+  
+  def admin_request_error(msg="There was an error in your request", error_type='DB')
+    log_category(error_type, msg)
+    flash[:error] = msg
+  end
+    
 end

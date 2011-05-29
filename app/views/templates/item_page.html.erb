@@ -1,0 +1,32 @@
+<% @item ||= (@node.item_page) %>
+
+<!-- Element -->
+<section  class="element item-elem">
+  <h1 class="title  item-elem-<%= @item.id %> "><%= @node.title %></h1>
+  <%= render :partial => "elem_partials/item_elem_partials/full_display", :locals => {:item => @item} %>
+</section>
+<!-- END -->
+
+
+
+
+<!-- Content_for components to insert into static_page -->
+<% if admin? %>
+  <% content_for :page_admin_bar do %>
+    <%= link_to 'Delete Item', admin_item_path(@item) , :confirm => "Are you sure?", :method => :delete, :class => 'btn large' %>
+    <%= link_to 'Edit Item', edit_admin_item_path(@item), :class => 'btn large' %>
+  <% end %>
+<% end %>
+
+<%= content_for :subColumn do %>
+  <h3><%= @node.menu_name %></h3>
+  <div id="categorySub">
+    <%= render_navigation(:level => 2..10) %>
+  </div>
+<% end %>
+
+<%= content_for :breadcrumb do %>
+  <%= render :partial => 'partials/breadcrumb' %>
+<% end %>
+<!-- End -->
+

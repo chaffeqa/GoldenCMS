@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
   # Find or instantiate the current site
   def get_site
     logger.debug log_format("FILTER", "Called get_site Before_Filter")
-    @current_site ||= Site.get_subdomain(subdomain)
+    @current_site ||= Site.get_subdomain(request.subdomain)
     return instantiate_site unless @current_site and @current_site.node
     set_site_name(@current_site.site_name)
     return true

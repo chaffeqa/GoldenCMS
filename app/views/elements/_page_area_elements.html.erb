@@ -1,11 +1,16 @@
-<% if admin? %> <div class="admin clearfix"> <% end %>
+<!-- START Page Area: position_<%= page_area %> -->
+<%# creates a div with class "admin clearfix" surounding this page area if an admin is logged in %>
+% if admin? %> <div class="admin clearfix"> <% end %>
   
-  <% @elements.elements_for_page_area(page_area).each do |element|  %>
+  <%# Renders each element for this page_area in order %>
+  <% @node.elements.elements_for_page_area(page_area).each do |element|  %>
     <%= render :partial => 'elements/element', :locals => {:element => element} %>
   <% end %>
 
+  <%# Renders a new_element_select partial for this page area if an admin is logged in %>
   <% if admin? %>
     <%= render :partial => 'elements/new_element_select', :locals => {:page_area => page_area} %>
   <% end %>
 
 <% if admin? %> </div><% end %>
+<!-- END Page Area -->

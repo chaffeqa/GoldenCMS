@@ -237,7 +237,7 @@ ActiveRecord::Schema.define(:version => 20110513151815) do
     t.integer  "ancestry_depth",    :default => 0
     t.string   "names_depth_cache"
     t.integer  "positions",         :default => 0
-    t.integer  "site_scope_id"
+    t.integer  "root_site_id"
     t.integer  "site_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -245,9 +245,9 @@ ActiveRecord::Schema.define(:version => 20110513151815) do
 
   add_index "nodes", ["ancestry"], :name => "index_nodes_on_ancestry"
   add_index "nodes", ["ancestry_depth"], :name => "index_nodes_on_ancestry_depth"
+  add_index "nodes", ["root_site_id"], :name => "index_nodes_on_root_site_id"
   add_index "nodes", ["shortcut"], :name => "index_nodes_on_shortcut"
   add_index "nodes", ["site_id"], :name => "index_nodes_on_site_id"
-  add_index "nodes", ["site_scope_id"], :name => "index_nodes_on_site_scope_id"
 
   create_table "photo_gallery_elems", :force => true do |t|
     t.string   "display_type"

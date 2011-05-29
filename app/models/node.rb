@@ -5,8 +5,9 @@ class Node < ActiveRecord::Base
   # Associations
   ###########
   belongs_to :site
-  belongs_to :site_scope, :class_name => 'Site'
+  belongs_to :root_site, :class_name => 'Site'
   has_ancestry :cache_depth => true, :orphan_strategy => :rootify  
+  acts_as_list :scope => proc { ["ancestry = '?'", ancestry] }
   has_many   :link_elems, :dependent => :destroy
   has_many :elements
   
@@ -24,7 +25,7 @@ class Node < ActiveRecord::Base
   ###########
 
   #Validations
-  validates :shortcut, :presence => {:allow_blank => true}, :uniqueness => {:scope => :site_scope_id, :allow_blank => true}
+  validates :shortcut, :presence => {:allow_blank => true}, :uniqueness => {:scope => :root_site_id, :allow_blank => true}
   validates :title, :presence => true
   validates :menu_name, :presence => true
   validates :layout_name, :inclusion => { :in => TEMPLATES.keys }  
@@ -35,7 +36,7 @@ class Node < ActiveRecord::Base
 
   #Callbacks
   before_validation :fill_missing_fields
-  before_save :set_ancestry_path_and_site_scope
+  before_save :set_ancestry_path_and_root_site
   #after_save :update_cache_chain
   #before_destroy :update_cache_chain
   
@@ -68,10 +69,9 @@ class Node < ActiveRecord::Base
 
   # Tests to see if the node changes violate the reserved node rules
   def reserved_node_violation?
-    this_nodes_site = self.root.try(:site)
     # Validation if this is a reserved node being updated...
-    if this_nodes_site and this_nodes_site.reserved_nodes.collect {|n| n.id}.include?(self.id)
-      errors.add(:base, "You cannot adjust reserved menu page shortcuts.  Reserved menu items include: #{this_nodes_site.reserved_shortcuts.join(', ')}") unless this_nodes_site.reserved_shortcuts.include?(self.shortcut)
+    if root_site and root_site.reserved_nodes.collect {|n| n.id}.include?(self.id)
+      errors.add(:base, "You cannot adjust reserved menu page shortcuts.  Reserved menu items include: #{this_nodes_site.reserved_shortcuts.join(', ')}") unless root_site.reserved_shortcuts.include?(shortcut)
     end
     # Validation if this Home node
     #errors.add(:parent_id, "This page must be the root of the menu hierarchy") if self.site and !parent_id.blank?
@@ -101,6 +101,7 @@ class Node < ActiveRecord::Base
 
   scope :displayed, where(:displayed => true)
   scope :similar_shortcuts, lambda {|sc| where('UPPER(nodes.shortcut) LIKE UPPER(?)', "%"+sc+"%") unless sc.blank?}
+  scope :ordered, order("ancestry_depth,position DESC")
   
 
 
@@ -117,37 +118,37 @@ class Node < ActiveRecord::Base
   def url(params={})
     url_params = params == {} ? '' : "?"+params.collect {|key,val| "#{key.to_s}=#{val.to_s}"}.join('&')
     return "/#{shortcut}" + url_params
-  end
-
-  
+  end  
 
   # Returns the correct string for the route to call 'render' on
-  # Ex. node.page = 'Blog' --> node.page_template = 'blogs/show'
-  def template_path
-    str = page_type
-    return ("page_templates/"+str.pluralize)
+  # Ex. node.page_type = 'blog' --> node.template_to_use = 'blog'
+  # Ex. node.page_type = nil --> node.template_to_use = 'dynamic_page'
+  def template_path_to_render
+    page_template = page_type.try(:to_s)
+    page_template ||= 'inventory' if shortcut == root_site.inventory_shortcut
+    page_template ||= 'dynamic_page'
+    return "templates/#{page_template}"
   end
   
-  # Return this node's page_type.  Returns nil if there is no assigned page_type
+  # Return this the name of the object this node is a 'page for' (ex. 'category' if this node represents a Category)
+  # Returns nil if there is no assigned page_type
   def page_type
-    association = nil
+    association = nil    
     NODE_PAGE_TYPES.keys.each {|assoc| association = assoc unless self.send(assoc).nil?}
     association
-  end
-
+  end    
+  
   # Sets this node's shortcut to the desired shortcut or closest related shortcut that will be unique in the database.  If a conflict
   # occurs than a numeric increment will be appended as a prefix and the increment number will be returned.  If no conflict occured
   # than the method will return 0 (or the passed in increment if one was passed in)
-  def set_safe_shortcut(shtcut=nil)
-    shtcut ||= self.shortcut || ''
-    node_id = self.id || 0
+  def find_safe_shortcut(shtcut='temp-shortcut')
     desired_shortcut = parameterize(shtcut.clone) # Clone since trouble with copying
     prefix = ""; incr = 0
-    while Node.where('nodes.shortcut = ? AND nodes.id != ?', prefix + desired_shortcut, node_id).exists?
+    while Node.where('nodes.shortcut = ? AND nodes.id != ?', prefix + desired_shortcut, id || 0).exists?
       incr += 1
       prefix = incr.to_s + "-"
     end
-    self.shortcut = prefix + desired_shortcut
+    return (prefix + desired_shortcut)
   end
   
 
@@ -180,16 +181,14 @@ class Node < ActiveRecord::Base
 
 
 
-
   private 
-  
   
   # Saves the path of ancestor nodes to this node
   # Sets this node's site_id to it's site's id
-  def set_ancestry_path_and_site_scope
+  def set_ancestry_path_and_root_site
     self.class.unscoped do
       self.names_depth_cache = path.map(&:menu_name).join('/')
-      self.site_scope_id = (root ? root.site.try(:id) : nil) 
+      self.root_site = (root ? root.site : nil) 
     end
   end  
 
@@ -206,9 +205,7 @@ class Node < ActiveRecord::Base
   # If no page_type, sets it to the DEFAULT_TEMPLATE layout
   def set_layout_name
     self.layout_name = page_type.nil? ? DEFAULT_TEMPLATE : NODE_PAGE_TYPES[page_type]["default_layout"]
-  end
-  
-  
+  end  
 
   # Actual behind the scenes ordering of the Node tree
   def self.order_helper( json, parent_id = nil)
@@ -225,9 +222,7 @@ class Node < ActiveRecord::Base
     end
     errors.flatten
   end
-
-
-
+  
   # Replaces special characters in a string so that it may be used as part of a ‘pretty’ URL.
   def parameterize(parameterized_string, sep = '-')
     return parameterized_string if parameterized_string.blank?
@@ -242,8 +237,7 @@ class Node < ActiveRecord::Base
     end
     parameterized_string
   end
-
-
+  
   # Node error logger TODO
   def log_problem_node(msg)
     logger.error "DB ********** Node Error **********"

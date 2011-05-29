@@ -9,7 +9,8 @@ class Category < ActiveRecord::Base
   belongs_to :node
   has_one :parent_node, :through => :node, :source => :parent, :class_name => 'Node'
   has_one :parent_category, :class_name => 'Category', :through => :parent_node, :source => :category
-  has_many :items, :through => :node, :source => :item_pages, :class_name => 'ItemPage'
+  has_many :item_pages, :through => :node, :source => :item_pages
+  has_many :items, :through => :item_pages
 
   has_attached_file :image,
     :storage => :s3,
