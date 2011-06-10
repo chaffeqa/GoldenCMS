@@ -8,9 +8,9 @@ class ApplicationController < ActionController::Base
   # Include all the helper files always
   helper :all
   # Make these controller methods accessable from everywhere
-  helper_method :get_page, :admin?
+  helper_method :initialize_requested_page, :admin?
   # Run these methods on every request
-  before_filter :parse_filter_params, :get_site
+  before_filter :parse_filter_params, :initialize_requested_site
   after_filter :add_flash_to_header
   # Fallback on the config-set default template layout
   layout DEFAULT_TEMPLATE
@@ -22,20 +22,20 @@ class ApplicationController < ActionController::Base
   ##################
 
   # Find or instantiate the current site
-  def get_site
-    logger.debug log_format("FILTER", "Called get_site Before_Filter")
-    @current_site ||= Site.get_subdomain(request.subdomain)
-    return instantiate_site unless @current_site and @current_site.page
-    set_site_name(@current_site.site_name)
+  def initialize_requested_site
+    logger.debug log_format("FILTER", "Called initialize_requested_site Before_Filter")
+    @requested_site ||= Site.get_subdomain(request.subdomain)
+    return instantiate_site unless @requested_site and @requested_site.page
+    set_site_name(@requested_site.site_name)
     return true
   end
 
-  # Find or Instantiates the current @page.  Check the page for validity.
-  def get_page
-    logger.debug log_format("FILTER", "Called get_page Before_Filter")
-    @page ||= @current_site.get_page_by_shortcut(params[:shortcut])
+  # Find or Instantiates the current @requested_page.  Check the page for validity.
+  def initialize_requested_page
+    logger.debug log_format("FILTER", "Called initialize_requested_page Before_Filter")
+    @requested_page ||= @requested_site.initialize_requested_page_by_shortcut(params[:shortcut])
     return false unless page_valid? and request_valid?
-    set_page_title(@page.title)
+    set_page_title(@requested_page.title)
     return true
   end
 
@@ -93,9 +93,9 @@ class ApplicationController < ActionController::Base
   # Checks the validity of the current page as well as the basic access rights
   def page_valid?
     # Page isn't valid
-    return render_error_status(404, "No Page Found") if @page.nil?
+    return render_error_status(404, "No Page Found") if @requested_page.nil?
     # Page not displayed and not admin
-    return render_error_status(404, "Shortcut: '#{@page.shortcut}' not publicly displayed") if not @page.displayed and not admin?
+    return render_error_status(404, "Shortcut: '#{@requested_page.shortcut}' not publicly displayed") if not @requested_page.displayed and not admin?
     return true
   end
   

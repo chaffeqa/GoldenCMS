@@ -57,7 +57,7 @@ class Item < ActiveRecord::Base
     end
     page.displayed = self.display || true
     site = Site.first
-    page.parent = site.get_page_by_shortcut(site.items_shortcut)
+    page.parent = site.initialize_requested_page_by_shortcut(site.items_shortcut)
   end
 
 

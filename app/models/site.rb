@@ -74,7 +74,7 @@ class Site < ActiveRecord::Base
   
   # Get this site's page by the passed in shortcut. 
   # NOTE returns the root page if the shorcut is '' (to make site root requests work)
-  def get_page_by_shortcut(shortcut)
+  def initialize_requested_page_by_shortcut(shortcut)
     return page if shortcut == ''
     pages.where(:shortcut => shortcut).try(:first)
   end
@@ -108,8 +108,8 @@ class Site < ActiveRecord::Base
   
   # Returns all the reserved pages for this site
   def reserved_pages
-    [get_page_by_shortcut(home_shortcut), get_page_by_shortcut(items_shortcut), get_page_by_shortcut(inventory_shortcut), get_page_by_shortcut(blogs_shortcut),
-    get_page_by_shortcut(calendars_shortcut), get_page_by_shortcut(categories_shortcut), get_page_by_shortcut(items_shortcut)].uniq.compact
+    [initialize_requested_page_by_shortcut(home_shortcut), initialize_requested_page_by_shortcut(items_shortcut), initialize_requested_page_by_shortcut(inventory_shortcut), initialize_requested_page_by_shortcut(blogs_shortcut),
+    initialize_requested_page_by_shortcut(calendars_shortcut), initialize_requested_page_by_shortcut(categories_shortcut), initialize_requested_page_by_shortcut(items_shortcut)].uniq.compact
   end
   
   # Returns this site's Blog shortcut

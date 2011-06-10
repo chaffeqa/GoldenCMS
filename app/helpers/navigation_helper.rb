@@ -4,15 +4,15 @@ module NavigationHelper
   # as well as caching capability
   def render_navigation(options={})
     flat = options.delete(:flat) || false
-    if @current_site and @current_site.page
-      key = flat ? "flat-tree::#{@current_site.cache_key}" : "tree::#{@current_site.cache_key}"
+    if @requested_site and @requested_site.page
+      key = flat ? "flat-tree::#{@requested_site.cache_key}" : "tree::#{@requested_site.cache_key}"
       cached = Rails.cache.read(key)
       if cached
         logger.debug log_format("CACHE","Read Cache key: #{key.to_s}")
         items = cached
       else
         logger.debug log_format("CACHE","Write Cache key: #{key.to_s}")
-        items = (flat ? @current_site.flat_page_tree : @current_site.page_tree)
+        items = (flat ? @requested_site.flat_page_tree : @requested_site.page_tree)
         Rails.cache.write(key, items) if cached.nil?
       end
       return raw(super(options.merge({:items => items})))

@@ -1,7 +1,7 @@
 class Admin::EventsController < ApplicationController
   layout 'admin'
   before_filter :check_admin
-  before_filter :get_page, :except => [:new, :create]
+  before_filter :initialize_requested_page, :except => [:new, :create]
 
 
   def new
@@ -28,7 +28,7 @@ class Admin::EventsController < ApplicationController
 
   def update
     if @event.update_attributes(params[:event])
-      redirect_to( shortcut_path(@page.shortcut), :notice => 'Event was successfully updated.')
+      redirect_to( shortcut_path(@requested_page.shortcut), :notice => 'Event was successfully updated.')
     else
       render :action => "edit"
     end
@@ -42,11 +42,11 @@ class Admin::EventsController < ApplicationController
 
   private
 
-  def get_page
+  def initialize_requested_page
     @calendar = Calendar.find(params[:calendar_id])
     @event = Event.find(params[:id])
     @event.build_page(:displayed => true) unless @event.page
-    @page = @event.page
+    @requested_page = @event.page
     super
   end
 end

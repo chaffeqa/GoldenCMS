@@ -3,12 +3,12 @@ class Admin::PagesController < ApplicationController
   before_filter :check_admin
 
   def new
-    @page = Page.new
+    @requested_page = Page.new
   end
 
   def create
-    @page = @site.build_page(params[:page])
-    if @page.save
+    @requested_page = @site.build_page(params[:page])
+    if @requested_page.save
       redirect_to admin_pages_path, notice: "Page successfully created!"
     else
       render :new
@@ -16,19 +16,19 @@ class Admin::PagesController < ApplicationController
   end
 
   def index
-    @pages = @site.page_tree
+    @requested_pages = @site.page_tree
   end
 
   def show
-    @page = Page.find(params[:id])
+    @requested_page = Page.find(params[:id])
   end
 
   def edit
-    @page = Page.find(params[:id])
+    @requested_page = Page.find(params[:id])
   end
 
   def update
-    if @page.update_attributes(params[:page])
+    if @requested_page.update_attributes(params[:page])
       redirect_to admin_pages_path, notice: "Page successfully updated!"
     else
       render :edit
@@ -36,8 +36,8 @@ class Admin::PagesController < ApplicationController
   end
 
   def destroy
-    @page = Page.find(params[:id])
-    @page.destroy ? flash[:notice] = "Page successfully destroyed!" : admin_request_error("There was an error in deleting the page.")
+    @requested_page = Page.find(params[:id])
+    @requested_page.destroy ? flash[:notice] = "Page successfully destroyed!" : admin_request_error("There was an error in deleting the page.")
     redirect_to admin_pages_path
     
   end

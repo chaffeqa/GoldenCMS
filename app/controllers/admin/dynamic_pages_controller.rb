@@ -1,10 +1,10 @@
 class Admin::DynamicPagesController < ApplicationController
   layout 'admin'
   before_filter :check_admin
-  before_filter :get_page, :only => [ :edit, :update, :destroy]
+  before_filter :initialize_requested_page, :only => [ :edit, :update, :destroy]
 
   def index
-    @dynamic_pages = DynamicPage.page(@page).per(@per_page)
+    @dynamic_pages = DynamicPage.page(@requested_page).per(@per_page)
     @dynamic_pages = @dynamic_pages.order(@sort + " " + @direction) unless @sort.blank?
   end
 
@@ -23,7 +23,7 @@ class Admin::DynamicPagesController < ApplicationController
   def create
     @dynamic_page = DynamicPage.new(params[:dynamic_page])
     # Set current_site root to this pages page unless it is already set
-    @dynamic_page.page.site = @current_site unless @current_site.page
+    @dynamic_page.page.site = @requested_site unless @requested_site.page
     if @dynamic_page.save
       redirect_to( admin_dynamic_pages_path(), :notice => 'Page was successfully created.')
     else
@@ -49,7 +49,7 @@ class Admin::DynamicPagesController < ApplicationController
   
 private
   
-  def get_page
+  def initialize_requested_page
     @dynamic_page = DynamicPage.find(params[:id])
   end
 end

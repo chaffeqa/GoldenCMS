@@ -25,15 +25,15 @@ module SearchHelper
   # Retrieves the pagination info from the @search_params.
   # NOTE the format for the params are as follows:
   #   @per_page = any params key that matches /^per_page/ regexp
-  #   @page = any params key that matches /^page/ regexp
+  #   @requested_page = any params key that matches /^page/ regexp
   def pagination
     @per_page ||= (@search_params.select {|k,v| k =~ /^per_page/}.flatten.last || 10).to_i
-    @page ||= (@search_params.select {|k,v| k =~ /^page/}.flatten.last || 1).to_i
-    logger.debug log_format("CODE","page: #{@page.inspect}, @per_page: #{@per_page.inspect}")
+    @requested_page ||= (@search_params.select {|k,v| k =~ /^page/}.flatten.last || 1).to_i
+    logger.debug log_format("CODE","page: #{@requested_page.inspect}, @per_page: #{@per_page.inspect}")
   end
   
   # Retrieves the pagination "page" attribute for a given element (passed in as a prefix uniq identifyer)
-  def get_page(prefix="")
+  def initialize_requested_page(prefix="")
     (@search_params[prefix + "page"] || 1).to_i
   end
   

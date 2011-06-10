@@ -1,6 +1,6 @@
 class Admin::PageElems::ItemListElemsController < ApplicationController
   layout 'admin'
-  before_filter :get_page, :check_admin
+  before_filter :initialize_requested_page, :check_admin
 
 
   def new
@@ -15,8 +15,8 @@ class Admin::PageElems::ItemListElemsController < ApplicationController
 
   def create
     @item_list_elem = ItemListElem.new(params[:item_list_elem])
-    if @item_list_elem.element.dynamic_page = @page.page and  @item_list_elem.save
-      redirect_to(shortcut_path(@page.shortcut), :notice => "Item List Element successfully added!")
+    if @item_list_elem.element.dynamic_page = @requested_page.page and  @item_list_elem.save
+      redirect_to(shortcut_path(@requested_page.shortcut), :notice => "Item List Element successfully added!")
     else
       render :action => 'new'
     end
@@ -25,7 +25,7 @@ class Admin::PageElems::ItemListElemsController < ApplicationController
 
   def update
     if @item_list_elem.update_attributes(params[:item_list_elem])
-      redirect_to(shortcut_path(@page.shortcut), :notice => "Item List Element successfully updated!")
+      redirect_to(shortcut_path(@requested_page.shortcut), :notice => "Item List Element successfully updated!")
     else
       render :action => 'edit'
     end
@@ -33,15 +33,15 @@ class Admin::PageElems::ItemListElemsController < ApplicationController
 
   def destroy
     @item_list_elem.destroy
-    redirect_to(shortcut_path(@page.shortcut), :notice => 'Element successfully destroyed.')
+    redirect_to(shortcut_path(@requested_page.shortcut), :notice => 'Element successfully destroyed.')
   end
 
 
   private
-  def get_page
+  def initialize_requested_page
     if params[:id]
       @item_list_elem = ItemListElem.find(params[:id])
-      @page = @item_list_elem.element.dynamic_page.page
+      @requested_page = @item_list_elem.element.dynamic_page.page
     end
     super
   end

@@ -1,6 +1,6 @@
 class Admin::ElementsController < ApplicationController
   before_filter :check_admin
-  before_filter :get_page
+  before_filter :initialize_requested_page
   
   def destroy
     if request.post? and @current_element.destroy
@@ -8,7 +8,7 @@ class Admin::ElementsController < ApplicationController
     else
       admin_request_error('Element failed to be destroyed.')
     end
-    redirect_to( shortcut_path(@page.shortcut))
+    redirect_to( shortcut_path(@requested_page.shortcut))
   end
 
   def move_up
@@ -17,7 +17,7 @@ class Admin::ElementsController < ApplicationController
     else
       admin_request_error('Element failed to be Moved.')
     end    
-    redirect_to( shortcut_path(@page.shortcut))
+    redirect_to( shortcut_path(@requested_page.shortcut))
   end
 
   def move_down
@@ -26,7 +26,7 @@ class Admin::ElementsController < ApplicationController
     else
       admin_request_error('Element failed to be Moved.')
     end    
-    redirect_to( shortcut_path(@page.shortcut))
+    redirect_to( shortcut_path(@requested_page.shortcut))
   end  
   
   def new_element
@@ -43,10 +43,10 @@ class Admin::ElementsController < ApplicationController
 
 
   private
-  def get_page
+  def initialize_requested_page
     if params[:id].present?
       @current_element = Element.find(params[:id])
-      @page = @current_element.page
+      @requested_page = @current_element.page
     end
     super
   end

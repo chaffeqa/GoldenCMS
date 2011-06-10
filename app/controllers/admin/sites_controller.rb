@@ -2,7 +2,7 @@ class Admin::SitesController < ApplicationController
   include SiteSpecificHelper
   layout 'admin'
   before_filter :check_admin
-  skip_filter :get_site
+  skip_filter :initialize_requested_site
   
   def index
     @sites = Site.all

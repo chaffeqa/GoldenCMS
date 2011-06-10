@@ -1,10 +1,10 @@
 class Admin::CategoriesController < ApplicationController
   layout 'admin'
   before_filter :check_admin
-  before_filter :get_page, :except => [:new, :create, :index]
+  before_filter :initialize_requested_page, :except => [:new, :create, :index]
 
   def index
-    @categories = Category.page(@page).per(@per_page)
+    @categories = Category.page(@requested_page).per(@per_page)
     @categories = @categories.order(@sort + " " + @direction) unless @sort.blank?
   end
 
@@ -41,10 +41,10 @@ class Admin::CategoriesController < ApplicationController
   
   private
 
-  def get_page
+  def initialize_requested_page
     @category = Category.find(params[:id])
     @category.build_page(:displayed => true) unless @category.page
-    @page = @category.page
+    @requested_page = @category.page
     super
   end
 

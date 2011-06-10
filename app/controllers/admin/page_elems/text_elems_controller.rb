@@ -1,6 +1,6 @@
 class Admin::PageElems::TextElemsController < ApplicationController
   layout 'admin'
-  before_filter :get_page, :check_admin
+  before_filter :initialize_requested_page, :check_admin
 
 
   def new
@@ -15,8 +15,8 @@ class Admin::PageElems::TextElemsController < ApplicationController
 
   def create
     @text_elem = TextElem.new(params[:text_elem])
-    if @text_elem.element.dynamic_page = @page.page and @text_elem.save
-      redirect_to(shortcut_path(@page.shortcut), :notice => "Text Element successfully added!")
+    if @text_elem.element.dynamic_page = @requested_page.page and @text_elem.save
+      redirect_to(shortcut_path(@requested_page.shortcut), :notice => "Text Element successfully added!")
     else
       flash.now[:error] = 'Errors'
       render :action => 'new'
@@ -26,7 +26,7 @@ class Admin::PageElems::TextElemsController < ApplicationController
 
   def update
     if @text_elem.update_attributes(params[:text_elem])
-      redirect_to(shortcut_path(@page.shortcut), :notice => "Text Element successfully updated!")
+      redirect_to(shortcut_path(@requested_page.shortcut), :notice => "Text Element successfully updated!")
     else
       render :action => 'edit'
     end
@@ -34,16 +34,16 @@ class Admin::PageElems::TextElemsController < ApplicationController
 
   def destroy
     @text_elem.destroy
-    redirect_to(shortcut_path(@page.shortcut), :notice => 'Element successfully destroyed.')
+    redirect_to(shortcut_path(@requested_page.shortcut), :notice => 'Element successfully destroyed.')
   end
 
 
 
   private
-  def get_page
+  def initialize_requested_page
     if params[:id]
       @text_elem = TextElem.find(params[:id])
-      @page = @text_elem.element.dynamic_page.page
+      @requested_page = @text_elem.element.dynamic_page.page
     end
     super
   end

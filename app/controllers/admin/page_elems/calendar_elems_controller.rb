@@ -1,6 +1,6 @@
 class Admin::PageElems::CalendarElemsController < ApplicationController
   layout 'admin'
-  before_filter :get_page, :check_admin
+  before_filter :initialize_requested_page, :check_admin
 
 
   def new
@@ -15,8 +15,8 @@ class Admin::PageElems::CalendarElemsController < ApplicationController
 
   def create
     @calendar_elem = CalendarElem.new(params[:calendar_elem])
-    if @calendar_elem.element.dynamic_page = @page.page and  @calendar_elem.save
-      redirect_to(shortcut_path(@page.shortcut), :notice => "Calendar Element successfully added!")
+    if @calendar_elem.element.dynamic_page = @requested_page.page and  @calendar_elem.save
+      redirect_to(shortcut_path(@requested_page.shortcut), :notice => "Calendar Element successfully added!")
     else
       render :action => 'new'
     end
@@ -25,7 +25,7 @@ class Admin::PageElems::CalendarElemsController < ApplicationController
 
   def update
     if @calendar_elem.update_attributes(params[:calendar_elem])
-      redirect_to(shortcut_path(@page.shortcut), :notice => "Calendar Element successfully updated!")
+      redirect_to(shortcut_path(@requested_page.shortcut), :notice => "Calendar Element successfully updated!")
     else
       render :action => 'edit'
     end
@@ -33,15 +33,15 @@ class Admin::PageElems::CalendarElemsController < ApplicationController
 
   def destroy
     @calendar_elem.destroy
-    redirect_to(shortcut_path(@page.shortcut), :notice => 'Element successfully destroyed.')
+    redirect_to(shortcut_path(@requested_page.shortcut), :notice => 'Element successfully destroyed.')
   end
 
 
   private
-  def get_page
+  def initialize_requested_page
     if params[:id]
       @calendar_elem = CalendarElem.find(params[:id])
-      @page = @calendar_elem.element.dynamic_page.page
+      @requested_page = @calendar_elem.element.dynamic_page.page
     end
     super
   end

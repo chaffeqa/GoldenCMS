@@ -29,7 +29,7 @@ module SessionSearchHelper
 
   def session_pagination_filter
     @per_page ||= session[:user_filters][:per_page] || 10
-    @page ||= session[:user_filters][:page] || '1'
+    @requested_page ||= session[:user_filters][:page] || '1'
   end
 end
 

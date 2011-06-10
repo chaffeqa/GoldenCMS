@@ -3,7 +3,7 @@ class Admin::ItemsController < ApplicationController
   before_filter :check_admin
   
   def index
-    @items = Item.admin_item_filters(@search_params).page(@page).per(@per_page)
+    @items = Item.admin_item_filters(@search_params).page(@requested_page).per(@per_page)
   end
 
 

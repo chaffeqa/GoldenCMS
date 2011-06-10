@@ -19,7 +19,7 @@ module TemplateRenderHelper
   end
 
   def get_elem_link_to_action(element, action)
-    { :controller => "admin/page_elems/#{element.elem_type.tableize}", :action => action, :id => element.elem, :shortcut => @page.shortcut }
+    { :controller => "admin/page_elems/#{element.elem_type.tableize}", :action => action, :id => element.elem, :shortcut => @requested_page.shortcut }
   end
 
   ##########################################################

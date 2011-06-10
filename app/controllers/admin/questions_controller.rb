@@ -3,7 +3,7 @@ class Admin::QuestionsController < ApplicationController
   before_filter :check_admin
 
   def index
-    @questions = Question.page(@page).per(@per_page)
+    @questions = Question.page(@requested_page).per(@per_page)
     @questions = @questions.order(@sort + " " + @direction) unless @sort.blank?
   end
 

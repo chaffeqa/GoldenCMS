@@ -1,10 +1,10 @@
 class Admin::CalendarsController < ApplicationController
   layout 'admin'
   before_filter :check_admin
-  before_filter :get_page, :except => [:new, :create, :index]
+  before_filter :initialize_requested_page, :except => [:new, :create, :index]
 
   def index
-    @calendars = Calendar.page(@page).per(@per_page)
+    @calendars = Calendar.page(@requested_page).per(@per_page)
     @calendars = @calendars.order(@sort + " " + @direction) unless @sort.blank?
   end
 
@@ -45,10 +45,10 @@ class Admin::CalendarsController < ApplicationController
 
   private
 
-  def get_page
+  def initialize_requested_page
     @calendar = Calendar.find(params[:id])
     @calendar.build_page(:displayed => true) unless @calendar.page
-    @page = @calendar.page
+    @requested_page = @calendar.page
     super
   end
 

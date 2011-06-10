@@ -56,7 +56,7 @@ class Category < ActiveRecord::Base
     end
     page.displayed = true
     site = Site.first
-    page.parent = (parent_category and !parent_category_id.blank?) ? parent_category.page : site.get_page_by_shortcut(site.categories_shortcut)
+    page.parent = (parent_category and !parent_category_id.blank?) ? parent_category.page : site.initialize_requested_page_by_shortcut(site.categories_shortcut)
   end
 
 

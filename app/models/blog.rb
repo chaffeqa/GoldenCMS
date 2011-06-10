@@ -42,7 +42,7 @@ class Blog < ActiveRecord::Base
     page.set_safe_shortcut(title)
     page.displayed = true
     site = Site.first
-    page.parent = site.get_page_by_shortcut(site.blogs_shortcut)
+    page.parent = site.initialize_requested_page_by_shortcut(site.blogs_shortcut)
   end
 
   private

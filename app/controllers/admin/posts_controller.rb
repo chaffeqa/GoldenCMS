@@ -1,7 +1,7 @@
 class Admin::PostsController < ApplicationController
   layout 'admin'
   before_filter :check_admin
-  before_filter :get_page, :except => [:new, :create]
+  before_filter :initialize_requested_page, :except => [:new, :create]
 
 
   def new
@@ -28,7 +28,7 @@ class Admin::PostsController < ApplicationController
 
   def update
     if @post.update_attributes(params[:post])
-      redirect_to( shortcut_path(@page.shortcut), :notice => 'Post was successfully updated.')
+      redirect_to( shortcut_path(@requested_page.shortcut), :notice => 'Post was successfully updated.')
     else
       render :action => "edit"
     end
@@ -42,11 +42,11 @@ class Admin::PostsController < ApplicationController
 
   private
 
-  def get_page
+  def initialize_requested_page
     @blog = Blog.find(params[:blog_id])
     @post = Post.find(params[:id])
     @post.build_page(:displayed => true) unless @post.page
-    @page = @post.page
+    @requested_page = @post.page
     super
   end
 

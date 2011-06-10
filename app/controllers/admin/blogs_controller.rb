@@ -1,10 +1,10 @@
 class Admin::BlogsController < ApplicationController
   layout 'admin'
   before_filter :check_admin
-  before_filter :get_page, :except => [:new, :create, :index]
+  before_filter :initialize_requested_page, :except => [:new, :create, :index]
 
   def index
-    @blogs = Blog.page(@page).per(@per_page)
+    @blogs = Blog.page(@requested_page).per(@per_page)
     @blogs = @blogs.order(@sort + " " + @direction) unless @sort.blank?
   end
 
@@ -45,10 +45,10 @@ class Admin::BlogsController < ApplicationController
 
   private
 
-  def get_page
+  def initialize_requested_page
     @blog = Blog.find(params[:id])
     @blog.build_page(:displayed => true) unless @blog.page
-    @page = @blog.page
+    @requested_page = @blog.page
     super
   end
 

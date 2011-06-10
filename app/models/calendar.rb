@@ -40,7 +40,7 @@ class Calendar < ActiveRecord::Base
     page.displayed = true
     page.layout = CALENDAR_TEMPLATE
     site = Site.first
-    page.parent = site.get_page_by_shortcut(site.calendars_shortcut)
+    page.parent = site.initialize_requested_page_by_shortcut(site.calendars_shortcut)
   end
 end
 
