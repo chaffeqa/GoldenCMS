@@ -2,18 +2,18 @@
 require File.expand_path('../application', __FILE__)
 
 DEFAULT_CONFIG_PARAMS = { 
-  "home_shortcut" => "home", 
-  "inventory_shortcut" => "inventory", 
-  "categories_shortcut" => "inventory", 
-  "blogs_shortcut" => "blogs", 
-  "calendars_shortcut" => "calendars", 
-  "items_shortcut" => "items"
+  "Home Shortcut" => "home", 
+  "Inventory Shortcut" => "inventory", 
+  "Categories Shortcut" => "inventory", 
+  "Blogs Shortcut" => "blogs", 
+  "Calendars Shortcut" => "calendars", 
+  "Items Shortcut" => "items"
 }
 
 TEMPLATES = {
-  "home" => {"human_name" => "Home", "positions" => 5}, 
-  "inside" => {"human_name" => "Inside", "positions" => 2}, 
-  "full" => {"human_name" => "Inside (No Nav)", "positions" => 1},
+  "home" => {"human_name" => "Home", "total_page_areas" => 5}, 
+  "inside" => {"human_name" => "Inside", "total_page_areas" => 2}, 
+  "full" => {"human_name" => "Inside (No Nav)", "total_page_areas" => 1},
   "application" => {"human_name" => "Static"} # Static layout
 }
 HOME_PAGE_TEMPLATE = "home"

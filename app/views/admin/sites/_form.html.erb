@@ -10,7 +10,7 @@
     </div>
   <% end %>
 
-  <% field_set_tag 'Site Configuration Params' do %>
+  <%= field_set_tag 'Site Configuration Params' do %>
       <div class="field"><span class="hint"><a class="expander">Explain this</a></span>
         <%= f.label :site_name, "Site Name", :class => "req" %>
         <%= f.text_field :site_name, :class => 'halfw' %>
@@ -29,7 +29,7 @@
       </div>
   <% end %>
 
-  <% field_set_tag 'Site Configuration Params' do %>
+  <%= field_set_tag 'Site Configuration Params' do %>
     <div class="field"><span class="hint"><a class="expander">Explain this</a></span>
       <%= f.label :config_params, "Configuration Params" %>
       <%= f.text_area :config_params  %>
@@ -37,7 +37,7 @@
     </div>  
   <% end %>
 
-  <% field_set_tag 'Site Header and Footer' do %>
+  <%= field_set_tag 'Site Header and Footer' do %>
     <div class="field"><span class="hint"><a class="expander">Explain this</a></span>
       <%= f.label :header, "Header" %>
       <%= f.text_area :header  %>

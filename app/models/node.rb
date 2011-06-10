@@ -29,7 +29,7 @@ class Node < ActiveRecord::Base
   validates :title, :presence => true
   validates :menu_name, :presence => true
   validates :layout_name, :inclusion => { :in => TEMPLATES.keys }  
-  validates :positions, :presence => true, :numericality => true
+  validates :total_page_areas, :presence => true, :numericality => true
   validate :shortcut_html_safe?
   validate :reserved_node_violation?, :on => :update
   #validate :check_unique_shortcut?
@@ -151,6 +151,11 @@ class Node < ActiveRecord::Base
     return (prefix + desired_shortcut)
   end
   
+  # Create the array of options to populate a <select> element for setting the Node.layout
+  def page_layout_select
+    TEMPLATES.collect {|key,value| [key, value["human_name"]] }
+  end
+  
 
 
 
@@ -198,7 +203,7 @@ class Node < ActiveRecord::Base
     self.menu_name = title || shortcut.try(:humanize) if menu_name.blank?
     self.shortcut = parameterize(menu_name) || parameterize(title) if shortcut.blank?
     self.layout_name ||= set_layout_name
-    self.positions = TEMPLATES[layout_name]["positions"]
+    self.total_page_areas = TEMPLATES[layout_name]["total_page_areas"]
   end  
   
   # Sets this node's layout to the default layout for this node's page_type.  

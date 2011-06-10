@@ -20,6 +20,8 @@ module NavigationHelper
     return ""
   end
   
+  
+  
   def dynamic_pages_options_tree_recursive(node, addition, neglected_id='')
     array = []
     array << ["#{addition} #{h(node.menu_name)}", "#{node.id}"] unless node.id == neglected_id

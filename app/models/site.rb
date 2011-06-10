@@ -89,6 +89,11 @@ class Site < ActiveRecord::Base
     return false
   end
   
+  # Returns a sorted and indented site node-tree array for populating a <select> element
+  def site_tree_select
+    nodes.order(:names_depth_cache).map { |c| ["--" * c.depth + c.menu_name, c.id] }
+  end
+  
   
   
   
@@ -112,32 +117,32 @@ class Site < ActiveRecord::Base
   
   # Returns this site's Blog shortcut
   def blogs_shortcut
-    (config_params||DEFAULT_CONFIG_PARAMS)["blogs_shortcut"]
+    (config_params||DEFAULT_CONFIG_PARAMS)["Blogs Shortcut"]
   end
 
   # Returns this site's Calendar shortcut
   def calendars_shortcut
-    (config_params||DEFAULT_CONFIG_PARAMS)["calendars_shortcut"]
+    (config_params||DEFAULT_CONFIG_PARAMS)["Calendars Shortcut"]
   end
 
   # Returns this site's Inventory shortcut
   def inventory_shortcut
-    (config_params||DEFAULT_CONFIG_PARAMS)["inventory_shortcut"]
+    (config_params||DEFAULT_CONFIG_PARAMS)["Inventory Shortcut"]
   end
 
   # Returns this site's Categories shortcut
   def categories_shortcut
-    (config_params||DEFAULT_CONFIG_PARAMS)["categories_shortcut"]
+    (config_params||DEFAULT_CONFIG_PARAMS)["Categories Shortcut"]
   end
 
   # Returns this site's Items shortcut
   def items_shortcut
-    (config_params||DEFAULT_CONFIG_PARAMS)["items_shortcut"]
+    (config_params||DEFAULT_CONFIG_PARAMS)["Items Shortcut"]
   end
 
   # Returns this site's Root node shortcut
   def home_shortcut
-    (config_params||DEFAULT_CONFIG_PARAMS)["home_shortcut"]
+    (config_params||DEFAULT_CONFIG_PARAMS)["Home Shortcut"]
   end
   
   # True if this site should have a separate categories node

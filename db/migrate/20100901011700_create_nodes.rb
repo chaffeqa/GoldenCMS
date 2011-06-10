@@ -7,10 +7,11 @@ class CreateNodes < ActiveRecord::Migration
       t.string :shortcut
       t.string :displayed
       t.string :layout_name
+      t.boolean :cachable
       t.string :ancestry
       t.integer :ancestry_depth, :default => 0
       t.string :names_depth_cache # Optional for easier select box implementation
-      t.integer :positions, :default => 0
+      t.integer :total_page_areas, :default => 0
       t.belongs_to :root_site
       t.belongs_to :site
       t.timestamps

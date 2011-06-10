@@ -3,7 +3,7 @@
 %>
 
 <%# Renders a page_area_elements partial for each position in the page %>
-<% @node.positions.times do |page_area| %>
+<% @node.total_page_areas.times do |page_area| %>
   <%= content_for(('position_' + page_area.to_s).to_sym) do %>
     <%= render :partial => 'elements/page_area_elements', :locals => {:page_area => page_area} %>
   <% end %>

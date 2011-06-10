@@ -1,16 +1,18 @@
 source 'http://rubygems.org'
 
 gem 'rails',     :git => 'git://github.com/rails/rails.git'
+gem 'rake', '~>0.9.2'
 gem 'jquery-rails'
-# For Heroku...
+# Install the ruby javascript compiler, since linux doesnt come with one
 gem 'therubyracer-heroku', '0.8.1.pre3'
 gem 'ckeditor', '3.5.3'
 gem 'paperclip'
-gem 'simple-navigation'#, :git => 'git://github.com/andi/simple-navigation.git'
+gem 'simple-navigation'
 gem 'devise'
 gem 'carmen'
-gem 'mail'#, :git => 'https://github.com/mikel/mail.git'
+gem 'mail'
 gem 'ancestry'
+gem 'acts_as_list'
 gem 'aws-s3'
 gem 'dalli' # For memcache
 gem 'kaminari'
@@ -35,10 +37,8 @@ end
 
 group :development do
   gem 'heroku'
-  # Install the ruby javascript compiler, since linux doesnt come with one
-  #gem "therubyracer"
-  # To use debugger
-  gem 'ruby-debug19', :require => 'ruby-debug'
+  # NOTE: debugger not working with rails --pre currently
+#  gem 'ruby-debug19', :require => 'ruby-debug'
   gem 'mysql2', :git => 'git://github.com/brianmario/mysql2.git'
 end
 

@@ -6,6 +6,8 @@ class CreateElements < ActiveRecord::Migration
       t.string :title
       t.boolean :display_title, :default => true
       t.string :html_id
+      t.string :html_class
+      t.boolean :cachable
       t.belongs_to :node
       t.timestamps
     end
