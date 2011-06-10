@@ -45,6 +45,9 @@ module SearchHelper
   # Collects and Returns all the parameters for the URL that are not Rails specific and saves them in @search_params
   def parse_search_params(params={})
     unless @search_params
+      # TODO: clean up garbage: use :symlinks instead of strings in @search_params
+      # HINT: use request.symbolized_path_parameters() 
+      # http://ap.rubyonrails.org/classes/ActionController/AbstractRequest.html#M000234
       @search_params = params.clone()
       @search_params.delete('action')
       @search_params.delete('controller')

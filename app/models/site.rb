@@ -22,11 +22,12 @@ class Site < ActiveRecord::Base
                         :format => { :with => /^[a-zA-Z0-9-]+$/, :message => 'can only contain alphanumeric characters and dashes.'}
   validates :subdomain, :uniqueness => true,
                         :format => { :with => /^[a-z0-9-]+$/, :message => 'can only contain lowercase alphanumeric characters and dashes.'}
-  validate :ensure_site_root
+  
+  # TODO: this may be too strict a policy, consider removing
+  #validate :ensure_site_root
 
   
   # Validate to ensure this application has one and only one Site object with subdomain = 'www'
-  # TODO: this may be too strict a policy, consider removing
   def ensure_site_root
     if Site.all.count == 0 and subdomain != "www"
       errors.add(:subdomain, "must be 'www' since this is the first site record.  Note: the 'www' sudomain will be the site used when a request asks for '' subdomain.") 
@@ -52,36 +53,41 @@ class Site < ActiveRecord::Base
   # Caller for the FLAT (level 1 and 2 combined) page tree creation
   def flat_page_tree
     @flat_tree ||= ([{
-        :key => "page_#{self.page.id}".to_sym,
-        :name => self.page.menu_name,
-        :url => self.page.url,
-        :options => {:class => "#{self.page.page_type} #{self.page.displayed ? '' : 'not-displayed'}"},
+        :key => "page_#{self.root_page.id}".to_sym,
+        :name => self.root_page.menu_name,
+        :url => self.root_page.url,
+        :options => {:class => "#{self.root_page.page_type} #{self.root_page.displayed ? '' : 'not-displayed'}"},
         :items => []
-    }] + self.page.children.collect {|page| page.tree_hash_value } )
+    }] + self.root_page.children.collect {|page| page.tree_hash_value } )
     @flat_tree
   end
 
   # Caller for the page tree creation
   def page_tree
-    @tree ||= [self.page.tree_hash_value]
+    @tree ||= [self.root_page.tree_hash_value]
     @tree
   end
 
-  # Returns the site
-  def self.get_subdomain(subdomain)
-    where(:subdomain => subdomain).try(:first)
+  # Returns one site object after attempting to match it with a passed in subdomains.
+  # @subdomains [Array:strings] Ex. ["www","GoldenCMS"]
+  # Default returns the first site
+  # TODO: fix so that <sitename>.heroku.com works
+  def self.find_by_subdomains(subdomains)    
+    # Replace [""] occurrence with ["www"]...
+    subdomains << "www" unless subdomains.delete("").nil? 
+    where(:subdomain => subdomains).try(:first) || order("id").first
   end
   
   # Get this site's page by the passed in shortcut. 
   # NOTE returns the root page if the shorcut is '' (to make site root requests work)
   def initialize_requested_page_by_shortcut(shortcut)
-    return page if shortcut == ''
+    return root_page if shortcut == ''
     pages.where(:shortcut => shortcut).try(:first)
   end
   
   # Attempts to create the basic site tree hierarchy
   def initialize_site_tree
-    self.errors[:base] << 'Site Tree root already initialized!' if page
+    self.errors[:base] << 'Site Tree root already initialized!' if root_page
     return (create_home_page and create_basic_menu_tree) if errors.empty?
     return false
   end
@@ -170,7 +176,7 @@ class Site < ActiveRecord::Base
   
   # Build the Home page for the passed in site
   def create_home_page
-    home_page = self.create_page(
+    home_page = self.create_root_page(
           :title => home_shortcut.humanize, 
           :menu_name => home_shortcut.humanize,
           :shortcut => home_shortcut,
@@ -191,23 +197,23 @@ class Site < ActiveRecord::Base
   # Build the basic menu tree.  Should be called after the Site and Root page are created
   def create_basic_menu_tree
     # Instantiate the blogs and calendars pages
-    self.errors[:base] << self.page.children.create(
+    self.errors[:base] << self.root_page.children.create(
       :menu_name => blogs_shortcut.humanize, :title => blogs_shortcut.humanize, :shortcut => blogs_shortcut, :displayed => false
     ).errors.full_messages
-    self.errors[:base] << self.page.children.create(
+    self.errors[:base] << self.root_page.children.create(
       :menu_name => calendars_shortcut.humanize, :title => calendars_shortcut.humanize, :shortcut => calendars_shortcut, :displayed => false
     ).errors.full_messages
     # Instantiate the inventory structure if this site has an inventory
     if has_inventory
-      self.errors[:base] << self.page.children.create(
+      self.errors[:base] << self.root_page.children.create(
         :menu_name => inventory_shortcut.humanize, :title => inventory_shortcut.humanize, :shortcut => inventory_shortcut, :displayed => true
       ).errors.full_messages
       # Instantiate the items page if this site has an a specific page for Items
-      self.errors[:base] << self.page.children.create(
+      self.errors[:base] << self.root_page.children.create(
         :menu_name => items_shortcut.humanize, :title => items_shortcut.humanize, :shortcut => items_shortcut, :displayed => false
       ).errors.full_messages if create_items_page?
       # Instantiate the categories page if this site has an a specific page for Categories
-      self.errors[:base] << self.page.children.create(
+      self.errors[:base] << self.root_page.children.create(
         :menu_name => categories_shortcut.humanize, :title => categories_shortcut.humanize, :shortcut => categories_shortcut, :displayed => false
       ).errors.full_messages if create_categories_page?
     end

@@ -23,8 +23,8 @@ class ApplicationController < ActionController::Base
 
   # Find or instantiate the current site
   def initialize_requested_site
-    logger.debug log_format("FILTER", "Called initialize_requested_site Before_Filter")
-    @requested_site ||= Site.get_subdomain(request.subdomain)
+    logger.debug log_format("FILTER", "Called initialize_requested_site Before_Filter for subdomains: #{request.subdomains.join(', ')}")
+    @requested_site ||= Site.find_by_subdomains(request.subdomains)
     return instantiate_site unless @requested_site and @requested_site.page
     set_site_name(@requested_site.site_name)
     return true
@@ -32,7 +32,7 @@ class ApplicationController < ActionController::Base
 
   # Find or Instantiates the current @requested_page.  Check the page for validity.
   def initialize_requested_page
-    logger.debug log_format("FILTER", "Called initialize_requested_page Before_Filter")
+    logger.debug log_format("FILTER", "Called initialize_requested_page Before_Filter for shortcut: #{params[:shortcut]}")
     @requested_page ||= @requested_site.initialize_requested_page_by_shortcut(params[:shortcut])
     return false unless page_valid? and request_valid?
     set_page_title(@requested_page.title)
@@ -62,8 +62,11 @@ class ApplicationController < ActionController::Base
   private
   
   # Method for instantiating the search filter params
+  # Only performed if the request has a query string addition (ex. "http://foo.com?query=string")
   def parse_filter_params
-    parse_search_params(params)
+    unless request.query_string.blank?
+      parse_search_params(params)
+    end
   end
 
   # If the request is an AJAX one, stashes the flash into the response headers
