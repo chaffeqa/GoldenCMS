@@ -6,10 +6,10 @@ class Event < ActiveRecord::Base
   ###########
   has_event_calendar
 
-  # Associated Node attributes
-  belongs_to :node
-  has_one :parent_node, :through => :node, :source => :parent
-  has_one :calendar, :through => :parent_node
+  # Associated Page attributes
+  belongs_to :page
+  has_one :parent_page, :through => :page, :source => :parent
+  has_one :calendar, :through => :parent_page
 
 
 
@@ -19,7 +19,7 @@ class Event < ActiveRecord::Base
 
   #Validations
   validates :name, :presence => true, :uniqueness => true
-  #before_validation :update_node
+  #before_validation :update_page
   #after_save :update_cache_chain
   #before_destroy :update_cache_chain
   
@@ -33,14 +33,14 @@ class Event < ActiveRecord::Base
     self.calendar.try(:update_cache_chain)
   end
 
-  def update_node
-    node = self.node ? self.node : self.build_node
+  def update_page
+    page = self.page ? self.page : self.build_page
     unless self.name.blank?
-      node.title =  name
-      node.menu_name = name
-      node.set_safe_shortcut(name)
+      page.title =  name
+      page.menu_name = name
+      page.set_safe_shortcut(name)
     end
-    node.displayed = true
-    self.node.parent = calendar.node if calendar and calendar.node
+    page.displayed = true
+    self.page.parent = calendar.page if calendar and calendar.page
   end
 end

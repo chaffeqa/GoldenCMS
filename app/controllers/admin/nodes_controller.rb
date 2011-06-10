@@ -1,44 +1,44 @@
-class Admin::NodesController < ApplicationController
+class Admin::PagesController < ApplicationController
   layout "admin"
   before_filter :check_admin
 
   def new
-    @node = Node.new
+    @page = Page.new
   end
 
   def create
-    @node = @site.build_node(params[:node])
-    if @node.save
-      redirect_to admin_nodes_path, notice: "Node successfully created!"
+    @page = @site.build_page(params[:page])
+    if @page.save
+      redirect_to admin_pages_path, notice: "Page successfully created!"
     else
       render :new
     end
   end
 
   def index
-    @nodes = @site.node_tree
+    @pages = @site.page_tree
   end
 
   def show
-    @node = Node.find(params[:id])
+    @page = Page.find(params[:id])
   end
 
   def edit
-    @node = Node.find(params[:id])
+    @page = Page.find(params[:id])
   end
 
   def update
-    if @node.update_attributes(params[:node])
-      redirect_to admin_nodes_path, notice: "Node successfully updated!"
+    if @page.update_attributes(params[:page])
+      redirect_to admin_pages_path, notice: "Page successfully updated!"
     else
       render :edit
     end
   end
 
   def destroy
-    @node = Node.find(params[:id])
-    @node.destroy ? flash[:notice] = "Node successfully destroyed!" : admin_request_error("There was an error in deleting the node.")
-    redirect_to admin_nodes_path
+    @page = Page.find(params[:id])
+    @page.destroy ? flash[:notice] = "Page successfully destroyed!" : admin_request_error("There was an error in deleting the page.")
+    redirect_to admin_pages_path
     
   end
 

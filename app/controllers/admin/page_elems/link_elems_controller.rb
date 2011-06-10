@@ -1,10 +1,10 @@
 class Admin::PageElems::LinkElemsController < ApplicationController
   layout 'admin'
-  before_filter :get_node, :check_admin
+  before_filter :get_page, :check_admin
 
   def new
     @link_elem = LinkElem.new(:link_type => 'Url')
-    @link_elem.build_element(:page_area => params[:page_area], :display_title => true)
+    @link_elem.build_element(:element_area => params[:element_area], :display_title => true)
   end
 
 
@@ -14,8 +14,8 @@ class Admin::PageElems::LinkElemsController < ApplicationController
 
   def create
     @link_elem = LinkElem.new(params[:link_elem])
-    if  @link_elem.element.dynamic_page = @node.page and  @link_elem.save
-      redirect_to shortcut_path(@node.shortcut), :notice => "Link Element successfully added!"
+    if  @link_elem.element.dynamic_page = @page.page and  @link_elem.save
+      redirect_to shortcut_path(@page.shortcut), :notice => "Link Element successfully added!"
     else
       render :action => 'new'
     end
@@ -24,7 +24,7 @@ class Admin::PageElems::LinkElemsController < ApplicationController
 
   def update
     if @link_elem.update_attributes(params[:link_elem])# and @element.update_attributes(:column_order => params[:column_order], :title => params[:title], :display_title => params[:display_title], :position => params[:position])
-      redirect_to shortcut_path(@node.shortcut), :notice => "Link Element successfully updated!"
+      redirect_to shortcut_path(@page.shortcut), :notice => "Link Element successfully updated!"
     else
       render :action => 'edit'
     end
@@ -38,14 +38,14 @@ class Admin::PageElems::LinkElemsController < ApplicationController
 
   def destroy
     @link_elem.destroy
-    redirect_to(shortcut_path(@node.shortcut), :notice => 'Element successfully destroyed.')
+    redirect_to(shortcut_path(@page.shortcut), :notice => 'Element successfully destroyed.')
   end
 
   private
-  def get_node
+  def get_page
     if params[:id]
       @link_elem = LinkElem.find(params[:id])
-      @node = @link_elem.element.dynamic_page.node
+      @page = @link_elem.element.dynamic_page.page
     end
     super
   end

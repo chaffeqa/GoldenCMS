@@ -15,7 +15,7 @@ class Admin::SitesController < ApplicationController
 
   def create
     @site = Site.new(params[:site])
-    # Instantiate the site, root node, root page, and all base nodes for the site
+    # Instantiate the site, root page, root page, and all base pages for the site
     if @site.save and @site.initialize_site_tree
       redirect_to root_url, :notice => 'Site successfully created!'
     else
@@ -23,7 +23,7 @@ class Admin::SitesController < ApplicationController
         logger.warn log_format("DB", "Error in site instantiation: @site = #{@site.inspect}")
         render :new
       else 
-        logger.warn log_format("DB", "Error in site heirarchy creation: @site = #{@site.inspect}, @home_page = #{@site.node.inspect}")
+        logger.warn log_format("DB", "Error in site heirarchy creation: @site = #{@site.inspect}, @home_page = #{@site.page.inspect}")
         render :edit
       end
     end

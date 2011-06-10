@@ -1,13 +1,13 @@
 class Admin::EventsController < ApplicationController
   layout 'admin'
   before_filter :check_admin
-  before_filter :get_node, :except => [:new, :create]
+  before_filter :get_page, :except => [:new, :create]
 
 
   def new
     @calendar = Calendar.find(params[:calendar_id])
     @event = @calendar.events.new
-    @event.build_node(:displayed => true)
+    @event.build_page(:displayed => true)
   end
 
 
@@ -18,8 +18,8 @@ class Admin::EventsController < ApplicationController
   def create
     @calendar = Calendar.find(params[:calendar_id])
     @event = @calendar.events.build(params[:event])
-    if @event.save and @calendar.node.children << @event.node
-      redirect_to( shortcut_path(@event.node.shortcut), :notice => 'Event was successfully created.')
+    if @event.save and @calendar.page.children << @event.page
+      redirect_to( shortcut_path(@event.page.shortcut), :notice => 'Event was successfully created.')
     else
       render :action => "new"
     end
@@ -28,7 +28,7 @@ class Admin::EventsController < ApplicationController
 
   def update
     if @event.update_attributes(params[:event])
-      redirect_to( shortcut_path(@node.shortcut), :notice => 'Event was successfully updated.')
+      redirect_to( shortcut_path(@page.shortcut), :notice => 'Event was successfully updated.')
     else
       render :action => "edit"
     end
@@ -37,16 +37,16 @@ class Admin::EventsController < ApplicationController
 
   def destroy
     @event.destroy
-    redirect_to( shortcut_path(@calendar.node.shortcut), :notice => 'Event was successfully destroyed' )
+    redirect_to( shortcut_path(@calendar.page.shortcut), :notice => 'Event was successfully destroyed' )
   end
 
   private
 
-  def get_node
+  def get_page
     @calendar = Calendar.find(params[:calendar_id])
     @event = Event.find(params[:id])
-    @event.build_node(:displayed => true) unless @event.node
-    @node = @event.node
+    @event.build_page(:displayed => true) unless @event.page
+    @page = @event.page
     super
   end
 end

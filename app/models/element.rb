@@ -4,8 +4,8 @@ class Element < ActiveRecord::Base
   ####################################################################
   # Associations
   ###########
-  belongs_to :node
-  acts_as_list :scope => proc { ["node_id = ? AND page_area = ?", node_id, page_area] }
+  belongs_to :page
+  acts_as_list :scope => proc { ["page_id = ? AND element_area = ?", page_id, element_area] }
   
   ELEM_TYPES.each do |human_name, elem_table|
     has_one elem_table.signularize.to_sym
@@ -20,7 +20,7 @@ class Element < ActiveRecord::Base
 
   #Validations
   validates :title, :presence => true
-  validates :page_area, :numericality => true
+  validates :element_area, :numericality => true
   
   #Callbacks
   before_save :create_html_id
@@ -43,9 +43,9 @@ class Element < ActiveRecord::Base
   # Returns the elements ordered from highest (first) to lowest (last)
   scope :elem_order, order('position asc')
   # Returns all Elements with the position passed in
-  scope :page_area_elems, lambda {|page_area| where(:page_area => page_area) }
+  scope :element_area_elems, lambda {|element_area| where(:element_area => element_area) }
   # Returns the ordered elements for the passed in position
-  scope :elements_for_page_area, lambda {|page_area| page_area_elems(page_area).elem_order }
+  scope :elements_for_element_area, lambda {|element_area| element_area_elems(element_area).elem_order }
 
 
   def create_html_id

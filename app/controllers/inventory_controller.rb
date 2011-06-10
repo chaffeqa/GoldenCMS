@@ -1,5 +1,5 @@
 class InventoryController < ApplicationController
-  before_filter :get_node
+  before_filter :get_page
 
   def inventory
     render_with_cache
@@ -13,9 +13,9 @@ class InventoryController < ApplicationController
 
   private
 
-  def get_node
-    @node = @current_site.get_node_by_shortcut(@current_site.inventory_shortcut) if request.parameters['action'] == 'inventory'
-    @node = @current_site.get_node_by_shortcut(@current_site.items_shortcut)  if request.parameters['action'] == 'search'
+  def get_page
+    @page = @current_site.get_page_by_shortcut(@current_site.inventory_shortcut) if request.parameters['action'] == 'inventory'
+    @page = @current_site.get_page_by_shortcut(@current_site.items_shortcut)  if request.parameters['action'] == 'search'
     super
   end
 end

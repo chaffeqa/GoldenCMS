@@ -1,11 +1,11 @@
 class Admin::PageElems::TextElemsController < ApplicationController
   layout 'admin'
-  before_filter :get_node, :check_admin
+  before_filter :get_page, :check_admin
 
 
   def new
     @text_elem = TextElem.new
-    @text_elem.build_element(:page_area => params[:page_area], :display_title => true)
+    @text_elem.build_element(:element_area => params[:element_area], :display_title => true)
   end
 
 
@@ -15,8 +15,8 @@ class Admin::PageElems::TextElemsController < ApplicationController
 
   def create
     @text_elem = TextElem.new(params[:text_elem])
-    if @text_elem.element.dynamic_page = @node.page and @text_elem.save
-      redirect_to(shortcut_path(@node.shortcut), :notice => "Text Element successfully added!")
+    if @text_elem.element.dynamic_page = @page.page and @text_elem.save
+      redirect_to(shortcut_path(@page.shortcut), :notice => "Text Element successfully added!")
     else
       flash.now[:error] = 'Errors'
       render :action => 'new'
@@ -26,7 +26,7 @@ class Admin::PageElems::TextElemsController < ApplicationController
 
   def update
     if @text_elem.update_attributes(params[:text_elem])
-      redirect_to(shortcut_path(@node.shortcut), :notice => "Text Element successfully updated!")
+      redirect_to(shortcut_path(@page.shortcut), :notice => "Text Element successfully updated!")
     else
       render :action => 'edit'
     end
@@ -34,16 +34,16 @@ class Admin::PageElems::TextElemsController < ApplicationController
 
   def destroy
     @text_elem.destroy
-    redirect_to(shortcut_path(@node.shortcut), :notice => 'Element successfully destroyed.')
+    redirect_to(shortcut_path(@page.shortcut), :notice => 'Element successfully destroyed.')
   end
 
 
 
   private
-  def get_node
+  def get_page
     if params[:id]
       @text_elem = TextElem.find(params[:id])
-      @node = @text_elem.element.dynamic_page.node
+      @page = @text_elem.element.dynamic_page.page
     end
     super
   end

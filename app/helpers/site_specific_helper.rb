@@ -4,31 +4,31 @@ module SiteSpecificHelper
   def build_home_page(site)
     @home_page ||= DynamicPage.new(
         :template_name => 'home', 
-        :node_attributes => {
+        :page_attributes => {
           :title => 'Home', 
           :menu_name => 'Home',
           :shortcut => @site.home_shortcut,
           :displayed => true
     })
-    @home_page.node.site = @site
+    @home_page.page.site = @site
     @home_page
   end
   
-  # Build the basic menu tree.  Should be called after the Site and Root node are created
+  # Build the basic menu tree.  Should be called after the Site and Root page are created
   def build_basic_menu_tree(site)
-    root = site.node; errors = []
-    # Instantiate the blogs and calendars nodes
+    root = site.page; errors = []
+    # Instantiate the blogs and calendars pages
     errors = errors + root.children.create(:menu_name => 'Blogs', :title => 'Blogs', :shortcut => site.blogs_shortcut, :displayed => false).errors.full_messages
     errors = errors + root.children.create(:menu_name => 'Calendars', :title => 'Calendars', :shortcut => site.calendars_shortcut, :displayed => false).errors.full_messages
     # Instantiate the inventory structure if this site has an inventory
     if site.has_inventory
-      inventory_node = root.children.create(:menu_name => 'Inventory', :title => 'Inventory', :shortcut => site.inventory_shortcut, :displayed => true)
-      errors = errors + inventory_node.errors.full_messages
-      if inventory_node.valid?
-        # Instantiate the items node if this site has an a specific node for Items
-        (errors = errors + inventory_node.children.create(:menu_name => 'Items', :title => 'Items', :shortcut => site.items_shortcut, :displayed => true).errors.full_messages) if site.create_items_node?
-        # Instantiate the categories node if this site has an a specific node for Categories
-        (errors = errors + inventory_node.children.create(:menu_name => 'Categories', :title => 'Categories', :shortcut => site.categories_shortcut, :displayed => true).errors.full_messages) if site.create_categories_node?
+      inventory_page = root.children.create(:menu_name => 'Inventory', :title => 'Inventory', :shortcut => site.inventory_shortcut, :displayed => true)
+      errors = errors + inventory_page.errors.full_messages
+      if inventory_page.valid?
+        # Instantiate the items page if this site has an a specific page for Items
+        (errors = errors + inventory_page.children.create(:menu_name => 'Items', :title => 'Items', :shortcut => site.items_shortcut, :displayed => true).errors.full_messages) if site.create_items_page?
+        # Instantiate the categories page if this site has an a specific page for Categories
+        (errors = errors + inventory_page.children.create(:menu_name => 'Categories', :title => 'Categories', :shortcut => site.categories_shortcut, :displayed => true).errors.full_messages) if site.create_categories_page?
       end
     end
     # Log any errors, and then add them to the passed in site

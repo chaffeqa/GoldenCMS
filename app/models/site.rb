@@ -7,8 +7,8 @@ class Site < ActiveRecord::Base
   # Associations
   ###########
 
-  has_one :node
-  has_many :nodes, :foreign_key => 'root_site_id'
+  has_one :root_page, :class_name => "Page"
+  has_many :pages, :foreign_key => 'root_site_id'
 
 
 
@@ -21,18 +21,15 @@ class Site < ActiveRecord::Base
   validates :site_name, :presence => true, 
                         :format => { :with => /^[a-zA-Z0-9-]+$/, :message => 'can only contain alphanumeric characters and dashes.'}
   validates :subdomain, :uniqueness => true,
-                        :format => { :with => /^[a-z0-9-]+$/, :message => 'can only contain lowercase alphanumeric characters and dashes.', :allow_blank => true}
-  
+                        :format => { :with => /^[a-z0-9-]+$/, :message => 'can only contain lowercase alphanumeric characters and dashes.'}
+  validate :ensure_site_root
 
   
-  # Validate to ensure this application has one and only one Site object with subdomain = ''
+  # Validate to ensure this application has one and only one Site object with subdomain = 'www'
+  # TODO: this may be too strict a policy, consider removing
   def ensure_site_root
-    if subdomain.blank?
-      # Test if another site already has a subdomain = ''
-      errors.add(:subdomain, "is already taken.") if self.class.where(:subdomain => '').where("sites.id != ?", id || 0).count > 0
-    else
-      # Test if no other site has a subdomain = '', in which case we want this site subdomain = ''
-      errors.add(:subdomain, "must be blank since this is the first site record.") if self.class.where(:subdomain => '').where("sites.id != ?", id || 0).empty?
+    if Site.all.count == 0 and subdomain != "www"
+      errors.add(:subdomain, "must be 'www' since this is the first site record.  Note: the 'www' sudomain will be the site used when a request asks for '' subdomain.") 
     end
   end
   
@@ -52,21 +49,21 @@ class Site < ActiveRecord::Base
   
   
 
-  # Caller for the FLAT (level 1 and 2 combined) node tree creation
-  def flat_node_tree
+  # Caller for the FLAT (level 1 and 2 combined) page tree creation
+  def flat_page_tree
     @flat_tree ||= ([{
-        :key => "node_#{self.node.id}".to_sym,
-        :name => self.node.menu_name,
-        :url => self.node.url,
-        :options => {:class => "#{self.node.page_type} #{self.node.displayed ? '' : 'not-displayed'}"},
+        :key => "page_#{self.page.id}".to_sym,
+        :name => self.page.menu_name,
+        :url => self.page.url,
+        :options => {:class => "#{self.page.page_type} #{self.page.displayed ? '' : 'not-displayed'}"},
         :items => []
-    }] + self.node.children.collect {|node| node.tree_hash_value } )
+    }] + self.page.children.collect {|page| page.tree_hash_value } )
     @flat_tree
   end
 
-  # Caller for the node tree creation
-  def node_tree
-    @tree ||= [self.node.tree_hash_value]
+  # Caller for the page tree creation
+  def page_tree
+    @tree ||= [self.page.tree_hash_value]
     @tree
   end
 
@@ -75,23 +72,23 @@ class Site < ActiveRecord::Base
     where(:subdomain => subdomain).try(:first)
   end
   
-  # Get this site's node by the passed in shortcut. 
-  # NOTE returns the root node if the shorcut is '' (to make site root requests work)
-  def get_node_by_shortcut(shortcut)
-    return node if shortcut == ''
-    nodes.where(:shortcut => shortcut).try(:first)
+  # Get this site's page by the passed in shortcut. 
+  # NOTE returns the root page if the shorcut is '' (to make site root requests work)
+  def get_page_by_shortcut(shortcut)
+    return page if shortcut == ''
+    pages.where(:shortcut => shortcut).try(:first)
   end
   
   # Attempts to create the basic site tree hierarchy
   def initialize_site_tree
-    self.errors[:base] << 'Site Tree root already initialized!' if node
-    return (create_home_node and create_basic_menu_tree) if errors.empty?
+    self.errors[:base] << 'Site Tree root already initialized!' if page
+    return (create_home_page and create_basic_menu_tree) if errors.empty?
     return false
   end
   
-  # Returns a sorted and indented site node-tree array for populating a <select> element
+  # Returns a sorted and indented site page-tree array for populating a <select> element
   def site_tree_select
-    nodes.order(:names_depth_cache).map { |c| ["--" * c.depth + c.menu_name, c.id] }
+    pages.order(:names_depth_cache).map { |c| ["--" * c.depth + c.menu_name, c.id] }
   end
   
   
@@ -109,10 +106,10 @@ class Site < ActiveRecord::Base
     [home_shortcut, items_shortcut, inventory_shortcut, blogs_shortcut, calendars_shortcut, categories_shortcut, items_shortcut].uniq.compact
   end
   
-  # Returns all the reserved nodes for this site
-  def reserved_nodes
-    [get_node_by_shortcut(home_shortcut), get_node_by_shortcut(items_shortcut), get_node_by_shortcut(inventory_shortcut), get_node_by_shortcut(blogs_shortcut),
-    get_node_by_shortcut(calendars_shortcut), get_node_by_shortcut(categories_shortcut), get_node_by_shortcut(items_shortcut)].uniq.compact
+  # Returns all the reserved pages for this site
+  def reserved_pages
+    [get_page_by_shortcut(home_shortcut), get_page_by_shortcut(items_shortcut), get_page_by_shortcut(inventory_shortcut), get_page_by_shortcut(blogs_shortcut),
+    get_page_by_shortcut(calendars_shortcut), get_page_by_shortcut(categories_shortcut), get_page_by_shortcut(items_shortcut)].uniq.compact
   end
   
   # Returns this site's Blog shortcut
@@ -140,18 +137,18 @@ class Site < ActiveRecord::Base
     (config_params||DEFAULT_CONFIG_PARAMS)["Items Shortcut"]
   end
 
-  # Returns this site's Root node shortcut
+  # Returns this site's Root page shortcut
   def home_shortcut
     (config_params||DEFAULT_CONFIG_PARAMS)["Home Shortcut"]
   end
   
-  # True if this site should have a separate categories node
-  def create_categories_node?
+  # True if this site should have a separate categories page
+  def create_categories_page?
     categories_shortcut != inventory_shortcut
   end
   
-  # True if this site should have a separate items node
-  def create_items_node?
+  # True if this site should have a separate items page
+  def create_items_page?
     items_shortcut != inventory_shortcut
   end  
   
@@ -171,9 +168,9 @@ class Site < ActiveRecord::Base
   # Site Building Methods
   ###########  
   
-  # Build the Home node for the passed in site
-  def create_home_node
-    home_node = self.create_node(
+  # Build the Home page for the passed in site
+  def create_home_page
+    home_page = self.create_page(
           :title => home_shortcut.humanize, 
           :menu_name => home_shortcut.humanize,
           :shortcut => home_shortcut,
@@ -181,38 +178,38 @@ class Site < ActiveRecord::Base
           :displayed => true,
           :positions => TEMPLATES[HOME_PAGE_TEMPLATE]["positions"]
     )
-    self.errors[:base] << home_node.errors.full_messages  
+    self.errors[:base] << home_page.errors.full_messages  
     # Log any errors
     unless errors.empty?
-      logger.error "*********** site.create_home_node Errors: *************"
+      logger.error "*********** site.create_home_page Errors: *************"
       errors.full_messages.each {|err| logger.error "#{err}" }
-      logger.error "********* End site.create_home_node Errors: ***********"
+      logger.error "********* End site.create_home_page Errors: ***********"
     end
     return errors.empty?
   end
   
-  # Build the basic menu tree.  Should be called after the Site and Root node are created
+  # Build the basic menu tree.  Should be called after the Site and Root page are created
   def create_basic_menu_tree
-    # Instantiate the blogs and calendars nodes
-    self.errors[:base] << self.node.children.create(
+    # Instantiate the blogs and calendars pages
+    self.errors[:base] << self.page.children.create(
       :menu_name => blogs_shortcut.humanize, :title => blogs_shortcut.humanize, :shortcut => blogs_shortcut, :displayed => false
     ).errors.full_messages
-    self.errors[:base] << self.node.children.create(
+    self.errors[:base] << self.page.children.create(
       :menu_name => calendars_shortcut.humanize, :title => calendars_shortcut.humanize, :shortcut => calendars_shortcut, :displayed => false
     ).errors.full_messages
     # Instantiate the inventory structure if this site has an inventory
     if has_inventory
-      self.errors[:base] << self.node.children.create(
+      self.errors[:base] << self.page.children.create(
         :menu_name => inventory_shortcut.humanize, :title => inventory_shortcut.humanize, :shortcut => inventory_shortcut, :displayed => true
       ).errors.full_messages
-      # Instantiate the items node if this site has an a specific node for Items
-      self.errors[:base] << self.node.children.create(
+      # Instantiate the items page if this site has an a specific page for Items
+      self.errors[:base] << self.page.children.create(
         :menu_name => items_shortcut.humanize, :title => items_shortcut.humanize, :shortcut => items_shortcut, :displayed => false
-      ).errors.full_messages if create_items_node?
-      # Instantiate the categories node if this site has an a specific node for Categories
-      self.errors[:base] << self.node.children.create(
+      ).errors.full_messages if create_items_page?
+      # Instantiate the categories page if this site has an a specific page for Categories
+      self.errors[:base] << self.page.children.create(
         :menu_name => categories_shortcut.humanize, :title => categories_shortcut.humanize, :shortcut => categories_shortcut, :displayed => false
-      ).errors.full_messages if create_categories_node?
+      ).errors.full_messages if create_categories_page?
     end
     # Log any errors
     unless errors.empty?

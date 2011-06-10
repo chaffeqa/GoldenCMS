@@ -11,19 +11,19 @@ class Admin::DynamicPagesController < ApplicationController
 
   def new
     @dynamic_page = DynamicPage.new
-    @dynamic_page.build_node(:displayed => true)
+    @dynamic_page.build_page(:displayed => true)
   end
 
 
   def edit
-    @dynamic_page.build_node(:displayed => true) unless @dynamic_page.node
+    @dynamic_page.build_page(:displayed => true) unless @dynamic_page.page
   end
 
 
   def create
     @dynamic_page = DynamicPage.new(params[:dynamic_page])
-    # Set current_site root to this pages node unless it is already set
-    @dynamic_page.node.site = @current_site unless @current_site.node
+    # Set current_site root to this pages page unless it is already set
+    @dynamic_page.page.site = @current_site unless @current_site.page
     if @dynamic_page.save
       redirect_to( admin_dynamic_pages_path(), :notice => 'Page was successfully created.')
     else

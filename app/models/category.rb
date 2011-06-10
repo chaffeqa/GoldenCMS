@@ -5,11 +5,11 @@ class Category < ActiveRecord::Base
   ###########
   has_many :item_list_elems, :dependent => :destroy
 
-  # Associated Node attributes
-  belongs_to :node
-  has_one :parent_node, :through => :node, :source => :parent, :class_name => 'Node'
-  has_one :parent_category, :class_name => 'Category', :through => :parent_node, :source => :category
-  has_many :item_pages, :through => :node, :source => :item_pages
+  # Associated Page attributes
+  belongs_to :page
+  has_one :parent_page, :through => :page, :source => :parent, :class_name => 'Page'
+  has_one :parent_category, :class_name => 'Category', :through => :parent_page, :source => :category
+  has_many :item_pages, :through => :page, :source => :item_pages
   has_many :items, :through => :item_pages
 
   has_attached_file :image,
@@ -32,7 +32,7 @@ class Category < ActiveRecord::Base
   ###########
 
   validates :title, :presence => true, :uniqueness => true
-  #before_validation :update_node
+  #before_validation :update_page
   #after_save  :update_cache_chain
   #before_destroy :update_cache_chain
   
@@ -47,16 +47,16 @@ class Category < ActiveRecord::Base
   end
 
 
-  def update_node
-    node = self.node ? self.node : self.build_node
+  def update_page
+    page = self.page ? self.page : self.build_page
     unless self.title.blank?
-      node.title =  title
-      node.menu_name = title
-      node.set_safe_shortcut(title)
+      page.title =  title
+      page.menu_name = title
+      page.set_safe_shortcut(title)
     end
-    node.displayed = true
+    page.displayed = true
     site = Site.first
-    node.parent = (parent_category and !parent_category_id.blank?) ? parent_category.node : site.get_node_by_shortcut(site.categories_shortcut)
+    page.parent = (parent_category and !parent_category_id.blank?) ? parent_category.page : site.get_page_by_shortcut(site.categories_shortcut)
   end
 
 

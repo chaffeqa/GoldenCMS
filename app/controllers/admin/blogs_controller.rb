@@ -1,7 +1,7 @@
 class Admin::BlogsController < ApplicationController
   layout 'admin'
   before_filter :check_admin
-  before_filter :get_node, :except => [:new, :create, :index]
+  before_filter :get_page, :except => [:new, :create, :index]
 
   def index
     @blogs = Blog.page(@page).per(@per_page)
@@ -11,7 +11,7 @@ class Admin::BlogsController < ApplicationController
 
   def new
     @blog = Blog.new
-    @blog.build_node(:displayed => true)
+    @blog.build_page(:displayed => true)
   end
 
 
@@ -22,7 +22,7 @@ class Admin::BlogsController < ApplicationController
   def create
     @blog = Blog.new(params[:blog])
     if @blog.save
-      redirect_to( shortcut_path(@blog.node.shortcut), :notice => 'Blog was successfully created.')
+      redirect_to( shortcut_path(@blog.page.shortcut), :notice => 'Blog was successfully created.')
     else
       render :action => "new"
     end
@@ -31,7 +31,7 @@ class Admin::BlogsController < ApplicationController
 
   def update
     if @blog.update_attributes(params[:blog])
-      redirect_to( shortcut_path(@blog.node.shortcut), :notice => 'Blog was successfully updated.')
+      redirect_to( shortcut_path(@blog.page.shortcut), :notice => 'Blog was successfully updated.')
     else
       render :action => "edit"
     end
@@ -45,10 +45,10 @@ class Admin::BlogsController < ApplicationController
 
   private
 
-  def get_node
+  def get_page
     @blog = Blog.find(params[:id])
-    @blog.build_node(:displayed => true) unless @blog.node
-    @node = @blog.node
+    @blog.build_page(:displayed => true) unless @blog.page
+    @page = @blog.page
     super
   end
 

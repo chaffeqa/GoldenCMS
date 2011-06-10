@@ -12,14 +12,14 @@ class CreateLinkElems < ActiveRecord::Migration
       t.string :link_file_content_type
       t.integer :link_file_file_size
       t.datetime :link_file_updated_at
-      t.belongs_to :node
+      t.belongs_to :page
       t.belongs_to :image
       t.belongs_to :element
       t.timestamps
     end
 
     add_index :link_elems, :element_id
-    add_index :link_elems, :node_id
+    add_index :link_elems, :page_id
     add_index :link_elems, :image_id
   end
 end

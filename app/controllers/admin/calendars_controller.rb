@@ -1,7 +1,7 @@
 class Admin::CalendarsController < ApplicationController
   layout 'admin'
   before_filter :check_admin
-  before_filter :get_node, :except => [:new, :create, :index]
+  before_filter :get_page, :except => [:new, :create, :index]
 
   def index
     @calendars = Calendar.page(@page).per(@per_page)
@@ -11,7 +11,7 @@ class Admin::CalendarsController < ApplicationController
 
   def new
     @calendar = Calendar.new
-    @calendar.build_node(:displayed => true)
+    @calendar.build_page(:displayed => true)
   end
 
 
@@ -22,7 +22,7 @@ class Admin::CalendarsController < ApplicationController
   def create
     @calendar = Calendar.new(params[:calendar])
     if @calendar.save
-      redirect_to( shortcut_path(@calendar.node.shortcut), :notice => 'Calendar was successfully created.')
+      redirect_to( shortcut_path(@calendar.page.shortcut), :notice => 'Calendar was successfully created.')
     else
       render :action => "new"
     end
@@ -31,7 +31,7 @@ class Admin::CalendarsController < ApplicationController
 
   def update
     if @calendar.update_attributes(params[:calendar])
-      redirect_to( shortcut_path(@calendar.node.shortcut), :notice => 'Calendar was successfully updated.')
+      redirect_to( shortcut_path(@calendar.page.shortcut), :notice => 'Calendar was successfully updated.')
     else
       render :action => "edit"
     end
@@ -45,10 +45,10 @@ class Admin::CalendarsController < ApplicationController
 
   private
 
-  def get_node
+  def get_page
     @calendar = Calendar.find(params[:id])
-    @calendar.build_node(:displayed => true) unless @calendar.node
-    @node = @calendar.node
+    @calendar.build_page(:displayed => true) unless @calendar.page
+    @page = @calendar.page
     super
   end
 

@@ -7,7 +7,7 @@ class Admin::MenusController < ApplicationController
 
   def sort
     if request.post?
-      @errors = Node.order_tree(params['_json'])
+      @errors = Page.order_tree(params['_json'])
       flash.now[:notice] = 'Menu hierarchy successfully updated' unless @errors.any?
       flash.now[:error] = "Errors on your menu update for --- #{@errors.collect {|n| n.menu_name + ': (' + n.errors.full_messages.join(', ') + ')'}.join(' --- ') }---" if @errors.any?
     else

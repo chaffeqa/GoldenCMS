@@ -1,2 +1,2 @@
-module Admin::NodesHelper
+module Admin::PagesHelper
 end

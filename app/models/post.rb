@@ -6,10 +6,10 @@ class Post < ActiveRecord::Base
   ###########
   belongs_to :blog
 
-  # Associated Node attributes
-  belongs_to :node
-  has_one :parent_node, :through => :node, :source => :parent
-  has_one :blog, :through => :parent_node, :source => :blog
+  # Associated Page attributes
+  belongs_to :page
+  has_one :parent_page, :through => :page, :source => :parent
+  has_one :blog, :through => :parent_page, :source => :blog
 
 
 
@@ -23,7 +23,7 @@ class Post < ActiveRecord::Base
   validates :title, :presence => true
   
   #Callbacks
-  before_validation :update_node
+  before_validation :update_page
   after_save  :update_cache_chain
   before_destroy :update_cache_chain
   
@@ -37,15 +37,15 @@ class Post < ActiveRecord::Base
     self.blog.try(:update_cache_chain)
   end
 
-  def update_node
-    node = self.node ? self.node : self.build_node
+  def update_page
+    page = self.page ? self.page : self.build_page
     unless title.blank?
-      node.title =  title
-      node.menu_name = title
-      node.set_safe_shortcut(title)
+      page.title =  title
+      page.menu_name = title
+      page.set_safe_shortcut(title)
     end
-    node.displayed = true
-    node.parent = blog.node if blog and blog.node
+    page.displayed = true
+    page.parent = blog.page if blog and blog.page
   end
 
 end

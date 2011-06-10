@@ -1,7 +1,7 @@
 class Admin::CategoriesController < ApplicationController
   layout 'admin'
   before_filter :check_admin
-  before_filter :get_node, :except => [:new, :create, :index]
+  before_filter :get_page, :except => [:new, :create, :index]
 
   def index
     @categories = Category.page(@page).per(@per_page)
@@ -11,7 +11,7 @@ class Admin::CategoriesController < ApplicationController
   
   def new
     @category = Category.new
-    @category.build_node(:displayed => true)
+    @category.build_page(:displayed => true)
   end
 
   def edit
@@ -41,10 +41,10 @@ class Admin::CategoriesController < ApplicationController
   
   private
 
-  def get_node
+  def get_page
     @category = Category.find(params[:id])
-    @category.build_node(:displayed => true) unless @category.node
-    @node = @category.node
+    @category.build_page(:displayed => true) unless @category.page
+    @page = @category.page
     super
   end
 

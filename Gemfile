@@ -17,6 +17,7 @@ gem 'aws-s3'
 gem 'dalli' # For memcache
 gem 'kaminari'
 gem 'event-calendar', :require => 'event_calendar'
+gem 'to_slug'
 
 
 

@@ -5,9 +5,9 @@ class CreateCalendars < ActiveRecord::Migration
       t.text :banner
       t.string :event_color
       t.string :background_color
-      t.belongs_to :node
+      t.belongs_to :page
       t.timestamps
     end
-    add_index :calendars, :node_id
+    add_index :calendars, :page_id
   end
 end

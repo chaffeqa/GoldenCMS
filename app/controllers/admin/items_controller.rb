@@ -9,12 +9,12 @@ class Admin::ItemsController < ApplicationController
 
   def new
     @item = Item.new
-    @item.build_node(:displayed => true)
+    @item.build_page(:displayed => true)
   end
 
   def edit
     @item = Item.find(params[:id])
-    @item.build_node(:displayed => true) unless @item.node
+    @item.build_page(:displayed => true) unless @item.page
   end
 
   def create
@@ -30,7 +30,7 @@ class Admin::ItemsController < ApplicationController
   def update
     @item = Item.find(params[:id])
     if @item.update_attributes(params[:item])
-      redirect_to(shortcut_path(@item.node.shortcut), :notice => 'Item was successfully updated.')
+      redirect_to(shortcut_path(@item.page.shortcut), :notice => 'Item was successfully updated.')
     else
       render :action => "edit"
     end

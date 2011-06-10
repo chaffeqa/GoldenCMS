@@ -8,8 +8,8 @@ class Item < ActiveRecord::Base
   accepts_nested_attributes_for :product_images, :allow_destroy => true, :reject_if => proc { |attributes| attributes['image'].blank? and attributes['id'].blank? }
 
 
-  # Associated Node attributes
-  belongs_to :node
+  # Associated Page attributes
+  belongs_to :page
   has_many :item_pages, :dependent => :destroy
   has_many :categories, :through => :item_pages
   accepts_nested_attributes_for :item_pages, :allow_destroy => true #, :reject_if => proc { |attr| attr['category_id'].blank?}
@@ -26,7 +26,7 @@ class Item < ActiveRecord::Base
   validates :cost, :presence => true, :numericality => true
 
   #Callbacks
-  #before_validation :update_node
+  #before_validation :update_page
   #after_save        :update_cache_chain
   #after_save        :update_item_categories
   #before_destroy    :update_cache_chain
@@ -47,17 +47,17 @@ class Item < ActiveRecord::Base
     (item_categories.each {|ic| ( ic.save) unless ic.marked_for_destruction? }) if item_categories
   end
 
-  # updates the attributes for each node for this item
-  def update_node
-    node = self.node ? self.node : self.build_node
+  # updates the attributes for each page for this item
+  def update_page
+    page = self.page ? self.page : self.build_page
     unless name.blank?
-      node.title = name
-      node.menu_name =  name
-      node.set_safe_shortcut(name)
+      page.title = name
+      page.menu_name =  name
+      page.set_safe_shortcut(name)
     end
-    node.displayed = self.display || true
+    page.displayed = self.display || true
     site = Site.first
-    node.parent = site.get_node_by_shortcut(site.items_shortcut)
+    page.parent = site.get_page_by_shortcut(site.items_shortcut)
   end
 
 
@@ -110,7 +110,7 @@ class Item < ActiveRecord::Base
 
   # Returns the best menu heirarchy url for this item
   def better_url
-    self.has_better_url? ? self.item_categories.first.node.shortcut : self.node.shortcut
+    self.has_better_url? ? self.item_categories.first.page.shortcut : self.page.shortcut
   end
 
 

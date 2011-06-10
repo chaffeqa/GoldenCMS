@@ -6,9 +6,9 @@ class Calendar < ActiveRecord::Base
   ###########
   has_many :calendar_elems
 
-  # Associated Node attributes
-  belongs_to :node
-  has_many :events, :through => :node
+  # Associated Page attributes
+  belongs_to :page
+  has_many :events, :through => :page
 
 
   ####################################################################
@@ -16,7 +16,7 @@ class Calendar < ActiveRecord::Base
   ###########
 
   validates :title, :presence => true, :uniqueness => true
-  #before_validation :update_node  
+  #before_validation :update_page  
   #after_save :update_cache_chain
   #before_destroy :update_cache_chain
   
@@ -30,17 +30,17 @@ class Calendar < ActiveRecord::Base
     self.calendar_elems.each {|elem| elem.try(:update_cache_chain) }
   end
 
-  def update_node
-    node = self.node ? self.node : self.build_node
+  def update_page
+    page = self.page ? self.page : self.build_page
     unless self.title.blank?
-      node.title =  title
-      node.menu_name = title
-      node.set_safe_shortcut(title)
+      page.title =  title
+      page.menu_name = title
+      page.set_safe_shortcut(title)
     end
-    node.displayed = true
-    node.layout = CALENDAR_TEMPLATE
+    page.displayed = true
+    page.layout = CALENDAR_TEMPLATE
     site = Site.first
-    node.parent = site.get_node_by_shortcut(site.calendars_shortcut)
+    page.parent = site.get_page_by_shortcut(site.calendars_shortcut)
   end
 end
 

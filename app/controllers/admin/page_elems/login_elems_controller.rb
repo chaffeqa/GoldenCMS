@@ -1,14 +1,14 @@
 class Admin::PageElems::LoginElemsController < ApplicationController
   layout 'admin'
-  before_filter :get_node, :check_admin
+  before_filter :get_page, :check_admin
 
 
   def new
-    @element = Element.new(:page_area => params[:page_area], :display_title => true, :elem_type => 'LoginElem', :title => 'Authentication')
-    if @element.dynamic_page = @node.page and @element.save
-      redirect_to(shortcut_path(@node.shortcut), :notice => "Login Element successfully added!")
+    @element = Element.new(:element_area => params[:element_area], :display_title => true, :elem_type => 'LoginElem', :title => 'Authentication')
+    if @element.dynamic_page = @page.page and @element.save
+      redirect_to(shortcut_path(@page.shortcut), :notice => "Login Element successfully added!")
     else
-      redirect_to(shortcut_path(@node.shortcut), :alert => "Login Element failsed to be added!")
+      redirect_to(shortcut_path(@page.shortcut), :alert => "Login Element failsed to be added!")
     end
   end
 
@@ -19,8 +19,8 @@ class Admin::PageElems::LoginElemsController < ApplicationController
 
   def create
     @blog_elem = BlogElem.new(params[:blog_elem])
-    if @blog_elem.save and  @node.page.elements << @blog_elem.element
-      redirect_to(shortcut_path(@node.shortcut), :notice => "Blog Element successfully added!")
+    if @blog_elem.save and  @page.page.elements << @blog_elem.element
+      redirect_to(shortcut_path(@page.shortcut), :notice => "Blog Element successfully added!")
     else
       render :action => 'new'
     end
@@ -29,7 +29,7 @@ class Admin::PageElems::LoginElemsController < ApplicationController
 
   def update
     if @blog_elem.update_attributes(params[:blog_elem])
-      redirect_to(shortcut_path(@node.shortcut), :notice => "Blog Element successfully updated!")
+      redirect_to(shortcut_path(@page.shortcut), :notice => "Blog Element successfully updated!")
     else
       render :action => 'edit'
     end
@@ -37,15 +37,15 @@ class Admin::PageElems::LoginElemsController < ApplicationController
 
   def destroy
     @blog_elem.destroy
-    redirect_to(shortcut_path(@node.shortcut), :notice => 'Element successfully destroyed.')
+    redirect_to(shortcut_path(@page.shortcut), :notice => 'Element successfully destroyed.')
   end
 
 
   private
-  def get_node
+  def get_page
     if params[:id]
       @blog_elem = BlogElem.find(params[:id])
-      @node = @blog_elem.element.dynamic_page.node
+      @page = @blog_elem.element.dynamic_page.page
     end
     super
   end

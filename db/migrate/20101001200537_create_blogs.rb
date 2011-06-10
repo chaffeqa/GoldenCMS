@@ -3,9 +3,9 @@ class CreateBlogs < ActiveRecord::Migration
     create_table :blogs do |t|
       t.string :title
       t.text :banner
-      t.belongs_to :node
+      t.belongs_to :page
       t.timestamps
     end
-    add_index :blogs, :node_id
+    add_index :blogs, :page_id
   end
 end

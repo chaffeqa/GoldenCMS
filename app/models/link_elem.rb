@@ -8,7 +8,7 @@ class LinkElem < ActiveRecord::Base
   # Associations
   ###########
   has_one :element, :as => :elem, :dependent => :destroy, :validate => true, :autosave => true
-  belongs_to :node
+  belongs_to :page
   belongs_to :image, :class_name => 'Ckeditor::Picture'
   accepts_nested_attributes_for :element
 

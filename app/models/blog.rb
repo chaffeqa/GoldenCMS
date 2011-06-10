@@ -7,9 +7,9 @@ class Blog < ActiveRecord::Base
   has_many :blog_elem_links, :dependent => :destroy
   has_many :blog_elems, :through => :blog_elem_links
 
-  # Associated Node attributes
-  belongs_to :node
-  has_many :posts, :through => :node
+  # Associated Page attributes
+  belongs_to :page
+  has_many :posts, :through => :page
 
 
   ####################################################################
@@ -20,7 +20,7 @@ class Blog < ActiveRecord::Base
   validates :title, :presence => true, :uniqueness => true
   
   # Callbacks
-  #before_validation :update_node
+  #before_validation :update_page
   #after_save :update_cache_chain
   #before_destroy :update_cache_chain
   
@@ -34,15 +34,15 @@ class Blog < ActiveRecord::Base
     self.blog_elems.each {|elem| elem.try(:update_cache_chain) }
   end
 
-  def update_node
+  def update_page
     self.title = unique_title if self.title.blank?
-    node = self.node ? self.node : self.build_node
-    node.title =  title
-    node.menu_name = title
-    node.set_safe_shortcut(title)
-    node.displayed = true
+    page = self.page ? self.page : self.build_page
+    page.title =  title
+    page.menu_name = title
+    page.set_safe_shortcut(title)
+    page.displayed = true
     site = Site.first
-    node.parent = site.get_node_by_shortcut(site.blogs_shortcut)
+    page.parent = site.get_page_by_shortcut(site.blogs_shortcut)
   end
 
   private

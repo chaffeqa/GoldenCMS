@@ -4,9 +4,9 @@ class CreatePosts < ActiveRecord::Migration
       t.string :title
       t.text :body
       t.datetime :post_date
-      t.belongs_to :node
+      t.belongs_to :page
       t.timestamps
     end
-    add_index :posts, :node_id
+    add_index :posts, :page_id
   end
 end

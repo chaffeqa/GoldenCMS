@@ -19,7 +19,7 @@ TEMPLATES = {
 HOME_PAGE_TEMPLATE = "home"
 DEFAULT_TEMPLATE = "inside"
 
-NODE_PAGE_TYPES = { 
+SPECIAL_PAGE_TYPES = { 
   'blog' => {"default_layout" => "inside"},
   'calendar' => {"default_layout" => "full"},
   'category' => {"default_layout" => "inside"},
