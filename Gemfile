@@ -1,7 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails',     :git => 'git://github.com/rails/rails.git'
-gem 'rake', '~>0.9.2'
+gem 'rails', :git => 'git://github.com/rails/rails.git'
 gem 'jquery-rails'
 # Install the ruby javascript compiler, since linux doesnt come with one
 gem 'therubyracer-heroku', '0.8.1.pre3'
@@ -41,6 +40,7 @@ group :development do
   # NOTE: debugger not working with rails --pre currently
 #  gem 'ruby-debug19', :require => 'ruby-debug'
   gem 'mysql2', :git => 'git://github.com/brianmario/mysql2.git'
+  gem 'rake', '~>0.9.2'
 end
 
 group :production do

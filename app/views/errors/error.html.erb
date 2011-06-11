@@ -2,11 +2,11 @@
 <% if @shortcut %>
   <p>Your request for: <%= link_to shortcut_url(@shortcut).to_s, shortcut_path(@shortcut)  %> does not exist, did you mean:</p>
   <ul>
-    <% if @similar_nodes.empty? %>
+    <% if @similar_pages.empty? %>
       <li>No similar site locations</li>
     <% else %>
-      <% @similar_nodes.each do |node| %>
-        <li><%= link_to node.title, shortcut_url(node.shortcut) %></li>
+      <% @similar_pages.each do |page| %>
+        <li><%= link_to page.title, shortcut_url(page.shortcut) %></li>
       <% end %>
     <% end %>
   </ul>

@@ -1,0 +1,16 @@
+<!-- START Element Area: element_area_<%= element_area %> -->
+<%# creates a div with class "admin clearfix" surounding this page area if an admin is logged in %>
+% if admin? %> <div class="admin clearfix"> <% end %>
+  
+  <%# Renders each element for this element_area in order %>
+  <% @requested_page.elements.elements_for_element_area(element_area).each do |element|  %>
+    <%= render :partial => 'elements/element', :locals => {:element => element} %>
+  <% end %>
+
+  <%# Renders a new_element_select partial for this element_area if an admin is logged in %>
+  <% if admin? %>
+    <%= render :partial => 'elements/new_element_select', :locals => {:element_area => element_area} %>
+  <% end %>
+
+<% if admin? %> </div><% end %>
+<!-- END Element Area -->

@@ -2,10 +2,10 @@
      and insert admin stuff all over the place. We'll let it slide for now...
 %>
 
-<%# Renders a page_area_elements partial for each position in the page %>
-<% @node.total_page_areas.times do |page_area| %>
-  <%= content_for(('position_' + page_area.to_s).to_sym) do %>
-    <%= render :partial => 'elements/page_area_elements', :locals => {:page_area => page_area} %>
+<%# Renders a element_area_elements partial for each position in the page %>
+<% @requested_page.total_element_areas.times do |element_area| %>
+  <%= content_for(('element_area_' + element_area.to_s).to_sym) do %>
+    <%= render :partial => 'elements/element_area_elements', :locals => {:element_area => element_area} %>
   <% end %>
 <% end %>
 
@@ -13,7 +13,6 @@
 <%# Inserts Dynamic Page controls in the admin bar %>
 <% content_for :page_admin_bar do %>
   <%= link_to('Preview Page', 'javascript:void(0)', :class => 'btn yellow large', :id => 'preview') %>
-  <%= link_to('Fresh Page', shortcut_path(@node.shortcut, :fresh => true), :class => 'btn large') %>
-  <%= link_to('Page Settings',  edit_admin_node_path(@node), :class => 'btn large') %>
+  <%= link_to('Page Settings',  edit_admin_page_path(@requested_page), :class => 'btn large') %>
 <% end %>
 
