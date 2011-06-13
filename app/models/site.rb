@@ -7,7 +7,7 @@ class Site < ActiveRecord::Base
   # Associations
   ###########
 
-  has_one :root_page, :class_name => "Page"
+  has_one :root_page, :class_name => "Page", :foreign_key => 'site_id'
   has_many :pages, :foreign_key => 'root_site_id'
 
 
@@ -19,7 +19,7 @@ class Site < ActiveRecord::Base
   #Validations
   #validate :ensure_site_root
   validates :site_name, :presence => true, 
-                        :format => { :with => /^[a-zA-Z0-9-]+$/, :message => 'can only contain alphanumeric characters and dashes.'}
+                        :format => { :with => /^[a-zA-Z0-9\ -]+$/, :message => 'can only contain alphanumeric characters, spaces, and dashes.'}
   validates :subdomain, :uniqueness => true,
                         :format => { :with => /^[a-z0-9-]+$/, :message => 'can only contain lowercase alphanumeric characters and dashes.'}
   
@@ -176,15 +176,18 @@ class Site < ActiveRecord::Base
   
   # Build the Home page for the passed in site
   def create_home_page
-    home_page = self.create_root_page(
+    home_page = self.build_root_page(
           :title => home_shortcut.humanize, 
           :menu_name => home_shortcut.humanize,
           :shortcut => home_shortcut,
           :layout_name => HOME_PAGE_TEMPLATE,
           :displayed => true,
-          :positions => TEMPLATES[HOME_PAGE_TEMPLATE]["positions"]
+          :cachable => true,
+          :total_element_areas => TEMPLATES[HOME_PAGE_TEMPLATE]["total_element_areas"]
     )
-    self.errors[:base] << home_page.errors.full_messages  
+    logger.debug "Home Page: #{home_page.inspect}"
+    home_page.save
+    self.errors[:base] << home_page.errors.full_messages.map {|msg| "Error on creating the 'Home' page: " + msg }  
     # Log any errors
     unless errors.empty?
       logger.error "*********** site.create_home_page Errors: *************"
@@ -199,23 +202,23 @@ class Site < ActiveRecord::Base
     # Instantiate the blogs and calendars pages
     self.errors[:base] << self.root_page.children.create(
       :menu_name => blogs_shortcut.humanize, :title => blogs_shortcut.humanize, :shortcut => blogs_shortcut, :displayed => false
-    ).errors.full_messages
+    ).errors.full_messages.map {|msg| "Error on creating the 'Blogs' page: " + msg } 
     self.errors[:base] << self.root_page.children.create(
       :menu_name => calendars_shortcut.humanize, :title => calendars_shortcut.humanize, :shortcut => calendars_shortcut, :displayed => false
-    ).errors.full_messages
+    ).errors.full_messages.map {|msg| "Error on creating the 'Calendars' page: " + msg } 
     # Instantiate the inventory structure if this site has an inventory
     if has_inventory
       self.errors[:base] << self.root_page.children.create(
         :menu_name => inventory_shortcut.humanize, :title => inventory_shortcut.humanize, :shortcut => inventory_shortcut, :displayed => true
-      ).errors.full_messages
+      ).errors.full_messages.map {|msg| "Error on creating the 'Inventory' page: " + msg } 
       # Instantiate the items page if this site has an a specific page for Items
       self.errors[:base] << self.root_page.children.create(
         :menu_name => items_shortcut.humanize, :title => items_shortcut.humanize, :shortcut => items_shortcut, :displayed => false
-      ).errors.full_messages if create_items_page?
+      ).errors.full_messages.map {|msg| "Error on creating the 'Items' page: " + msg }  if create_items_page?
       # Instantiate the categories page if this site has an a specific page for Categories
       self.errors[:base] << self.root_page.children.create(
         :menu_name => categories_shortcut.humanize, :title => categories_shortcut.humanize, :shortcut => categories_shortcut, :displayed => false
-      ).errors.full_messages if create_categories_page?
+      ).errors.full_messages.map {|msg| "Error on creating the 'Categories' page: " + msg }  if create_categories_page?
     end
     # Log any errors
     unless errors.empty?

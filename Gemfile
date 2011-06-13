@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', :git => 'git://github.com/rails/rails.git'
+gem 'rails', '3.1.0.rc4'#:git => 'git://github.com/rails/rails.git'
 gem 'jquery-rails'
 # Install the ruby javascript compiler, since linux doesnt come with one
 gem 'therubyracer-heroku', '0.8.1.pre3'
@@ -37,6 +37,7 @@ end
 
 group :development do
   gem 'heroku'
+  gem 'rails-footnotes', '>= 3.7'
   # NOTE: debugger not working with rails --pre currently
 #  gem 'ruby-debug19', :require => 'ruby-debug'
   gem 'mysql2', :git => 'git://github.com/brianmario/mysql2.git'

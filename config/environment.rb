@@ -11,9 +11,9 @@ DEFAULT_CONFIG_PARAMS = {
 }
 
 TEMPLATES = {
-  "home" => {"human_name" => "Home", "total_page_areas" => 5}, 
-  "inside" => {"human_name" => "Inside", "total_page_areas" => 2}, 
-  "full" => {"human_name" => "Inside (No Nav)", "total_page_areas" => 1},
+  "home" => {"human_name" => "Home", "total_element_areas" => 5}, 
+  "inside" => {"human_name" => "Inside", "total_element_areas" => 2}, 
+  "full" => {"human_name" => "Inside (No Nav)", "total_element_areas" => 1},
   "application" => {"human_name" => "Static"} # Static layout
 }
 HOME_PAGE_TEMPLATE = "home"

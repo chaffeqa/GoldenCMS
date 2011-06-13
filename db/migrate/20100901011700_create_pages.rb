@@ -9,6 +9,7 @@ class CreatePages < ActiveRecord::Migration
       t.string :layout_name
       t.boolean :cachable
       t.string :ancestry
+      t.integer :position
       t.integer :ancestry_depth, :default => 0
       t.string :names_depth_cache # Optional for easier select box implementation
       t.integer :total_element_areas, :default => 0

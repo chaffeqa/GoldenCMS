@@ -7,7 +7,8 @@ class Page < ActiveRecord::Base
   belongs_to :site
   belongs_to :root_site, :class_name => 'Site'
   has_ancestry :cache_depth => true, :orphan_strategy => :rootify  
-  acts_as_list :scope => proc { ["ancestry = '?'", ancestry] }
+  #acts_as_list :scope => proc { ["ancestry = '?'", ancestry] }
+  acts_as_list :scope => 'ancestry = \'#{ancestry}\''
   has_many   :link_elems, :dependent => :destroy
   has_many :elements
   
@@ -101,7 +102,7 @@ class Page < ActiveRecord::Base
 
   scope :displayed, where(:displayed => true)
   scope :similar_shortcuts, lambda {|sc| where('UPPER(pages.shortcut) LIKE UPPER(?)', "%"+sc+"%") unless sc.blank?}
-  scope :ordered, order("ancestry_depth,position DESC")
+  scope :ordered, order("ancestry_depth, position DESC")
   
 
 

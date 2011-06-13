@@ -8,7 +8,7 @@ module LoggingHelper
   end
   
   def admin_request_error(msg="There was an error in your request", error_type='DB')
-    log_category(error_type, msg)
+    logger.error log_format(msg, error_type)
     flash[:error] = msg
   end
     

@@ -25,7 +25,7 @@ class ApplicationController < ActionController::Base
   def initialize_requested_site
     logger.debug log_format("FILTER", "Called initialize_requested_site Before_Filter for subdomains: #{request.subdomains.join(', ')}")
     @requested_site ||= Site.find_by_subdomains(request.subdomains)
-    return instantiate_site unless @requested_site and @requested_site.page
+    return instantiate_site unless @requested_site and @requested_site.root_page
     set_site_name(@requested_site.site_name)
     return true
   end

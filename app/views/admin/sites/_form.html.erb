@@ -1,14 +1,5 @@
 <%= form_for([:admin,@site]) do |f| %>
-  <% if @site.errors.any?   %>
-    <div id="error_explanation">
-      <h2><%= pluralize((@site.errors.count), "error") %> prohibited this Page from being saved:</h2>
-      <ul>
-        <% @site.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <%= render :partial => 'shared/form_errors', :locals => {:resource => @site} %>
 
   <%= field_set_tag 'Site Configuration Params' do %>
       <div class="field"><span class="hint"><a class="expander">Explain this</a></span>
@@ -29,6 +20,8 @@
       </div>
   <% end %>
 
+  <% #TODO config_params %>
+  <!--
   <%= field_set_tag 'Site Configuration Params' do %>
     <div class="field"><span class="hint"><a class="expander">Explain this</a></span>
       <%= f.label :config_params, "Configuration Params" %>
@@ -36,6 +29,7 @@
       <span class="expanded-hint">TODO.</span>
     </div>  
   <% end %>
+  -->
 
   <%= field_set_tag 'Site Header and Footer' do %>
     <div class="field"><span class="hint"><a class="expander">Explain this</a></span>

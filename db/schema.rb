@@ -237,6 +237,7 @@ ActiveRecord::Schema.define(:version => 20110513151815) do
     t.string   "layout_name"
     t.boolean  "cachable"
     t.string   "ancestry"
+    t.integer  "position"
     t.integer  "ancestry_depth",      :default => 0
     t.string   "names_depth_cache"
     t.integer  "total_element_areas", :default => 0
