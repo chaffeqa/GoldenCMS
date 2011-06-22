@@ -1,8 +1,9 @@
 <!--  START Element -->
 <section class="admin new-element-select">
   <span class="controls">
-    <%= form_tag(new_admin_element_path(:shortcut => @requested_page.shortcut, :element_area => element_area)) do %>
+    <%= form_tag(new_admin_page_element_path(@requested_page), :method => :get) do %>
       <%= select_tag :elem_controller, options_for_select(Element.get_elem_select), :prompt => "Add an Element" %>
+      <%= hidden_field :elemente_area, :value => element_area %>
       <%= submit_tag "Add Element", :class => 'btn add small' %>
     <% end %>
   </span>

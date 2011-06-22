@@ -5,10 +5,11 @@ class Element < ActiveRecord::Base
   # Associations
   ###########
   belongs_to :page
-  acts_as_list :scope => proc { ["page_id = ? AND element_area = ?", page_id, element_area] }
+  acts_as_list :scope => 'page_id = \'#{page_id}\' AND element_area = \'#{element_area}\'' # :scope => proc { ["page_id = ? AND element_area = ?", page_id, element_area] }
   
   ELEM_TYPES.each do |human_name, elem_table|
-    has_one elem_table.signularize.to_sym
+    has_one elem_table.singularize.to_sym
+    accepts_nested_attributes_for elem_table.singularize.to_sym
   end
 
 
@@ -20,7 +21,8 @@ class Element < ActiveRecord::Base
 
   #Validations
   validates :title, :presence => true
-  validates :element_area, :numericality => true
+  validates :element_area, :presence => true, :numericality => true
+  validates :page_id, :presence => true, :numericality => true
   
   #Callbacks
   before_save :create_html_id
@@ -49,7 +51,7 @@ class Element < ActiveRecord::Base
 
 
   def create_html_id
-    self.html_id = title.blank? ? "element-unnamed" : parameterize(title.clone.downcase)
+    self.html_id = title.blank? ? "element-unnamed" : title.to_slug
   end
 
   # Select array
@@ -57,26 +59,9 @@ class Element < ActiveRecord::Base
     ELEM_TYPES
   end
 
-  # Returns the string name of the elem controller
-  def get_elem_controller
-    elem_type.tableize
-  end
-
-
-  private
-
-  # Replaces special characters in a string so that it may be used as part of a ‘pretty’ URL.
-  def parameterize(parameterized_string, sep = '-')
-    # Turn unwanted chars into the separator
-    parameterized_string.gsub!(/[^a-zA-Z0-9\-_]+/, sep)
-    unless sep.nil? || sep.empty?
-      re_sep = Regexp.escape(sep)
-      # No more than one of the separator in a row.
-      parameterized_string.gsub!(/#{re_sep}{2,}/, sep)
-      # Remove leading/trailing separator.
-      parameterized_string.gsub!(/^#{re_sep}|#{re_sep}$/, '')
-    end
-    parameterized_string.downcase
+  # Returns the string name of the elem table, otherwise returns 'no_element'
+  def get_elem_table_name
+    elem_type.try(:tableize) || 'no_element'
   end
 
 

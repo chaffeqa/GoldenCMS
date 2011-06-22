@@ -16,7 +16,7 @@ class Page < ActiveRecord::Base
   SPECIAL_PAGE_TYPES.keys.each do |page_type|
     has_one page_type.to_sym
     accepts_nested_attributes_for page_type.to_sym
-    has_many page_type.pluralize.to_sym, :through => :children, :source => page_type.to_sym
+    #has_many page_type.pluralize.to_sym, :through => :children, :source => page_type.to_sym
   end
 
 
@@ -103,7 +103,6 @@ class Page < ActiveRecord::Base
   scope :displayed, where(:displayed => true)
   scope :similar_shortcuts, lambda {|sc| where('UPPER(pages.shortcut) LIKE UPPER(?)', "%"+sc+"%") unless sc.blank?}
   scope :ordered, order("ancestry_depth, position DESC")
-  
 
 
 

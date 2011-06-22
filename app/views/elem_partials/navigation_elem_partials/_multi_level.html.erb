@@ -1,0 +1,8 @@
+<% while  -%>
+<%= content_tag(:ul) do %>
+  <% @requested_page.relatives.displayed.unshift(@requested_page).order_by(:position).each do |page| %>
+    <%= content_tag_for(:li, page) do %>
+      <%= link_to page.menu_name, page.url, :class => (page == @requested_page ? 'selected' : "") %>    
+    <% end %>
+  <% end %>
+<% end %>

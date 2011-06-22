@@ -17,10 +17,10 @@ class Site < ActiveRecord::Base
   ###########
 
   #Validations
-  #validate :ensure_site_root
   validates :site_name, :presence => true, 
                         :format => { :with => /^[a-zA-Z0-9\ -]+$/, :message => 'can only contain alphanumeric characters, spaces, and dashes.'}
-  validates :subdomain, :uniqueness => true,
+  validates :subdomain, :presence => true,
+                        :uniqueness => true,
                         :format => { :with => /^[a-z0-9-]+$/, :message => 'can only contain lowercase alphanumeric characters and dashes.'}
   
   # TODO: this may be too strict a policy, consider removing
@@ -74,14 +74,14 @@ class Site < ActiveRecord::Base
   # TODO: fix so that <sitename>.heroku.com works
   def self.find_by_subdomains(subdomains)    
     # Replace [""] occurrence with ["www"]...
-    subdomains << "www" unless subdomains.delete("").nil? 
+    subdomains << "www" if subdomains.empty? or subdomains.delete("")
     where(:subdomain => subdomains).try(:first) || order("id").first
   end
   
   # Get this site's page by the passed in shortcut. 
   # NOTE returns the root page if the shorcut is '' (to make site root requests work)
   def initialize_requested_page_by_shortcut(shortcut)
-    return root_page if shortcut == ''
+    return root_page if shortcut.blank?
     pages.where(:shortcut => shortcut).try(:first)
   end
   

@@ -40,7 +40,7 @@ ELEM_TYPES = [
   ["Blog"             ,   "blog_elems"            ],
   ["Calendar"         ,   "calendar_elems"        ],
   #["Photo Gallery"    ,   "photo_gallery_elems"   ],
-  ["Side Nav Menu"    ,   "side_nav_elems"        ],
+  ["Nav Menu"         ,   "navigation_elems"      ],
   ["Image"            ,   "image_elems"           ]
 ]
 

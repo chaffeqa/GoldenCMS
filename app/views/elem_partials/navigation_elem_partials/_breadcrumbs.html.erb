@@ -1,0 +1,5 @@
+<% @requested_page.ancestors.each do |ancestor| %>
+ <%= link_to ancestor.menu_name, ancestor.url %> &gt;  
+<% end %>
+<%= link_to @requested_page.menu_name, @requested_page.url %>
+

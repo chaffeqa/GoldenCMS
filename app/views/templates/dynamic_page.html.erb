@@ -5,7 +5,7 @@
 <%# Renders a element_area_elements partial for each position in the page %>
 <% @requested_page.total_element_areas.times do |element_area| %>
   <%= content_for(('element_area_' + element_area.to_s).to_sym) do %>
-    <%= render :partial => 'elements/element_area_elements', :locals => {:element_area => element_area} %>
+    <%= render :partial => 'elements/element_area', :locals => {:element_area => element_area} %>
   <% end %>
 <% end %>
 

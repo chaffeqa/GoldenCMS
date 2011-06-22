@@ -1,6 +1,6 @@
 <!-- START Element Area: element_area_<%= element_area %> -->
 <%# creates a div with class "admin clearfix" surounding this page area if an admin is logged in %>
-% if admin? %> <div class="admin clearfix"> <% end %>
+<% if admin? %> <div class="admin clearfix"> <% end %>
   
   <%# Renders each element for this element_area in order %>
   <% @requested_page.elements.elements_for_element_area(element_area).each do |element|  %>

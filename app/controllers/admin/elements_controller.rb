@@ -29,11 +29,13 @@ class Admin::ElementsController < ApplicationController
     redirect_to( shortcut_path(@requested_page.shortcut))
   end  
   
-  def new_element
-    if request.post? and params[:elem_controller].present?
+  # Redirects to the appropriate Elem builder page.
+  # TODO refactor to make the new element form point to the correct controller
+  def new
+    if params[:elem_controller].present?
       respond_to do |format|
-        format.html { redirect_to(:controller => "admin/page_elems/#{params[:elem_controller]}", :action => 'new', :shortcut => params[:shortcut], :element_area => params[:element_area]) }
-        format.js { redirect_to(:controller => "admin/page_elems/#{params[:elem_controller]}", :action => 'new', :shortcut => params[:shortcut], :element_area => params[:element_area], :format => :js) }
+        format.html { redirect_to(:controller => "admin/page_elems/#{params[:elem_controller]}", :action => 'new', :shortcut => @requested_page.shortcut, :element_area => params[:element_area]) }
+        format.js { redirect_to(:controller => "admin/page_elems/#{params[:elem_controller]}", :action => 'new', :shortcut => @requested_page.shortcut, :element_area => params[:element_area], :format => :js) }
       end
     else
       admin_request_error("Were sorry, something Went wrong with the request.")
@@ -43,11 +45,17 @@ class Admin::ElementsController < ApplicationController
 
 
   private
+  
+  # Sets @requested_page object based on the params   
   def initialize_requested_page
-    if params[:id].present?
-      @current_element = Element.find(params[:id])
-      @requested_page = @current_element.page
-    end
+    if params[:page_id].present?
+      @requested_page = Page.find(params[:page_id])
+    else
+      admin_request_error("Were sorry, something went wrong with the request.")
+      redirect_to(:back)
+      return false
+    end      
+    @current_element = Element.find(params[:id])  if params[:id].present?
     super
   end
 

@@ -1,19 +1,5 @@
 GoldenCMS::Application.routes.draw do
 
-  get "nodes/new"
-
-  get "nodes/create"
-
-  get "nodes/index"
-
-  get "nodes/show"
-
-  get "nodes/edit"
-
-  get "nodes/update"
-
-  get "nodes/destroy"
-
   devise_for :admins
 
 
@@ -23,12 +9,14 @@ GoldenCMS::Application.routes.draw do
 
   # Admin Namespace
   namespace "admin" do
-    resources :elements, :only => [:destroy] do
-      post :move_up, :on => :member
-      post :move_down, :on => :member
-    end
+    #match ':shortcut/:page_area/new_element' => 'elements#new_element', :as => :new_element
     resource :sites
-    resources :nodes, :except => [:show]
+    resources :pages, :except => [:show] do 
+      resources :elements, :only => [:destroy, :new] do
+        post :move_up, :on => :member
+        post :move_down, :on => :member
+      end
+    end
     resources :menus, :only => [:index] do
       post :sort, :on => :collection
     end
@@ -56,7 +44,7 @@ GoldenCMS::Application.routes.draw do
       end
       resources :image_elems, :except => [:index, :show]
       resource :item_search_elems, :only => [:new]
-      resource :side_nav_elems, :only => [:new, :destroy]
+      resource :navigation_elems, :except => [:index, :show]
     end
   end
 
@@ -65,7 +53,6 @@ GoldenCMS::Application.routes.draw do
   match "error" => 'errors#error', :as => :error
   
   match ':shortcut(/:year(/:month))' => 'routing#by_shortcut', :as => :calendar, :constraints => {:year => /\d{4}/, :month => /\d{1,2}/}
-  match ':shortcut/:page_area/new_element' => 'elements#new_element', :as => :new_element
   match ':shortcut' => 'routing#by_shortcut', :as => :shortcut, :constraints => { :shortcut => /[a-zA-Z0-9\-_]+/}, :formats => [:html, :js]
 
   root :to => 'routing#by_shortcut'

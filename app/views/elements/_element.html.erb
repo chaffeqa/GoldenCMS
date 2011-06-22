@@ -1,10 +1,6 @@
 <!--  START Element -->
-<%= content_tag_for(:section, element, :class => element.elem_type) do %>
-  <% if element.elem %>
-    <%= render :partial => "elem_partials/#{(element.elem_type.tableize).singularize}", :locals => {:elem => element.elem} %>
-  <% else %>
-    <%= render :partial => "elem_partials/#{(element.elem_type.tableize).singularize}", :locals => {:element => element} %>
-  <% end %>
+<%= content_tag_for(:section, element, :class => element.get_elem_table_name) do %>
+    <%= render :partial => "elem_partials/#{element.get_elem_table_name}", :locals => {:elem => element.try(:elem) || element} %>
 <% end %>
 <!-- END Element -->
 
