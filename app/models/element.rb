@@ -54,6 +54,15 @@ class Element < ActiveRecord::Base
     self.html_id = title.blank? ? "element-unnamed" : title.to_slug
   end
 
+  # Return this the name of the object this element is a 'element for' (ex. 'text_elems' if this page represents a Text Element)
+  # Returns nil if there is no assigned elem_type
+  def elem_type
+    association = nil    
+    ELEM_TYPES.each {|human, table_name| association = table_name unless self.send(table_name.singularize).nil?}
+    association
+  end    
+
+
   # Select array
   def self.get_elem_select
     ELEM_TYPES

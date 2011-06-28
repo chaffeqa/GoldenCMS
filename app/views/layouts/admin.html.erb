@@ -21,7 +21,7 @@
             <article id="mainColumn" class="clearfix contents">
               <div id="top"></div>
               <div id="inner">
-                <%= content_for?(:mainColumn) ? yield(:mainColumn) : yield %>
+                <%= yield %>
               </div>
             </article>
           </div>

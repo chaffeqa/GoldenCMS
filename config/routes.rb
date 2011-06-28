@@ -12,7 +12,7 @@ GoldenCMS::Application.routes.draw do
     #match ':shortcut/:page_area/new_element' => 'elements#new_element', :as => :new_element
     resource :sites
     resources :pages, :except => [:show] do 
-      resources :elements, :only => [:destroy, :new] do
+      resources :elements, :except => [:index] do
         post :move_up, :on => :member
         post :move_down, :on => :member
       end

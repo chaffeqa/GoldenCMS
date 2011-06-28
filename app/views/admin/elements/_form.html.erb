@@ -1,37 +1,34 @@
-<%= form_for([:admin,@element]) do |f| %>
-  <%= render :partial => 'shared/form_errors', :locals => {:resource => @element %>
+<%= form_for([:admin, @requested_page, @element]) do |f| %>
+  <%= render :partial => 'shared/form_errors', :locals => {:resource => @element} %>
 
-<%= field_set_tag 'Element Attributes' do %>
-    
+<%= field_set_tag 'Element Attributes' do %>    
   <%= content_tag(:div, :class => "field") do %>
     <%= f.label :page_id, "Element For Page" %>
     <%= f.select :page_id, @requested_site.page_tree_selector, :disabled => true %>
-    <%= f.text_field :page_area %>
+    <%= f.text_field :element_area %>
   <% end %>
-  
   <%= content_tag(:div, :class => "field") do %>
     <%= f.label :title, :class => 'req' %>
     <%= f.text_field :title %>
     <%= f.check_box :display_title %>&nbsp;
     <%= f.label :display_title, "Display Title?" %>
-  <% end %>
-  
+  <% end %>  
   <%= content_tag(:div, :class => "field") do %>
     <%= f.label :cachable, 'Cachable?' %>
     <%= f.check_box :cachable %>
   <% end %>
   <%= content_tag(:div, :class => "field") do %>
-    <%= f.label :html_class %>
+    <%= f.label :html_class, "HTML Class" %>
     <%= f.text_field :html_class %>
   <% end %>
   <%= content_tag(:div, :class => "field") do %>
-    <%= f.label :html_id %>
+    <%= f.label :html_id, "HTML Id" %>
     <%= f.text_field :html_id %>
   <% end %>  
 <% end %>
 
-<% if @element_type %>
-  <%= render :partial => "admin/page_elems/#{@element_type}", :locals => {:form => f } %>
+<% unless @element.elem_type.blank? %>
+  <%= render :partial => "admin/page_elems/#{@element.elem_type}/form", :locals => {:element_form => f } %>
 <% else %>
   No element type selected. 
 <% end %>

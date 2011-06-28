@@ -21,14 +21,13 @@
             <article id="subColumn" class="clearfix contents">
               <div id="top"></div>
               <div id="inner">
-                <%= yield(:subColumn) %>
+                <%= yield(:element_area_1) %>
               </div>
             </article>
             <article id="mainColumn" class="clearfix contents">
               <div id="top"></div>
               <div id="inner">
-                <%= content_for?(:breadcrumb) ? yield(:breadcrumb) : (render :partial => 'partials/breadcrumb') %>
-                <%= content_for?(:mainColumn) ? yield(:mainColumn) : yield %>
+                <%= content_for?(:element_area_0) ? yield(:element_area_0) : yield %>
               </div>
             </article>
           </div>

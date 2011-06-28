@@ -1,10 +1,11 @@
 class Admin::ElementsController < ApplicationController
+  layout 'admin'
   before_filter :check_admin
   before_filter :initialize_requested_page
 
   def new
-    @element = @requested_page.elements.build(:page_area => params[:page_area] || 1)
-    @element_type = params[:elem_type]    
+    @element = @requested_page.elements.build(:element_area => params[:element_area] || 1)
+    @element_type = params[:element_type]
   end
   
   
@@ -20,7 +21,7 @@ class Admin::ElementsController < ApplicationController
 
   
   def destroy
-    if request.post? and @current_element.destroy
+    if request.post? and @element.destroy
       flash[:notice] = 'Element successfully Destroyed.' 
     else
       admin_request_error('Element failed to be destroyed.')
@@ -29,7 +30,7 @@ class Admin::ElementsController < ApplicationController
   end
 
   def move_up
-    if request.post? and @current_element.move_higher
+    if request.post? and @element.move_higher
       flash[:notice] = 'Element successfully Moved.' 
     else
       admin_request_error('Element failed to be Moved.')
@@ -38,7 +39,7 @@ class Admin::ElementsController < ApplicationController
   end
 
   def move_down
-    if request.post? and @current_element.move_lower
+    if request.post? and @element.move_lower
       flash[:notice] = 'Element successfully Moved.' 
     else
       admin_request_error('Element failed to be Moved.')
@@ -48,7 +49,7 @@ class Admin::ElementsController < ApplicationController
   
   # Redirects to the appropriate Elem builder page.
   # TODO refactor to make the new element form point to the correct controller
-  def new
+  def old_new
     if params[:elem_controller].present?
       respond_to do |format|
         format.html { redirect_to(:controller => "admin/page_elems/#{params[:elem_controller]}", :action => 'new', :shortcut => @requested_page.shortcut, :element_area => params[:element_area]) }
@@ -72,7 +73,7 @@ class Admin::ElementsController < ApplicationController
       redirect_to(:back)
       return false
     end      
-    @current_element = Element.find(params[:id])  if params[:id].present?
+    @element = Element.find(params[:id])  if params[:id].present?
     super
   end
 

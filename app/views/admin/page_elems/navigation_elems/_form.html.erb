@@ -1,0 +1,21 @@
+<%= field_set_tag 'Navigation Element Fields' do %>
+  <%= element_form.fields_for :navigation_elem, @element.navigation_elem || @element.build_navigation_elem do |f| %>
+    <%= content_tag(:div, :class => "field") do %>
+      <span class="hint">How do you want your item to be displayed? <a class="expander">Explain this</a></span>
+        <%= f.label :display_type, "Display Options" %>
+        <%= f.select :display_type, options_for_select(NavigationElem.display_type_select, (f.object.new_record? ? NavigationElem.display_type_select[0] : f.object.display_type)) %>
+        <span class="expanded-hint">
+          <strong>Default</strong><br />
+            The basic multi-level list of a menu.  You are most likely to see and use this on the side panel of any website page.
+          <strong>Current Level</strong><br />
+            Shows only the pages at the same menu level as this page.  A good example of this is any menu that doesn't expand.
+          <strong>Breadcrumb</strong><br />
+            Shows a 'trail' of pages leading to this page.  An example of a breadcrumb looks like: "Home > Page 1 > This Page".  
+        </span>
+    <% end %>
+    <%= content_tag(:div, :class => "field") do %>
+      <%= f.label :special_class %>
+      <%= f.text_field :special_class %>
+    <% end %>
+  <% end %>
+<% end %>

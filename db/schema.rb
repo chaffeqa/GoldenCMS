@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110513151815) do
+ActiveRecord::Schema.define(:version => 20110622181305) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",                             :default => "", :null => false
@@ -228,6 +228,16 @@ ActiveRecord::Schema.define(:version => 20110513151815) do
   add_index "link_elems", ["element_id"], :name => "index_link_elems_on_element_id"
   add_index "link_elems", ["image_id"], :name => "index_link_elems_on_image_id"
   add_index "link_elems", ["page_id"], :name => "index_link_elems_on_page_id"
+
+  create_table "navigation_elems", :force => true do |t|
+    t.string   "display_type"
+    t.string   "special_class"
+    t.integer  "element_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "navigation_elems", ["element_id"], :name => "index_navigation_elems_on_element_id"
 
   create_table "pages", :force => true do |t|
     t.string   "title"
