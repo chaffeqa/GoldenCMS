@@ -1,10 +1,15 @@
-class Admin::PageElems::SideNavElemsController < ApplicationController
+class Admin::PageElems::NavigationElemsController < ApplicationController
   layout 'admin'
   before_filter :initialize_requested_page, :check_admin
 
+  
+  def new
+    @text_elem = TextElem.new
+    @text_elem.build_element(:element_area => params[:element_area], :display_title => true)
+  end
 
   def new
-    @element=Element.new(:title => @requested_page.menu_name, :element_area => params[:element_area], :display_title => true, :elem_type => 'side_nav_elems')
+    @element = Element.new(:title => @requested_page.menu_name, :element_area => params[:element_area], :display_title => true)
     @element.dynamic_page = @requested_page.page
     if @element.save
       redirect_to(shortcut_path(@requested_page.shortcut), :notice => "Side Nav Element successfully added!")

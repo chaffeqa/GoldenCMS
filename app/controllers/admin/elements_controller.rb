@@ -1,6 +1,23 @@
 class Admin::ElementsController < ApplicationController
   before_filter :check_admin
   before_filter :initialize_requested_page
+
+  def new
+    @element = @requested_page.elements.build(:page_area => params[:page_area] || 1)
+    @element_type = params[:elem_type]    
+  end
+  
+  
+  def create
+    @element = Element.new(params[:element])
+    if @element.save
+      redirect_to(@requested_page.url, :notice => "Element successfully added!")
+    else
+      flash.now[:error] = 'Errors in creating Element'
+      render :action => 'new'
+    end
+  end
+
   
   def destroy
     if request.post? and @current_element.destroy

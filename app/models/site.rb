@@ -163,7 +163,17 @@ class Site < ActiveRecord::Base
     self.config_params ||= DEFAULT_CONFIG_PARAMS
     self.has_inventory = true
   end
-  
+
+  # Creates an array of pages of this site that is suitable for a collection_select
+  # Use as: <%= f.select :<page>_id, @site.page_tree_selector %>
+  def page_tree_selector 
+    pages.order(:names_depth_cache).map { |page| [
+        "---" * page.depth + 
+        (page.displayed ? " " : " (invisible) ") +
+        page.menu_name,      
+        page.id
+      ] }
+  end  
   
   
   
