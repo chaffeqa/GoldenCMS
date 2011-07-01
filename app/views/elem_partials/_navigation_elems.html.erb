@@ -4,6 +4,6 @@
     <%= render :partial => 'elements/element_controls', :locals => {:element => elem.element} %>
   </span>  
 <% end %>
-<%= content_tag_for(:nav, elem, :class => elem.display_type + elem.special_class) do %>
+<%= content_tag_for(:nav, elem, :class => elem.full_html_class) do %>
   <%= render :partial => "elem_partials/navigation_elem_partials/#{elem.display_type}", :locals => {:elem => elem} %>
 <% end %>

@@ -32,8 +32,12 @@ class NavigationElem < ActiveRecord::Base
   # Helper Methods
   ###########
   
+  def full_html_class
+    [display_type, special_class].join(" ")
+  end
+  
   def self.display_type_select
-    DISPLAY_TYPES.collect {|human, database_value| human }
+    DISPLAY_TYPES#.collect {|human, database_value| human, database_value }
   end
 
 end

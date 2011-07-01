@@ -5,7 +5,8 @@ class Admin::ElementsController < ApplicationController
 
   def new
     @element = @requested_page.elements.build(:element_area => params[:element_area] || 1)
-    @element_type = params[:element_type]
+    # Build the element_type if the params is present
+    @element.send("build_#{params[:element_type]}") if params[:element_type].present?
   end
   
   

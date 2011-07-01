@@ -1,6 +1,6 @@
 <!--  START Element -->
-<%= content_tag_for(:section, element, :class => element.get_elem_table_name) do %>
-    <%= render :partial => "elem_partials/#{element.get_elem_table_name}", :locals => {:elem => element.try(:elem) || element} %>
+<%= content_tag_for(:section, element, :class => element.full_html_class, :id => element.full_html_id) do %>
+    <%= render :partial => "elem_partials/#{element.elem_table_name}", :locals => {:elem => element.elem_object} %>
 <% end %>
 <!-- END Element -->
 

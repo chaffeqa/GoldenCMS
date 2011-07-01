@@ -160,8 +160,26 @@ class Page < ActiveRecord::Base
 
 
   ####################################################################
-  # Page Tree Creator
+  # Page Navigation Methods
   ##########
+  
+  # Returns an array of pages representing the single level navigation to display
+  # Note: if this page is the root page, will display its children << the root page
+  def single_level_nav_pages
+    if self.is_root?
+      return children.displayed.order(:position).unshift(self)
+    else
+      return siblings.displayed.order(:position)
+    end
+  end
+  
+  def children_nav_pages
+    if self.is_root?
+      return children.displayed.order(:position).unshift(self)
+    else
+      return children.displayed.order(:position)
+    end
+  end
 
   # Basic page hash for the page tree
   def tree_hash_value

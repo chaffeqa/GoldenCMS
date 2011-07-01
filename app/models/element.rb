@@ -58,21 +58,36 @@ class Element < ActiveRecord::Base
   # Returns nil if there is no assigned elem_type
   def elem_type
     association = nil    
-    ELEM_TYPES.each {|human, table_name| association = table_name unless self.send(table_name.singularize).nil?}
+    ELEM_TYPES.each {|human, table_name| association = table_name unless self.try(table_name.singularize).nil?}
     association
   end    
+  
+  # Returns the elem object of this element.  Returns nil if no elem exists.
+  def elem_object
+    return self.send(elem_type.singularize.intern) if elem_type
+    nil
+  end
 
 
-  # Select array
+  # Select array for element types
   def self.get_elem_select
-    ELEM_TYPES
+    ELEM_TYPES.map { |human, table_name| [human, table_name.singularize] }
   end
 
   # Returns the string name of the elem table, otherwise returns 'no_element'
-  def get_elem_table_name
-    elem_type.try(:tableize) || 'no_element'
+  def elem_table_name
+    elem_type || 'no_element'
   end
-
+  
+  # Returns a string representing this Element's html class
+  def full_html_class 
+    [elem_table_name,html_class].join(" ")
+  end
+    
+  # Returns a string representing this Element's html class
+  def full_html_id
+    html_id
+  end
 
 end
 

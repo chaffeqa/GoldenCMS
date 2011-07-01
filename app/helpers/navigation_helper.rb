@@ -21,6 +21,19 @@ module NavigationHelper
   end
   
   
+  def multi_level_navigation_html(ancestors)
+    page = ancestors.pop
+    content_tag(:ul) do 
+      page.children_nav_pages.each do |child_page| 
+        content_tag_for(:li, child_page) do 
+          link_to child_page.menu_name, child_page.url, :class => ("selected" if ancestors.empty?)
+          (+ multi_level_navigation_html(ancestors) ) if not ancestors.empty? and child_page == ancestors.last 
+        end
+      end
+    end
+  end
+  
+  
   
   def dynamic_pages_options_tree_recursive(page, addition, neglected_id='')
     array = []

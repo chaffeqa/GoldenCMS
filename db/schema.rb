@@ -176,11 +176,13 @@ ActiveRecord::Schema.define(:version => 20110622181305) do
     t.decimal  "min_price",    :precision => 8, :scale => 2, :default => 0.0
     t.decimal  "max_price",    :precision => 8, :scale => 2, :default => 0.0
     t.string   "display_type"
+    t.integer  "element_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "item_list_elems", ["category_id"], :name => "index_item_list_elems_on_category_id"
+  add_index "item_list_elems", ["element_id"], :name => "index_item_list_elems_on_element_id"
 
   create_table "item_pages", :force => true do |t|
     t.integer  "item_id"
