@@ -1,24 +1,9 @@
-<%= form_for([:admin,@text_elem]) do |f| %>
-  <% if @text_elem.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize((@text_elem.errors.count ), "error") %> prohibited this element from being saved:</h2>
-      <ul>
-        <% @text_elem.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
-        <% end %>
-      </ul>
-    </div>
+<%= field_set_tag 'Text Element Fields' do %>
+  <%= element_form.fields_for :text_elem, @element.text_elem || @element.build_text_elem do |f| %>
+    <%= content_tag(:div, :class => "field ckeditor") do %>
+      <%= f.label :text, 'Body' %>
+      <%#= f.cktext_area :text, :width=>'750px', :heigth=>'300px' %>
+      <%= f.text_area :text %>
+    <% end %>
   <% end %>
-
-<fieldset>
-  <%= render :partial => 'admin/page_elems/form_element_fields', :locals => {:f => f} %>
-
-  <div class="ckeditor">
-    <%= f.label :text, 'Body' %>
-    <%= f.cktext_area :text, :width=>'750px', :heigth=>'300px' %>
-  </div>
-
-  <%= render :partial => 'admin/page_elems/submit', :locals => {:f => f, :type => 'element'} %>
-</fieldset>
 <% end %>
-

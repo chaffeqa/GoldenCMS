@@ -4,6 +4,12 @@ GIT
   specs:
     mysql2 (0.3.2)
 
+GIT
+  remote: git://github.com/brianmario/mysql2.git
+  revision: acedfd2ca51816d1f11c19e9386472aef1a412ec
+  specs:
+    mysql2 (0.3.2)
+
 GEM
   remote: http://rubygems.org/
   specs:
