@@ -1,8 +1,16 @@
 module ApplicationHelper
+
+  # Redirects the request to the new Administrative Account path
+  def instantiate_first_admin
+    flash[:alert] = "No Administrator account currently exists, please create one"
+    redirect_to(new_administrator_registration_path)
+    return false
+  end
   
   # Redirects the request to the new site path
   def instantiate_site
-    redirect_to(new_admin_sites_path, :error => "No site currently exists, pleace create one")
+    flash[:alert] = "No site currently exists, please create one"
+    redirect_to(new_admin_sites_path)
     return false
   end
   

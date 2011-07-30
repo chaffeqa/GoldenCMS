@@ -18,8 +18,6 @@ gem 'kaminari'
 gem 'event-calendar', :require => 'event_calendar'
 gem 'to_slug'
 
-
-
 # Asset template engines
 gem 'uglifier'
 gem 'sass'
@@ -27,26 +25,34 @@ gem 'coffee-script'
 
 
 
+########################
+# Environment Specific #
+########################
 
+group :test, :development do
+  gem "rspec-rails"
+  gem 'mysql2', :git => 'git://github.com/brianmario/mysql2.git'
+  gem 'rake', '~>0.9.2'
+end
 
 group :test do
-  # Pretty printed test output
-  gem 'turn', :require => false
-  gem 'mysql2', :git => 'git://github.com/brianmario/mysql2.git'
+  gem "factory_girl_rails"
+  gem "capybara"
+  gem "guard-rspec"
+  # For Gaurd Linux support...
+  gem 'rb-inotify'
+  gem 'libnotify'
+  # Pretty printed test output...
+  gem 'turn'#, :require => false
+  gem 'database_cleaner'
 end
 
 group :development do
   gem 'heroku'
   gem 'rails-footnotes', '>= 3.7'
-  # NOTE: debugger not working with rails --pre currently
-#  gem 'ruby-debug19', :require => 'ruby-debug'
-  gem 'mysql2', :git => 'git://github.com/brianmario/mysql2.git'
-  gem 'rake', '~>0.9.2'
 end
 
 group :production do
   gem 'pg'
 end
 
-#Removed Gems:
-#gem 'acts_as_tree', :git => 'git://github.com/erdah/acts_as_tree.git'

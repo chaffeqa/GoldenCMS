@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   # Make these controller methods accessable from everywhere
   helper_method :initialize_requested_page, :admin?
   # Run these methods on every request
-  before_filter :parse_filter_params, :initialize_requested_site
+  before_filter :check_administrative_account_count, :initialize_requested_site, :parse_filter_params
   after_filter :add_flash_to_header
   # Fallback on the config-set default template layout
   layout DEFAULT_TEMPLATE
@@ -20,6 +20,14 @@ class ApplicationController < ActionController::Base
   ##################
   # FILTER METHODS #
   ##################
+  
+  # Checks if there is no administrative account created
+  def check_administrative_account_count
+    logger.debug log_format("FILTER", "Called check_administrative_account_count, Admin count: #{Administrator.count}")
+    # redirect if there is no administrative account yet
+    return instantiate_first_admin if Administrator.count == 0
+    return true
+  end
 
   # Find or instantiate the current site
   def initialize_requested_site
@@ -39,13 +47,20 @@ class ApplicationController < ActionController::Base
     return true
   end
 
-  #TODO Returns true or false if user is admin
+  #Returns true or false if user is admin
   def admin?
-    true #    admin_signed_in?
+    # Return true if this is dev mode (but doesnt break the site initialize building)
+    return true if Rails.env == :development and Administrator.count > 0
+    administrator_signed_in?
   end
 
-  # Checks if User is an admin; Redirects if not
+  # Checks if User is an admin.
+  # Renders 422 error if admin is not logged in.
+  # Exceptions include if there is no administrator account yet
+  # @returns True or false
   def check_admin
+    logger.debug log_format("FILTER", "Called check_admin")
+    return true if Administrator.count == 0
     return render_error_status(422, "Unnauthorized access. Request IP: '#{request.remote_ip}'") unless admin?
     return true
   end
@@ -71,11 +86,13 @@ class ApplicationController < ActionController::Base
 
   # If the request is an AJAX one, stashes the flash into the response headers
   def add_flash_to_header
+    logger.debug log_format("FILTER", "Called add_flash_to_header")
     # only run this in case it's an Ajax request.
     return unless request.xhr?
     # add different flashes to header
     response.headers['X-Flash-Error'] = flash.now[:error] unless flash.now[:error].blank?
     response.headers['X-Flash-Notice'] = flash.now[:notice] unless flash.now[:notice].blank?
+    flash.discard
   end
 
   # Renders a 404 page if an active record error occurs

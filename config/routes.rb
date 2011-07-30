@@ -1,6 +1,9 @@
 GoldenCMS::Application.routes.draw do
 
-  devise_for :admins
+  devise_for :administrators, :controllers => { 
+    :registrations => "admin/administrators_registrations", 
+    :sessions => "admin/administrators_sessions"
+  }
 
 
   # Questions for 'Contact Us'
@@ -12,13 +15,14 @@ GoldenCMS::Application.routes.draw do
     #match ':shortcut/:page_area/new_element' => 'elements#new_element', :as => :new_element
     resource :sites
     resources :pages, :except => [:show] do 
+      post :sort, :on => :collection
       resources :elements, :except => [:index] do
         post :move_up, :on => :member
         post :move_down, :on => :member
       end
     end
     resources :menus, :only => [:index] do
-      post :sort, :on => :collection
+     post :sort, :on => :collection
     end
     resources :items
     resources :blogs, :except => [:show] do
@@ -32,20 +36,20 @@ GoldenCMS::Application.routes.draw do
     resources :calendars, :except => [:show] do
       resources :events, :except => [:index]
     end
-    scope :module => 'page_elems' do
-      resources :login_elems, :only => [:new]
-      resources :item_elems, :except => [:index, :show]
-      resources :item_list_elems, :except => [:index, :show]
-      resources :blog_elems, :except => [:index, :show]
-      resources :calendar_elems, :except => [:index, :show]
-      resources :text_elems, :except => [:index, :show]
-      resources :link_elems, :except => [:index] do
-        post :file, :on => :member
-      end
-      resources :image_elems, :except => [:index, :show]
-      resource :item_search_elems, :only => [:new]
-      resource :navigation_elems, :except => [:index, :show]
-    end
+#    scope :module => 'page_elems' do
+#      resources :login_elems, :only => [:new]
+#      resources :item_elems, :except => [:index, :show]
+#      resources :item_list_elems, :except => [:index, :show]
+#      resources :blog_elems, :except => [:index, :show]
+#      resources :calendar_elems, :except => [:index, :show]
+#      resources :text_elems, :except => [:index, :show]
+#      resources :link_elems, :except => [:index] do
+#        post :file, :on => :member
+#      end
+#      resources :image_elems, :except => [:index, :show]
+#      resource :item_search_elems, :only => [:new]
+#      resource :navigation_elems, :except => [:index, :show]
+#    end
   end
 
 

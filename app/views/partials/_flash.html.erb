@@ -1,0 +1,6 @@
+<% [:notice,:alert].each do |key| %>
+  <div id="<%= key.to_s %>" class="flash" style="display:<%= session["flash"].nil? || session["flash"][key].blank? ? 'none' : 'block' %>;">
+	  <span class="message"><%= raw(session["flash"].try(key) || '') %></span>
+	  <span class="close"><%= link_to '|X|', 'javascript:null(0);', :fade => key %></span>
+  </div>
+<% end %>

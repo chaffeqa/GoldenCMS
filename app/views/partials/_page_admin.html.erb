@@ -2,6 +2,7 @@
   <div class="container">
 
     <%= link_to image_tag('inventure-logo.png', :alt => 'Inventure'), 'http://www.inventure.com' %>
+    <% if @requested_site %>
     <ul class="btn large clearfix" id="admin-menu">
       <li>Content management
         <ul>
@@ -31,14 +32,10 @@
         </ul>
       </li>
     </ul>
+    <% end %>
+    <%= link_to "Log Out", destroy_administrator_session_path, :class => 'btn large' %>
     <%= yield :page_admin_bar %>
 
   </div>
 </section>
-<% ['notice','error'].each do |key| %>
-  <div id="<%= key %>" class="flash" style='display:<%= flash[key.to_sym].blank? ? 'none' : 'block' %>;'>
-	  <span class="message"><%= raw(flash[key.to_sym] || '') %></span>
-	  <span class="close"><%= link_to '|X|', 'javascript:null(0);', :fade => key %></span>
-  </div>
-<% end %>
 

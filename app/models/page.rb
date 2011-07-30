@@ -181,7 +181,7 @@ class Page < ActiveRecord::Base
     end
   end
 
-  # Basic page hash for the page tree
+  # Basic hash for this Page. Used for constructing the page tree
   def tree_hash_value
     {
       :key => "page_#{self.id}".to_sym,
@@ -189,6 +189,23 @@ class Page < ActiveRecord::Base
       :url => self.url,
       :options => {:class => "#{self.page_type} #{self.displayed ? '' : 'not-displayed'}"},
       :items => children.collect {|page| page.tree_hash_value }
+    }
+  end
+  
+  # Returns a hash representing this Page in a format that js_tree needs
+  # @return Hash
+  def js_tree_hash
+  { 
+      # Applied to the <a> attribute
+      data: {
+        title: menu_name,
+        attr: { href: url }
+      },
+      # applied to the <li> attribute
+      attr: { 
+        id: "page_#{id}", 
+        class: "#{page_type} #{displayed ? '' : 'not-displayed'}"
+      }      
     }
   end
 
