@@ -2,6 +2,7 @@
   <div class="container">
 
     <%= link_to image_tag('inventure-logo.png', :alt => 'Inventure'), 'http://www.inventure.com' %>
+    <%= link_to current_administrator.email, edit_administrator_registration_path(), :class => 'current-administrator' %>
     <% if @requested_site %>
     <ul class="btn large clearfix" id="admin-menu">
       <li>Content management

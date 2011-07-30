@@ -1,6 +1,6 @@
 # User Factories
 Factory.define :administrator do |f|
- f.email "admin@test.com" 
+ f.sequence(:email) {|n| "admin#{n}@test.com" } 
  f.password "admintester"
 end
 Factory.define :user do |f|

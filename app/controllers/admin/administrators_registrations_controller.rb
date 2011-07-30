@@ -19,7 +19,8 @@ class Admin::AdministratorsRegistrationsController < ApplicationController
 
     if resource.save
       if resource.active_for_authentication?
-        set_flash_message :notice, :signed_up if is_navigational_format?
+        flash[:notice] = "Administrator (#{resource.email}) successfully signed up" if is_navigational_format?
+        #set_flash_message :notice, :signed_up if is_navigational_format?
         # Commented out so the creator Administrator will stay signed in...
         # Could use: Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name)
         log_format('CODE',"WARNING! Created a new Administrator while one is already signed in!") if signed_in_resource
@@ -48,7 +49,8 @@ class Admin::AdministratorsRegistrationsController < ApplicationController
     self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
 
     if resource.update_with_password(params[resource_name])
-      set_flash_message :notice, :updated if is_navigational_format?
+      flash[:notice] = "Administrator (#{resource.email}) successfully updated" if is_navigational_format?
+      #set_flash_message :notice, :updated if is_navigational_format?
       sign_in resource_name, resource, :bypass => true
       respond_with resource, :location => after_update_path_for(resource)
     else
