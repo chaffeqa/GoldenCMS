@@ -18,7 +18,8 @@ class Admin::SitesController < ApplicationController
     @site.init_default_attributes
     # Instantiate the site, root page, root page, and all base pages for the site
     if @site.save and @site.initialize_site_tree
-      redirect_to root_url, :notice => 'Site successfully created!'
+      flash[:notice] = 'Site successfully created!'
+      redirect_to root_url
     else
       if @site.new_record?
         logger.warn log_format("DB", "Error in site instantiation: @site = #{@site.inspect}")

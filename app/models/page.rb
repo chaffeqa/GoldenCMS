@@ -7,7 +7,6 @@ class Page < ActiveRecord::Base
   belongs_to :site
   belongs_to :root_site, :class_name => 'Site'
   has_ancestry :cache_depth => true, :orphan_strategy => :rootify  
-  #acts_as_list :scope => proc { ["ancestry = '?'", ancestry] }
   acts_as_list :scope => 'ancestry = \'#{ancestry}\''
   has_many   :link_elems, :dependent => :destroy
   has_many :elements
@@ -36,7 +35,6 @@ class Page < ActiveRecord::Base
   #validate :check_unique_shortcut?
 
   #Callbacks
-  before_validation :fill_missing_fields
   before_save :set_ancestry_path_and_root_site
   #after_save :update_cache_chain
   #before_destroy :update_cache_chain
@@ -90,7 +88,7 @@ class Page < ActiveRecord::Base
 
   # Checks the shortcut to ensure the string is HTML safe.
   def shortcut_html_safe?
-    errors.add(:shortcut, "Shortcut cannot contain illegal URL characters (Legal characters: a-z, A-Z, 0-9, '-', '_')") if !shortcut.nil? and shortcut != shortcut.to_slug #parameterize(shortcut)
+    errors.add(:shortcut, "Shortcut cannot contain illegal URL characters (Legal characters: a-z, A-Z, 0-9, '-')") if !shortcut.nil? and shortcut != shortcut.to_slug #parameterize(shortcut)
   end
 
 
@@ -216,11 +214,45 @@ class Page < ActiveRecord::Base
     return errors
   end
 
+  #####################################
+  # Autocomplete for easy Page building
+  #####################################
+
+  # Ensures the fields for this page are all filled, and if not, attempts to fill them
+  def autocomplete_missing_fields
+    self.title = menu_name || shortcut.try(:humanize) if title.blank?
+    self.menu_name = title || shortcut.try(:humanize) if menu_name.blank?
+    self.shortcut = (menu_name || title).to_slug if shortcut.blank? 
+    self.layout_name = recommended_layout_name if layout_name.blank?
+    self.total_element_areas ||= recommended_total_element_areas
+  end
+
+  # Recommends a layout name based on a page's page_type.  
+  # If no recommendation is found, recommends the DEFAULT_TEMPLATE layout_name
+  def recommended_layout_name  
+    begin
+      SPECIAL_PAGE_TYPES[page_type]["default_layout"] || DEFAULT_TEMPLATE
+    rescue
+      DEFAULT_TEMPLATE
+    end
+  end 
+
+  # Recommends a total_element_areas number based on a page's layout.  
+  # If no recommendation is found, recommends the DEFAULT_TEMPLATE number    
+  def recommended_total_element_areas
+    begin
+      TEMPLATES[a_layout_name]["total_element_areas"] || TEMPLATES[DEFAULT_TEMPLATE]["total_element_areas"]
+    rescue
+      TEMPLATES[DEFAULT_TEMPLATE]["total_element_areas"]
+    end
+    
+  end
 
 
-
-
-
+  #################
+  # Private 
+  #################
+  
   private 
   
   # Saves the path of ancestor pages to this page
@@ -230,22 +262,9 @@ class Page < ActiveRecord::Base
       self.names_depth_cache = path.map(&:menu_name).join('/')
       self.root_site = (root ? root.site : nil) 
     end
-  end  
-
-  # Ensures the fields for this page are all filled, and if not, attempts to fill them
-  def fill_missing_fields
-    self.title = menu_name || shortcut.try(:humanize) if title.blank?
-    self.menu_name = title || shortcut.try(:humanize) if menu_name.blank?
-    self.shortcut = (menu_name || title).to_slug if shortcut.blank? #parameterize(menu_name) || parameterize(title) if shortcut.blank?
-    self.layout_name ||= set_layout_name
-    self.total_element_areas = TEMPLATES[layout_name]["total_element_areas"]
-  end  
+  end    
+   
   
-  # Sets this page's layout to the default layout for this page's page_type.  
-  # If no page_type, sets it to the DEFAULT_TEMPLATE layout
-  def set_layout_name
-    self.layout_name = page_type.nil? ? DEFAULT_TEMPLATE : SPECIAL_PAGE_TYPES[page_type]["default_layout"]
-  end  
 
   # Actual behind the scenes ordering of the Page tree
   def self.order_helper( json, parent_id = nil)

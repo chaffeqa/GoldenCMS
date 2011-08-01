@@ -72,7 +72,8 @@ class Site < ActiveRecord::Base
   # @subdomains [Array:strings] Ex. ["www","GoldenCMS"]
   # Default returns the first site
   # TODO: fix so that <sitename>.heroku.com works
-  def self.find_by_subdomains(subdomains)    
+  def self.find_by_subdomains(subdomains)
+    subdomains = [subdomains] if subdomains.class == String    
     # Replace [""] occurrence with ["www"]...
     subdomains << "www" if subdomains.empty? or subdomains.delete("")
     where(:subdomain => subdomains).try(:first) || order("id").first
@@ -211,23 +212,23 @@ class Site < ActiveRecord::Base
   def create_basic_menu_tree
     # Instantiate the blogs and calendars pages
     self.errors[:base] << self.root_page.children.create(
-      :menu_name => blogs_shortcut.humanize, :title => blogs_shortcut.humanize, :shortcut => blogs_shortcut, :displayed => false
+      :menu_name => blogs_shortcut.humanize, :title => blogs_shortcut.humanize, :shortcut => blogs_shortcut, :displayed => false, :layout_name => DEFAULT_TEMPLATE, :total_element_areas => TEMPLATES[DEFAULT_TEMPLATE]["total_element_areas"]
     ).errors.full_messages.map {|msg| "Error on creating the 'Blogs' page: " + msg } 
     self.errors[:base] << self.root_page.children.create(
-      :menu_name => calendars_shortcut.humanize, :title => calendars_shortcut.humanize, :shortcut => calendars_shortcut, :displayed => false
+      :menu_name => calendars_shortcut.humanize, :title => calendars_shortcut.humanize, :shortcut => calendars_shortcut, :displayed => false, :layout_name => DEFAULT_TEMPLATE, :total_element_areas => TEMPLATES[DEFAULT_TEMPLATE]["total_element_areas"]
     ).errors.full_messages.map {|msg| "Error on creating the 'Calendars' page: " + msg } 
     # Instantiate the inventory structure if this site has an inventory
     if has_inventory
       self.errors[:base] << self.root_page.children.create(
-        :menu_name => inventory_shortcut.humanize, :title => inventory_shortcut.humanize, :shortcut => inventory_shortcut, :displayed => true
+        :menu_name => inventory_shortcut.humanize, :title => inventory_shortcut.humanize, :shortcut => inventory_shortcut, :displayed => true, :layout_name => DEFAULT_TEMPLATE, :total_element_areas => TEMPLATES[DEFAULT_TEMPLATE]["total_element_areas"]
       ).errors.full_messages.map {|msg| "Error on creating the 'Inventory' page: " + msg } 
       # Instantiate the items page if this site has an a specific page for Items
       self.errors[:base] << self.root_page.children.create(
-        :menu_name => items_shortcut.humanize, :title => items_shortcut.humanize, :shortcut => items_shortcut, :displayed => false
+        :menu_name => items_shortcut.humanize, :title => items_shortcut.humanize, :shortcut => items_shortcut, :displayed => false, :layout_name => DEFAULT_TEMPLATE, :total_element_areas => TEMPLATES[DEFAULT_TEMPLATE]["total_element_areas"]
       ).errors.full_messages.map {|msg| "Error on creating the 'Items' page: " + msg }  if create_items_page?
       # Instantiate the categories page if this site has an a specific page for Categories
       self.errors[:base] << self.root_page.children.create(
-        :menu_name => categories_shortcut.humanize, :title => categories_shortcut.humanize, :shortcut => categories_shortcut, :displayed => false
+        :menu_name => categories_shortcut.humanize, :title => categories_shortcut.humanize, :shortcut => categories_shortcut, :displayed => false, :layout_name => DEFAULT_TEMPLATE, :total_element_areas => TEMPLATES[DEFAULT_TEMPLATE]["total_element_areas"]
       ).errors.full_messages.map {|msg| "Error on creating the 'Categories' page: " + msg }  if create_categories_page?
     end
     # Log any errors

@@ -1,6 +1,8 @@
 # Load the rails application
 require File.expand_path('../application', __FILE__)
 
+# TODO make these interns
+
 DEFAULT_CONFIG_PARAMS = { 
   "Home Shortcut" => "home", 
   "Inventory Shortcut" => "inventory", 

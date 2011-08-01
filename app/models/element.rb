@@ -23,9 +23,15 @@ class Element < ActiveRecord::Base
   validates :title, :presence => true
   validates :element_area, :presence => true, :numericality => true
   validates :page_id, :presence => true, :numericality => true
+  validates :html_id, :presence => true
+  validates :html_class, :presence => true
+  validate :html_attr_html_safe
   
   #Callbacks
-  before_save :create_html_id
+  before_validation { 
+    self.html_id ||= title.try(:to_slug)
+    self.html_class ||= title.try(:to_slug)
+  }
   #after_save :update_cache_chain
  # before_destroy :update_cache_chain
   
@@ -50,8 +56,10 @@ class Element < ActiveRecord::Base
   scope :elements_for_element_area, lambda {|element_area| element_area_elems(element_area).elem_order }
 
 
-  def create_html_id
-    self.html_id = title.blank? ? "element-unnamed" : title.to_slug
+  # Adds an error on html_id or html_class if either is not HTML safe
+  def html_attr_html_safe 
+    errors.add(:html_id, "cannot contain illegal URL characters (Legal characters: a-z, A-Z, 0-9, '-')") if !html_id.nil? and html_id != html_id.to_slug
+    errors.add(:html_class, "cannot contain illegal URL characters (Legal characters: a-z, A-Z, 0-9, '-')") if !html_class.nil? and html_class != html_class.to_slug
   end
 
   # Return this the name of the object this element is a 'element for' (ex. 'text_elems' if this page represents a Text Element)
