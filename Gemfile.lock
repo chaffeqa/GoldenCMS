@@ -144,7 +144,7 @@ GEM
     rake (0.9.2)
     rb-inotify (0.8.5)
       ffi (>= 0.5.0)
-    rdoc (3.8)
+    rdoc (3.9.1)
     rest-client (1.6.3)
       mime-types (>= 1.16)
     rspec (2.6.0)

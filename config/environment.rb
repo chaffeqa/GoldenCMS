@@ -30,7 +30,7 @@ SPECIAL_PAGE_TYPES = {
   'post' => {"default_layout" => "inside"}
 }
 
-LOG_CATEGORY = ['CODE','CACHE','DB','FILTER','PARAMS']
+LOG_CATEGORY = ['CODE','CACHE','DB','FILTER','PARAMS','AUTHENTIFICATION']
 
 ELEM_TYPES = [
   ["Text"             ,   "text_elems"            ],

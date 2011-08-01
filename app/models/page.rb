@@ -123,7 +123,7 @@ class Page < ActiveRecord::Base
   # Ex. page.page_type = nil --> page.template_to_use = 'dynamic_page'
   def template_path_to_render
     page_template = page_type.try(:to_s)
-    page_template ||= 'inventory' if shortcut == root_site.inventory_shortcut
+    page_template = 'inventory' if shortcut == root_site.inventory_shortcut
     page_template ||= 'dynamic_page'
     return "templates/#{page_template}"
   end

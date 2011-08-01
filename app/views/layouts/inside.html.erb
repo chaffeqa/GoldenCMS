@@ -6,17 +6,17 @@
 <!--[if IE 9 ]>    <html lang="en" class="no-js ie9"> <![endif]-->
 <!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
   <head>
-    <%= render 'partials/head' %>
+    <%= render 'layouts/partials/head' %>
     <%= yield(:head) %>
   </head>
 
   <body id="<%= content_for?(:body_id) ? yield(:body_id) : 'secPage' %>"
 	class="<%= content_for?(:body_class) ? yield(:body_class) : 'twoColumn' %>">
-    <% if admin? %><%= render 'partials/page_admin' %><% end %>
+    <% if admin? %><%= render 'layouts/partials/admin_bar' %><% end %>
     <div id="body">
       <div id="bodyFade">
         <div id="pageContainer">
-          <%= render 'partials/header' %>
+          <%= render 'layouts/partials/header' %>
           <div id="content" class="clearfix">
             <article id="subColumn" class="clearfix contents">
               <div id="top"></div>
@@ -31,9 +31,9 @@
               </div>
             </article>
           </div>
-          <%= render 'partials/footer' %>
+          <%= render 'layouts/partials/footer' %>
           <%= yield(:footer) %>
-          <%= render 'partials/foot' %>
+          <%= render 'layouts/partials/foot' %>
         </div>
       </div>
     </div>

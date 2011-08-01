@@ -6,6 +6,7 @@ class Admin::AdministratorsRegistrationsController < ApplicationController
   # Authenticate all registration actions UNLESS there is no Administrator record in the DB...
   prepend_before_filter :authenticate_scope!, :only => [:edit, :update, :destroy]
   include Devise::Controllers::InternalHelpers
+  layout 'admin'
 
   # GET /resource/sign_up
   def new

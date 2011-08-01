@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  include SearchHelper, ApplicationHelper, LoggingHelper
+  include SearchHelper, ApplicationHelper, LoggingHelper, LayoutHelper
   
   protect_from_forgery
   rescue_from ActiveRecord::RecordNotFound, :with => :error_rescue
@@ -50,7 +50,7 @@ class ApplicationController < ActionController::Base
   #Returns true or false if user is admin
   def admin?
     # Return true if this is dev mode (but doesnt break the site initialize building)
-    return true if Rails.env == :development and Administrator.count > 0
+    return true if Rails.env == "development" and Administrator.count > 0
     administrator_signed_in?
   end
 
@@ -90,7 +90,7 @@ class ApplicationController < ActionController::Base
     # only run this in case it's an Ajax request.
     return unless request.xhr?
     # add different flashes to header
-    response.headers['X-Flash-Error'] = flash.now[:error] unless flash.now[:error].blank?
+    response.headers['X-Flash-Error'] = flash.now[:alert] unless flash.now[:alert].blank?
     response.headers['X-Flash-Notice'] = flash.now[:notice] unless flash.now[:notice].blank?
     flash.discard
   end
