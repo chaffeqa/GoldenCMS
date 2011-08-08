@@ -15,6 +15,7 @@ RSpec.configure do |config|
   # See https://github.com/plataformatec/devise/wiki/How-To:-Controllers-and-Views-tests-with-Rails-3-(and-rspec)
   config.include ControllerMacros, :type => :controller
   config.include RequestMacros, :type => :request
+  config.include ViewMacros, :type => :view
   
   # == Mock Framework
   # If you prefer to use mocha, flexmock or RR, uncomment the appropriate line:

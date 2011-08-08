@@ -15,8 +15,8 @@ DEFAULT_CONFIG_PARAMS = {
 TEMPLATES = {
   "home" => {"human_name" => "Home", "total_element_areas" => 5}, 
   "inside" => {"human_name" => "Inside", "total_element_areas" => 2}, 
-  "full" => {"human_name" => "Inside (No Nav)", "total_element_areas" => 1},
-  "application" => {"human_name" => "Static"} # Static layout
+  "full" => {"human_name" => "Inside (No Nav)", "total_element_areas" => 1}#,
+  #"application" => {"human_name" => "Static"} # Static layout
 }
 HOME_PAGE_TEMPLATE = "home"
 DEFAULT_TEMPLATE = "inside"
@@ -29,6 +29,8 @@ SPECIAL_PAGE_TYPES = {
   'item_page' => {"default_layout" => "inside"},
   'post' => {"default_layout" => "inside"}
 }
+
+REQUIRED_TEMPLATE_PARTIALS = ['head','foot','header','footer','flash']
 
 LOG_CATEGORY = ['CODE','CACHE','DB','FILTER','PARAMS','AUTHENTIFICATION']
 

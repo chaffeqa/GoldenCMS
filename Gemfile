@@ -3,7 +3,7 @@ source 'http://rubygems.org'
 gem 'rails', '3.1.0.rc5'#:git => 'git://github.com/rails/rails.git'
 gem 'jquery-rails'
 # Install the ruby javascript compiler, since linux doesnt come with one
-gem 'therubyracer-heroku', '0.8.1.pre3'
+#gem 'therubyracer-heroku', '0.8.1.pre3'
 gem 'ckeditor', '3.5.3'
 gem 'paperclip'
 gem 'simple-navigation'
@@ -19,10 +19,11 @@ gem 'event-calendar', :require => 'event_calendar'
 gem 'to_slug'
 
 # Asset template engines
-gem 'uglifier'
-gem 'sass'
-gem 'coffee-script'
-
+group :assets do
+  gem 'sass-rails', "~> 3.1.0.rc"
+  gem 'coffee-script'
+  gem 'uglifier'
+end
 
 
 ########################
@@ -33,6 +34,7 @@ group :test, :development do
   gem "rspec-rails"
   gem 'mysql2', :git => 'git://github.com/brianmario/mysql2.git'
   gem 'rake', '~>0.9.2'
+  gem 'therubyracer', '>= 0.9.2'
 end
 
 group :test do
@@ -40,7 +42,7 @@ group :test do
   gem "capybara"
   gem "guard-rspec"
   # For Gaurd Linux support...
-  gem 'rb-inotify'
+  gem 'rb-inotify', :git => 'git://github.com/nex3/rb-inotify.git'
   gem 'libnotify'
   # Pretty printed test output...
   gem 'turn'#, :require => false

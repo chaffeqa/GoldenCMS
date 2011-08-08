@@ -13,6 +13,7 @@
   <body id="<%= content_for?(:body_id) ? yield(:body_id) : 'homePage' %>"
 	class="<%= content_for?(:body_class) ? yield(:body_class) : 'twoColumn' %>">
     <% if admin? %><%= render 'layouts/partials/admin_bar' %><% end %>
+    <%= render 'layouts/partials/flash' %>
     <div id="body">
       <div id="bodyFade">
         <div id="pageContainer">

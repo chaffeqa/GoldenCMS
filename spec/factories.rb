@@ -1,6 +1,5 @@
 #Factory.defineGirl.define do
   # Administrator Factories
-
   Factory.define :administrator do |f|
     f.sequence(:email) {|n| "admin#{n}@test.com" } 
     f.password "admintester"

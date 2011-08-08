@@ -1,0 +1,10 @@
+<%# Renders the Page (@requested_page) represented by the partial: pages/_page.html.erb %>
+<%= render @requested_page %>
+
+
+<%# Inserts Dynamic Page controls in the admin bar %>
+<% content_for :page_admin_bar do %>
+  <%= link_to('Preview Page', 'javascript:void(0)', :class => 'btn yellow large', :id => 'preview') %>
+  <%= link_to('Page Settings',  edit_admin_page_path(@requested_page), :class => 'btn large') %>
+<% end %>
+

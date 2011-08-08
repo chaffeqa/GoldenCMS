@@ -124,8 +124,8 @@ class Page < ActiveRecord::Base
   def template_path_to_render
     page_template = page_type.try(:to_s)
     page_template = 'inventory' if shortcut == root_site.inventory_shortcut
-    page_template ||= 'dynamic_page'
-    return "templates/#{page_template}"
+    page_template ||= 'show'
+    return "pages/#{page_template}"
   end
   
   # Return this the name of the object this page is a 'page for' (ex. 'category' if this page represents a Category)

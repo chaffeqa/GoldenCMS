@@ -4,7 +4,9 @@ require 'rails/all'
 
 # If you have a Gemfile, require the gems listed there, including any gems
 # you've limited to :test, :development, or :production.
-Bundler.require(:default, Rails.env) if defined?(Bundler)
+#Bundler.require(:default, Rails.env) if defined?(Bundler)
+# Added to appease Heroku style Gemfile (http://devcenter.heroku.com/articles/rails31_heroku_cedar)
+Bundler.require *Rails.groups(:assets) if defined?(Bundler)
 
 module GoldenCMS
   class Application < Rails::Application
