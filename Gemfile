@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.1.0.rc5'#:git => 'git://github.com/rails/rails.git'
+gem 'rails', '3.1.0.rc6'#:git => 'git://github.com/rails/rails.git'
 gem 'jquery-rails'
 # Install the ruby javascript compiler, since linux doesnt come with one
 #gem 'therubyracer-heroku', '0.8.1.pre3'
