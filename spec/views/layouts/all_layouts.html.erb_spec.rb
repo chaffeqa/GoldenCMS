@@ -43,6 +43,11 @@ TEMPLATES.keys.each do |template|
         render
         rendered.should have_selector("head")
       end    
+      context "when an admin is logged in" do
+        before(:each) {log_in_admin}
+        it 'should include "admin.css"'
+        it 'should include "admin.js"'
+      end
     end
       
     context '<body>' do
@@ -70,29 +75,24 @@ TEMPLATES.keys.each do |template|
         render
         rendered.should have_selector :body, :class => default_class
       end
-    end
-    
-    context 'when an admin is logged in' do
-      before(:each) do
-        view.stub(:admin?) { true }
-        stub_template "partials/_admin_bar.html.haml" => 'admin_bar partial'
+
+      context 'when an admin is logged in' do
+        before(:each) {log_in_admin}
+        it 'should render admin_bar' do
+          render
+          rendered.should =~ /admin_bar partial/
+        end     
       end
-      
-      it 'should render admin_bar' do
-        render
-        rendered.should =~ /admin_bar partial/
-      end     
-    end
-    
-    context 'when no admin is logged in' do
-      before(:each) do
-        #view.stub(:admin?) { false }
-        stub_template "partials/_admin_bar.html.haml" => 'admin_bar partial'
-      end
-      
-      it 'should not render admin_bar' do
-        render
-        rendered.should_not =~ /admin_bar partial/
+
+      context 'when no admin is logged in' do
+        before(:each) do
+          stub_template "partials/_admin_bar.html.erb" => 'admin_bar partial'
+        end
+
+        it 'should not render admin_bar' do
+          render
+          rendered.should_not =~ /admin_bar partial/
+        end
       end
     end
     

@@ -1,13 +1,13 @@
-#Factory.defineGirl.define do
+FactoryGirl.define do
   # Administrator Factories
-  Factory.define :administrator do |f|
+  factory :administrator do |f|
     f.sequence(:email) {|n| "admin#{n}@test.com" } 
     f.password "admintester"
   end
 
   # Site Factories
 
-  Factory.define :site do |f|
+  factory :site do |f|
     f.site_name "Test Site"
     f.subdomain "www"
     f.has_inventory true
@@ -15,7 +15,7 @@
 
   # Page Factories
 
-  Factory.define :page do |f|
+  factory :page do |f|
     f.sequence(:title) {|n| "Page #{n}"}
     f.sequence(:menu_name) {|n| "Page #{n}"}
     f.sequence(:shortcut) {|n| "page-#{n}"}
@@ -25,9 +25,9 @@
 
   # Element Factoreis
 
-  Factory.define :element do |f|
+  factory :element do |f|
     f.title "Test Element"
     f.element_area 1
     f.association :page
   end
-#end
+end

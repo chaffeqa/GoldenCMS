@@ -12,9 +12,11 @@ GoldenCMS::Application.routes.draw do
 
   # Admin Namespace
   namespace "admin" do
+    root  :to => 'dashboard#index'
+    get 'dashboard/index'
     #match ':shortcut/:page_area/new_element' => 'elements#new_element', :as => :new_element
     resource :sites
-    resources :pages, :except => [:show] do 
+    resources :pages do 
       post :sort, :on => :collection
       resources :elements, :except => [:index] do
         post :move_up, :on => :member

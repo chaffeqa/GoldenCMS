@@ -50,7 +50,7 @@ class ApplicationController < ActionController::Base
   #Returns true or false if user is admin
   def admin?
     # Return true if this is dev mode (but doesnt break the site initialize building)
-    return true if Rails.env == "development" and Administrator.count > 0
+    return true if Rails.env.productions? and Administrator.count > 0
     administrator_signed_in?
   end
 

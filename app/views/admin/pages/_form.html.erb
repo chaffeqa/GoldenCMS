@@ -19,7 +19,7 @@
       <span class="expanded-hint">The menu name is used to display your page in the menus of your
       website. This is useful for making a long page title shorter and more manageable in menus.</span>
     </div>
-    <% unless @pnage.page.site %>
+    <% unless @page.site %>
       <div class="field"><span class="hint"><a class="expander">Explain this</a></span>
         <%= f.label :shortcut %>
         <%= "http://" + request.domain + "/" %><%= f.text_field :shortcut, :class => 'halfw' %>
@@ -31,12 +31,12 @@
     <% end %>
 <% end %>
     
-<% unless @page.site %>
+<% unless @page.root_site %>
   <%= field_set_tag 'Page Location' do %>
       <div class="field">
         <span class="hint">Select where this page should exist within the site heirarchy.</span>
         <%= f.label :parent_id, "Parent Page" %>
-        <%= f.select :parent_id, @current_site.site_tree_select %>
+        <%= f.select :parent_id, select_page_tree_from_site(@page.root_site) %>
       </div>
   <% end %>
 <% end %>
@@ -44,7 +44,7 @@
 <%= field_set_tag 'Page Display' do %>
   <div class="field"><span class="hint">Choose the template you would like this page to use.</span>
     <%= f.label :layout_name, "Template Type", :class => "req" %>
-    <%= f.select :layout_name, options_for_select(Page.page_layout_select, @page.layout || DEFAULT_TEMPLATE ) %>
+    <%= f.select :layout_name, options_for_select(select_page_layout_name, @page.layout_name || DEFAULT_TEMPLATE ) %>
   </div>
 <% end %>  
 

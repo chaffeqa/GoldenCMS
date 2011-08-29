@@ -9,7 +9,11 @@ class Admin::PagesController < ApplicationController
 
 
   def new
-    @page = Page.new(:displayed => true)
+    @page = @requested_site.pages.build(:displayed => true)
+  end
+  
+  def show
+    format.json { @page.to_json }
   end
 
 
@@ -18,9 +22,9 @@ class Admin::PagesController < ApplicationController
 
 
   def create
-    @page = Page.new(params[:page])
+    @page = @requested_site.pages.build(params[:page])
     # Set current_site root to this pages page unless it is already set
-    @page.page.site = @requested_site unless @requested_site.page
+    @page.site = @requested_site unless @requested_site.root_page
     if @page.save
       redirect_to( admin_pages_path(), :notice => 'Page was successfully created.')
     else

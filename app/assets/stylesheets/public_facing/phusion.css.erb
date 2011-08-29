@@ -1,0 +1,122 @@
+/******** Site Navigation ********/
+li.not-displayed {display: none !important;}
+/************************/
+
+
+
+/**** FLASH MESSAGES ****/
+#notice { color: green; background-color: #9F9; border: green solid 2px;}
+#message { color: green; background-color: #9F9; border: green solid 2px;}
+#alert { color: red; background-color: #F99;  border: red solid 2px;}
+#error { color: red; background-color: #F99; border: red solid 2px;}
+.flash { padding: 2px 5px; }
+
+.field_with_errors input { border: red solid 1px !important; background-color: #FEE; }
+#error_explanation { width: 300px; border: 2px solid red; padding: 7px 7px 0 7px; margin-bottom: 20px; background-color: #eee; }
+#error_explanation h2 {padding: 5px 5px 5px 15px; font-size: 1em; margin: -7px -7px 0 -7px; background-color: #D77; color: #fff }
+#error_explanation ul li {}
+/************************/
+
+
+
+/*********** Button **********/
+.btn {
+    background: #222 url(<%= asset_path "gradient.png" %>) repeat-x;
+    display: inline-block !important;
+    position: relative;
+    padding: 5px 10px 6px;
+    border: none;
+    border-bottom: 1px solid #222;
+    color: #fff !important;
+    line-height: 1;
+    text-decoration: none;
+    font-weight: bold;
+    text-shadow: 0 -1px 1px #222;
+    -moz-border-radius: 5px; -webkit-border-radius: 5px;
+    -moz-box-shadow: 0 1px 3px #999; -webkit-box-shadow: 0 1px 3px #999;
+    cursor: pointer;
+}
+.controls .control {float: right; margin: 0 2px -2px; font-size: 20px; line-height: 1em;}
+.btn:hover {color: #AAA !important; text-decoration: none;
+	     -moz-box-shadow: 0 2px 6px #999; -webkit-box-shadow: 0 2px 6px #999;}
+
+/* Sizes ---------- */
+.small.btn {font-size: 11px; padding: 5px 8px 4px;}
+.medium.btn {font-size: 13px;}
+.large.btn {font-size: 14px; padding: 8px 14px 9px;}
+
+/* Colors ---------- */
+.blue.btn {background-color: #2daebf; border-bottom: 1px solid #2daebf;
+	     text-shadow: 0 -1px 1px #2D6166;}
+.red.btn {background-color: #e33100; border-bottom: 1px solid #e33100;
+	     text-shadow: 0 -1px 1px #e33100;}
+.magenta.btn {background-color: #a9014b; border-bottom: 1px solid #a9014b;
+	     text-shadow: 0 -1px 1px #a9014b;}
+.orange.btn {background-color: #ff5c00; border-bottom: 1px solid #ff5c00;
+	     text-shadow: 0 -1px 1px #ff5c00;}
+.yellow.btn {background-color: #ffb515; border-bottom: 1px solid #de9e15;
+	     text-shadow: 0 -1px 1px #bb8207;
+}
+btn.yellow:hover {color: #fff !important;}
+/******************************/
+
+
+
+/* File Upload ---------- */
+.file_upload {
+  position: relative;
+  overflow: hidden;
+  direction: ltr;
+  cursor: pointer;
+  text-align: center;
+  color: #333;
+  font-weight: bold;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  max-width: 200px;
+  height: 25px;
+  line-height: 30px;
+}
+
+.file_upload iframe, .file_upload button {
+  display: none;
+}
+
+.file_upload_small {
+  width: 200px;
+  height: 30px;
+  line-height: 30px;
+  font-size: auto;
+  background: palegreen;
+  border: 1px solid limegreen;
+}
+
+.file_upload_large {
+  width: 100%;
+  height: 150px;
+  line-height: 150px;
+  font-size: 20px;
+  background: palegreen;
+  border: 1px solid limegreen;
+}
+
+.file_upload_highlight {
+  background: lawngreen;
+}
+
+.file_upload input {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  border: 300px solid transparent;
+  opacity: 0;
+  -ms-filter: 'alpha(opacity=0)';
+  filter: alpha(opacity=0);
+  -o-transform: translate(-300px, -300px) scale(10);
+  -moz-transform: translate(-800px, 0) scale(10);
+  cursor: pointer;
+}
+/******************************/
+

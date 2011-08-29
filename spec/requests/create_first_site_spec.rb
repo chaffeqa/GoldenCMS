@@ -1,10 +1,10 @@
 require 'spec_helper'
 
 describe "When creating the first Site" do
-  let(:site) {Factory.stub(:site)}
+  let(:site) {build(:site)}
   
   context 'and no Administrator account exists' do
-    let(:administrator) {Factory.stub(:administrator)}
+    let(:administrator) {build(:administrator)}
     it "prompts a new admin to signup" do
       Administrator.count.should eq(0)
       visit root_path
@@ -33,7 +33,7 @@ describe "When creating the first Site" do
   end  
     
   context 'and an Administrator is signed in' do
-    let(:administrator) {Factory(:administrator)}
+    let(:administrator) {create(:administrator)}
       
     it 'allows the new site to be created' do
       login_admin(administrator) 

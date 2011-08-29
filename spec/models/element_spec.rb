@@ -1,40 +1,43 @@
 require 'spec_helper'
 
 describe Element do
-  let(:element) {Factory(:element)}
+  
+  it "should save a valid element" do
+    build(:element).save!
+  end
   
   context 'basic attributes' do
     it 'requires a page' do
-      Factory.build(:element, :page_id => nil).should have_at_least(1).errors_on(:page_id)
+      build(:element, :page_id => nil).should_not be_valid
     end
     it 'requires a title' do
-      Factory.build(:element, :title => '').should have_at_least(1).errors_on(:title)
+      build(:element, :title => '').should_not be_valid
     end
   end
   
   context '#html_id' do
     it 'requires an html safe html_id' do
-      Factory.build(:element, :html_id => 'bad /html').should have_at_least(1).errors_on(:html_id)
+      build(:element, :html_id => 'bad /html').should_not be_valid
     end
     it 'allows an html_id to be set' do
-      elem = Factory(:element, :html_id => 'special-id')
-      elem.html_id.should == 'special-id'
+      create(:element, :html_id => 'special-id').html_id.should eq('special-id')
     end
     it 'creates an to_slug of the title if no html_id is given' do
-      element.html_id.should == element.title.to_slug
+      elem = create(:element)
+      elem.html_id.should eq(elem.title.to_slug)
     end
   end
   
   context '#html_class' do
     it 'requires an html safe html_class' do
-      Factory.build(:element, :html_class => 'bad /html').should have_at_least(1).errors_on(:html_class)
+      build(:element, :html_class => 'bad /html').should_not be_valid
     end
     it 'allows an html_class to be set' do
-      elem = Factory(:element, :html_class => 'special-class')
-      elem.html_class.should == 'special-class'
+      create(:element, :html_class => 'special-class').html_class.should eq('special-class')
     end
     it 'creates an to_slug of the title if no html_class is given' do
-      element.html_class.should == element.title.to_slug
+      elem = create(:element)
+      elem.html_class.should eq(elem.title.to_slug)
     end
   end
   

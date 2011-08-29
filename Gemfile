@@ -1,27 +1,22 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.1.0.rc6'#:git => 'git://github.com/rails/rails.git'
+gem 'rails', '3.1.0.rc6'
 gem 'jquery-rails'
-# Install the ruby javascript compiler, since linux doesnt come with one
-#gem 'therubyracer-heroku', '0.8.1.pre3'
-gem 'ckeditor', '3.5.3'
+gem "ckeditor", "~> 3.6.0"
 gem 'paperclip'
-gem 'simple-navigation'
 gem 'devise'
-gem 'carmen'
 gem 'mail'
 gem 'ancestry'
 gem 'acts_as_list'
-gem 'aws-s3'
-gem 'dalli' # For memcache
-gem 'kaminari'
-gem 'event-calendar', :require => 'event_calendar'
+gem 'will_paginate', '~> 3.0'
 gem 'to_slug'
+gem "event-calendar", "~> 2.3.3", :require => 'event_calendar'
 
-# Asset template engines
+# Gems used only for assets and not required
+# in production environments by default.
 group :assets do
-  gem 'sass-rails', "~> 3.1.0.rc"
-  gem 'coffee-script'
+  gem 'sass-rails', "  ~> 3.1.0.rc"
+  gem 'coffee-rails', "~> 3.1.0.rc"
   gem 'uglifier'
 end
 
@@ -30,31 +25,32 @@ end
 # Environment Specific #
 ########################
 
-group :test, :development do
-  gem "rspec-rails"
-  gem 'mysql2', :git => 'git://github.com/brianmario/mysql2.git'
-  gem 'rake', '~>0.9.2'
-  gem 'therubyracer', '>= 0.9.2'
+group :development, :test do
+	gem 'heroku'
+	gem 'mysql2', :git => 'git://github.com/brianmario/mysql2.git'
+	gem 'rake', '~>0.9.2'
+	gem 'therubyracer', '>= 0.9.2'
+	gem 'rspec'
+	gem 'rspec-rails'
+	gem "autotest"
+	gem 'web-app-theme'
+	gem 'hpricot'
+	gem 'ruby_parser'
+	gem 'rails3-generators' #mainly for factory_girl & simple_form at this point
+	gem "factory_girl_rails", "~> 1.1"
+	gem 'cucumber-rails'
 end
 
 group :test do
-  gem "factory_girl_rails"
-  gem "capybara"
-  gem "guard-rspec"
-  # For Gaurd Linux support...
-  gem 'rb-inotify', :git => 'git://github.com/nex3/rb-inotify.git'
-  gem 'libnotify'
-  # Pretty printed test output...
-  gem 'turn'#, :require => false
-  gem 'database_cleaner'
+	# database_cleaner is not required, but highly recommended
+	gem 'database_cleaner'
+	gem 'capybara'
+  gem 'turn'
 end
 
-group :development do
-  gem 'heroku'
-  gem 'rails-footnotes', '>= 3.7'
-end
+# To use gems:
 
-group :production do
-  gem 'pg'
-end
-
+#gem 'aws-s3'
+#gem 'dalli' # For memcache
+#gem "carrierwave"
+#gem "mini_magick"

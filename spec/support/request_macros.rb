@@ -3,8 +3,8 @@ module RequestMacros
 
   # Creates a default administrator and site
   def instantiate_site
-    @first_admin = Factory(:administrator) 
-    @site = Factory.stub(:site)
+    @first_admin = create(:administrator) 
+    @site = build(:site)
     login_admin(@first_admin)
     visit new_admin_sites_path
     fill_in "Site Name", :with => @site.site_name

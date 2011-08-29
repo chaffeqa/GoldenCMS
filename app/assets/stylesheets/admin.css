@@ -1,0 +1,5 @@
+/*
+*= require_self
+*= require_tree ./admin_facing
+*= require_tree ./public_facing
+*/

@@ -1,0 +1,138 @@
+/****** Form Elements ******/
+form {
+    padding: 10px;
+}
+form > fieldset .field {
+    clear: both;
+    margin:0 0 6px;
+}
+
+/* CKEDITOR HACKS */
+form > fieldset > div.ckeditor {
+    max-width: 750px; 
+    min-height: 300px;
+}
+form > fieldset > #cke_contents_text_elem_text_editor {
+    min-height: 200px;
+}
+
+
+
+
+form > fieldset .field > .hint {
+    color:#777;
+    float:right;
+    width:200px;
+}
+form > fieldset .field > .hint > a { cursor: pointer; }
+form > fieldset .field > span.expanded-hint {
+    color: #777;
+    clear: both;
+    display: block;
+}
+
+form > fieldset .field > .field_with_errors {display: inline;}
+form > fieldset .field > .field_with_errors > select,
+form > fieldset .field > .field_with_errors > textarea,
+form > fieldset .field > .field_with_errors > input { 
+    border: red solid 1px !important; }
+
+form > fieldset.tab {
+    border: 1px solid #f0f0f0;
+    margin: 0 -10px;
+    padding: 10px;
+    margin-bottom: 1em;
+}
+form > fieldset.tab > legend {
+    background-color: #fff;
+    font-size: 1.2em;
+    padding: 3px;
+}
+form > fieldset .field > label,
+form > fieldset .field > .field_with_errors > label {
+    display:inline-block;
+    font-weight:bold;
+    padding:0 5px 0 0;
+}
+form > fieldset .field > label.req:after,
+form > fieldset .field > .field_with_errors > label.req:after {
+    color:red;
+    content:" *";
+}
+form > fieldset .field > input[type="text"], 
+form > fieldset .field > input[type="password"], 
+form > fieldset .field > input[type="file"], 
+form > fieldset .field > select,
+form > fieldset .field > .field_with_errors > input[type="text"], 
+form > fieldset .field > .field_with_errors > input[type="password"], 
+form > fieldset .field > .field_with_errors > input[type="file"], 
+form > fieldset .field > .field_with_errors > select {
+    background: #fff;
+    border: 1px solid #999;
+    color: #777;
+    font: inherit;
+    margin: 2px 1px;
+    padding: 2px;
+    width: 315px;
+}
+form > fieldset .field > select,
+form > fieldset .field > .field_with_errors > select {
+    width: 322px;
+}
+form > fieldset .field > input.half {
+    width: 151px;
+}
+form > fieldset .field > input.third {
+    width: 97px;
+}
+form > fieldset .field > input.twothirds {
+    width: 206px;
+}
+form > fieldset .field > input[type="file"],
+form > fieldset .field > .field_with_errors > input[type="file"] {
+    width: auto;
+} 
+
+form > fieldset .field > .datetime > select,
+form > fieldset .field > .field_with_errors > .datetime > select {
+    background: #fff;
+    border: 1px solid #999;
+    color: #777;
+    font: inherit;
+    margin: 2px 1px;
+    padding: 2px;
+}
+form > fieldset .field > input[disabled="disabled"], 
+form > fieldset .field > select[disabled="disabled"],
+form > fieldset .field > .field_with_errors > input[disabled="disabled"], 
+form > fieldset .field > .field_with_errors > select[disabled="disabled"] {
+    color: #AAA;
+    background-color: #FFF;
+    border: 1px solid #CCC;
+}
+form > fieldset .field > input[type="checkbox"],
+form > fieldset .field > .field_with_errors > input[type="checkbox"] {
+    width:auto;
+    vertical-align: middle;
+    margin: 0 0 2px 10px;
+}
+form > fieldset .field > textarea,
+form > fieldset .field > .field_with_errors > textarea {
+    margin: 2px 1px;
+    border:1px solid #AAA;
+    height:60px;
+    vertical-align:top;
+    width:319px;
+}
+
+form > fieldset .field > input:focus, 
+form > fieldset .field > input.focused, 
+form > fieldset .field > select:focus, 
+form > fieldset .field > select.focused,
+form > fieldset .field > .field_with_errors > input:focus, 
+form > fieldset .field > .field_with_errors > input.focused, 
+form > fieldset .field > .field_with_errors > select:focus, 
+form > fieldset .field > .field_with_errors > select.focused {
+    border-color:#000000;
+    color:#333333;
+}

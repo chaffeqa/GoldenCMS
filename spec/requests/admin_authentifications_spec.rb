@@ -20,7 +20,7 @@ describe "When registering an Administrator" do
   end
   
   context 'and an administrator is signed in' do
-    let(:admin_two) {Factory.stub(:administrator)}
+    let(:admin_two) {build(:administrator)}
     
     it "allows you to sign up a new admin" do
       login_admin(@first_admin)

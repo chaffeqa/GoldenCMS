@@ -35,48 +35,6 @@ module NavigationHelper
   
   
   
-  def dynamic_pages_options_tree_recursive(page, addition, neglected_id='')
-    array = []
-    array << ["#{addition} #{h(page.menu_name)}", "#{page.id}"] unless page.id == neglected_id
-    page.children.dynamic_pages.each do |childpage|
-      array += dynamic_pages_options_tree_recursive(childpage, "#{addition}---", neglected_id)
-    end
-    array
-  end
-
-  # returns an array representing the inventory category tree.  Uses the category.page.title and category.page.id.
-  # Ex. [..., ['Biblical','1'], ['...Babylon', '2'], ...]
-  def cat_options_tree_recursive(page, addition)
-    array = []
-    array << ["#{addition} #{h(page.title)}", "#{page.id}"]
-    page.children.categories.each do |childpage|
-      array += cat_options_tree_recursive(childpage, "#{addition}---")
-    end
-    array
-  end
-
-  # returns an array representing the inventory category tree.  Uses the category.title and category.id.
-  # Ex. [..., ['Biblical','1'], ['...Babylon', '2'], ...]
-  def cat_id_options_tree_recursive(page, addition)
-    array = []
-    array << ["#{addition} #{h(page.title)}", "#{page.page_id}"] if page.page_type == 'Category'
-    page.children.categories.each do |childpage|
-      array += cat_id_options_tree_recursive(childpage, "#{addition}---")
-    end
-    array
-  end
-
-  # returns an array representing the inventory category tree.  Uses the category.title and category.title.
-  # Ex. [..., ['Biblical','Biblical'], ['...Babylon', 'Babylon'], ...]
-  def cat_title_options_tree_recursive(page, addition)
-    array = []
-    array << ["#{addition} #{h(page.title)}", "#{page.title}"] if page.page_type == 'Category'
-    page.children.categories.each do |childpage|
-      array += cat_title_options_tree_recursive(childpage, "#{addition}---")
-    end
-    array
-  end
-
   def item_options_tree(categories)
     array = []
     categories.each do |cat|

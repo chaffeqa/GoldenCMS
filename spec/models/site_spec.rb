@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Site do
-  let(:site) { Factory.build(:site) }
+  let(:site) { build(:site) }
   
   it 'requires a site name' do
     site.site_name = ''
@@ -16,14 +16,14 @@ describe Site do
   end
   
   it 'saves with a site_name and subdomain' do
-    site.should be_valid
+    site.save!
   end
   
   
   context '#find_by_subdomains' do
     before(:each) do
-      @www_site = Factory(:site)
-      @cool_site = Factory(:site, :subdomain => 'cool')
+      @www_site = create(:site)
+      @cool_site = create(:site, :subdomain => 'cool')
     end
     it 'respondes to #find_by_subdomains' do
       Site.should respond_to :find_by_subdomains

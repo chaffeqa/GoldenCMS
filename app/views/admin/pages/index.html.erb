@@ -30,15 +30,10 @@ with the heirarchy, click "Update." Your page order will not be saved until you 
 				  }
 			  }
 		  },
-		"plugins" : [ "themes", "json_data" ]
-	});
-});
-
-      "plugins" : [  "html_data", "ui", "dnd", "json_data" ]
+		  "plugins" : [  "html_data", "ui", "dnd", "json_data" ]
     });
-
-    $('#save-changes').live("click", function(e){
-      e.preventDefault();
+    
+    $('#save-changes').live("click", function(){
       var response = $.ajax({
         url: '<%= sort_admin_pages_path() %>',
         type: 'POST',
@@ -48,7 +43,6 @@ with the heirarchy, click "Update." Your page order will not be saved until you 
       //$('#menu-errors').html(response.responseText);
       return false;
     });
-
   });
 </script>
 

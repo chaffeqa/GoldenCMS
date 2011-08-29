@@ -149,10 +149,6 @@ class Page < ActiveRecord::Base
     return (prefix + desired_shortcut)
   end
   
-  # Create the array of options to populate a <select> element for setting the Page.layout
-  def page_layout_select
-    TEMPLATES.collect {|key,value| [key, value["human_name"]] }
-  end
   
 
 
