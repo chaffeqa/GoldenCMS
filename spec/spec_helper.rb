@@ -16,7 +16,7 @@ RSpec.configure do |config|
   config.include ControllerMacros, :type => :controller
   config.include RequestMacros, :type => :request
   config.include ViewMacros, :type => :view
-  
+
   # == Mock Framework
   #
   # If you prefer to use mocha, flexmock or RR, uncomment the appropriate line:

@@ -1,4 +1,5 @@
 class Admin::AdministratorsSessionsController < ApplicationController
+  prepend_before_filter :allow_params_authentication!, :only => :create
   prepend_before_filter :require_no_authentication, :only => [ :new, :create ]
   skip_filter :initialize_requested_site
   include Devise::Controllers::InternalHelpers
